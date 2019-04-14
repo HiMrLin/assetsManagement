@@ -11,7 +11,8 @@ public class HelloWordRequestBusinessService {
     @Autowired
     DataCenterService dataCenterService;
     public void helloWorldRequestProcess() {
-        String userName=dataCenterService.getData("userName");
+        String userName = dataCenterService.getData("userName");//从容器中获取数据
+        //操作完成后返回给前台数据
         ResponseData responseData=dataCenterService.getResponseDataFromDataLocal();
         ResponseDataUtil.putValueToData(responseData,"userName",userName);
     }

@@ -7,7 +7,6 @@ import com.fjnu.assetsManagement.exception.RequestFailureException;
 import com.fjnu.assetsManagement.module.helloWorld.constant.HelloWorldFunctionNoConstants;
 import com.fjnu.assetsManagement.module.helloWorld.service.HelloWordRequestService;
 import com.fjnu.assetsManagement.service.DataCenterService;
-import com.fjnu.assetsManagement.util.ResponseDataUtil;
 import org.apache.struts2.convention.annotation.Action;
 import org.apache.struts2.convention.annotation.Namespace;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,6 +29,7 @@ public class HelloWorldAction extends JsonAction {
         switch (functionNo) {
             case HelloWorldFunctionNoConstants.TEST:
                 helloWordRequestService.helloWorldRequestProcess();
+                this.setHeadOfResponseDataWithSuccessInfo(dataCenterService.getResponseDataFromDataLocal());
                 this.responseData=dataCenterService.getResponseDataFromDataLocal();
                 break;
             default:

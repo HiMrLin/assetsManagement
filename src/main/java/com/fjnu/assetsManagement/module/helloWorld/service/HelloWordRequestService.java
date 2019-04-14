@@ -10,8 +10,8 @@ public class HelloWordRequestService {
     @Autowired
     private HelloWordRequestBusinessService helloWordRequestBusinessService;
     public void helloWorldRequestProcess() {
-        helloWordRequestCheckService.helloWorldRequestCheck();
-        helloWordRequestBusinessService.helloWorldRequestProcess();
+        helloWordRequestCheckService.helloWorldRequestCheck(); //检查参数合法性
+        helloWordRequestBusinessService.helloWorldRequestProcess();//获取数据后的具体操作
 
     }
 }
