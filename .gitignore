@@ -85,3 +85,23 @@ fabric.properties
 # Editor-based Rest Client
 .idea/httpRequests
 
+.idea/artifacts/
+.idea/compiler.xml
+.idea/misc.xml
+.idea/vcs.xml
+src/main/java/com/fjnu/assetsManagement/dao/
+src/main/java/com/fjnu/assetsManagement/dto/
+src/main/java/com/fjnu/assetsManagement/vo/
+src/test/
+target/assetsManagement/META-INF/
+target/assetsManagement/WEB-INF/classes/com/fjnu/assetsManagement/ctroller/
+target/assetsManagement/WEB-INF/classes/database.properties
+target/assetsManagement/WEB-INF/classes/spring-hibernate.xml
+target/assetsManagement/WEB-INF/classes/spring.xml
+target/assetsManagement/WEB-INF/web.xml
+target/assetsManagement/index.jsp
+target/classes/database.properties
+target/classes/spring-hibernate.xml
+target/classes/spring.xml
+target/generated-sources/
+/.idea/
