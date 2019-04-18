@@ -1,9 +1,11 @@
 package com.fjnu.assetsManagement.entity;
 
 
+import lombok.Data;
+
 import java.util.Date;
 
-@lombok.Data
+@Data
 public class Assets {
 
     private String assetsId;
