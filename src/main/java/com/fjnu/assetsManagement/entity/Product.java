@@ -4,7 +4,7 @@ import lombok.Data;
 
 /**
  * @ClassName:Product
- * @Description:
+ * @Description: 测试用例使用
  * @Author:lwn
  * @Date:2019/3/31 15:58
  **/
