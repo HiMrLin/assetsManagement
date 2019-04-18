@@ -105,3 +105,5 @@ target/classes/spring-hibernate.xml
 target/classes/spring.xml
 target/generated-sources/
 /.idea/
+assetsManagement.iml
+
