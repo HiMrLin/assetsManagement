@@ -27,6 +27,7 @@ public class HelloWordRequestBusinessService {
         list.add(product2);
         //操作完成后返回给前台数据
         ResponseData responseData=dataCenterService.getResponseDataFromDataLocal();
+        ResponseDataUtil.setHeadOfResponseDataWithSuccessInfo(responseData);
         ResponseDataUtil.putValueToData(responseData, "list", list);
     }
 }
