@@ -17,9 +17,9 @@ public class Assets {
     private Date inAccountTime;
     private Long accountId;
     private Long financeId;
-    private String assetsState;
-    private String financeState;
-    private String inState;
+    private Integer assetsState;
+    private Integer financeState;
+    private Integer inState;
     private String code;
     private Long orderdetailId;
 
