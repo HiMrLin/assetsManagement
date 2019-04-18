@@ -89,9 +89,6 @@ fabric.properties
 .idea/compiler.xml
 .idea/misc.xml
 .idea/vcs.xml
-src/main/java/com/fjnu/assetsManagement/dao/
-src/main/java/com/fjnu/assetsManagement/dto/
-src/main/java/com/fjnu/assetsManagement/vo/
 src/test/
 target/assetsManagement/META-INF/
 target/assetsManagement/WEB-INF/classes/com/fjnu/assetsManagement/ctroller/
@@ -105,3 +102,5 @@ target/classes/spring-hibernate.xml
 target/classes/spring.xml
 target/generated-sources/
 /.idea/
+assetsManagement.iml
+
