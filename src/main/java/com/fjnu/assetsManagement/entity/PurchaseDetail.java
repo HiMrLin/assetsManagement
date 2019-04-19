@@ -1,13 +1,47 @@
 package com.fjnu.assetsManagement.entity;
 
 import lombok.Data;
+import lombok.Getter;
+
+import javax.persistence.*;
 
 @Data
+@Entity
+@Table(name = "purchase_detail")
 public class PurchaseDetail {
+
+    @Getter(onMethod_ = {@Id, @Column(name = "id"), @GeneratedValue(strategy = GenerationType.IDENTITY)})
     private Long id;
-    private Long masterId;
+
+
+    @Getter(onMethod_ = {@Column(name = "unit_price")})
     private Double unitPrice;
+
+    @Getter(onMethod_ = {@Column(name = "kind")})
     private String kind;
+
+    @Getter(onMethod_ = {@Column(name = "name")})
     private String name;
+
+    @Getter(onMethod_ = {@Column(name = "quantity")})
     private Long quantity;
+
+    @Getter(onMethod_ = {@ManyToOne(cascade = CascadeType.ALL), @JoinColumn(name = "master_id")})
+    private PurchaseMaster purchaseMaster;
+
+    @Override
+    public int hashCode() {
+        return this.quantity.hashCode();
+    }
+
+    @Override
+    public String toString() {
+        return "PurchaseDetail{" +
+                "id=" + id +
+                ", unitPrice=" + unitPrice +
+                ", kind='" + kind + '\'' +
+                ", name='" + name + '\'' +
+                ", quantity=" + quantity +
+                '}';
+    }
 }
