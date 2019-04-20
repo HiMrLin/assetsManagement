@@ -5,6 +5,7 @@ import com.fjnu.assetsManagement.entity.PurchaseDetail;
 import com.fjnu.assetsManagement.module.purchase.enums.PurchaseReasonOfFailure;
 import com.fjnu.assetsManagement.service.DataCenterService;
 import com.fjnu.assetsManagement.util.ExceptionUtil;
+import com.google.common.primitives.Longs;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -20,7 +21,13 @@ public class PurchaseRequestCheckService {
 
     public void addPurchaseItemServiceCheck() {
         String operator = dataCenterService.getParamValueFromParamOfRequestParamJsonByParamName("operator");
-        Long orderNo = Long.valueOf(String.valueOf(dataCenterService.getParamValueFromParamOfRequestParamJsonByParamName("orderNo")));
+
+        //有可能造成空指针异常，使用tryParse，如果转换失败会返回null，效果更好，不需要在之前判空
+        //Long orderNo = Long.valueOf(String.valueOf(dataCenterService.getParamValueFromParamOfRequestParamJsonByParamName("orderNo")));
+
+        Long orderNo = Longs.tryParse((String) dataCenterService.getParamValueFromParamOfRequestParamJsonByParamName("orderNo"));
+        //Long state = Longs.tryParse((String)dataCenterService.getParamValueFromParamOfRequestParamJsonByParamName("state"));
+
 
         JSONArray array = dataCenterService.getParamValueFromParamOfRequestParamJsonByParamName("purchaseDetailSet");
         List<PurchaseDetail> purchaseDetailList = array.toJavaList(PurchaseDetail.class);
@@ -30,20 +37,25 @@ public class PurchaseRequestCheckService {
         if (StringUtils.isBlank(operator)) {
             //验证数据不合法后返回前台提示信息
             ExceptionUtil.setFailureMsgAndThrow(dataCenterService.getResponseDataFromDataLocal(), PurchaseReasonOfFailure.OPERATOR_IS_NOT_BLANK);
-        } else if (orderNo == null) {
+        }
+        if (orderNo == null) {
             ExceptionUtil.setFailureMsgAndThrow(dataCenterService.getResponseDataFromDataLocal(), PurchaseReasonOfFailure.ORDERNO_IS_NOT_BLANK);
-        } else if (purchaseDetailSet.isEmpty()) {
+        }
+        if (purchaseDetailSet.isEmpty()) {
             ExceptionUtil.setFailureMsgAndThrow(dataCenterService.getResponseDataFromDataLocal(), PurchaseReasonOfFailure.PURCHASEDETAIL_IS_NOT_BLANK);
         }
         //对于每个purchaseDetail进行判空
         for (PurchaseDetail purchaseDetail : purchaseDetailSet) {
             if (StringUtils.isBlank(purchaseDetail.getKind())) {
                 ExceptionUtil.setFailureMsgAndThrow(dataCenterService.getResponseDataFromDataLocal(), PurchaseReasonOfFailure.PURCHASEDETAIL_IS_NOT_ENOUGH);
-            } else if (StringUtils.isBlank(purchaseDetail.getName())) {
+            }
+            if (StringUtils.isBlank(purchaseDetail.getName())) {
                 ExceptionUtil.setFailureMsgAndThrow(dataCenterService.getResponseDataFromDataLocal(), PurchaseReasonOfFailure.PURCHASEDETAIL_IS_NOT_ENOUGH);
-            } else if (purchaseDetail.getQuantity() == null) {
+            }
+            if (purchaseDetail.getQuantity() == null) {
                 ExceptionUtil.setFailureMsgAndThrow(dataCenterService.getResponseDataFromDataLocal(), PurchaseReasonOfFailure.PURCHASEDETAIL_IS_NOT_ENOUGH);
-            } else if (purchaseDetail.getUnitPrice() == null) {
+            }
+            if (purchaseDetail.getUnitPrice() == null) {
                 ExceptionUtil.setFailureMsgAndThrow(dataCenterService.getResponseDataFromDataLocal(), PurchaseReasonOfFailure.PURCHASEDETAIL_IS_NOT_ENOUGH);
             }
 

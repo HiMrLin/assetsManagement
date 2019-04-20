@@ -27,6 +27,7 @@ public class PurchaseRequestBusinessService {
         //获取操作员以及采购单号
         String operator = dataCenterService.getData("operator");
         Long orderNo = dataCenterService.getData("orderNo");
+        String remark = dataCenterService.getParamValueFromParamOfRequestParamJsonByParamName("remark");
         //获取采购的详细物品
         Set<PurchaseDetail> purchaseDetailSet = dataCenterService.getData("purchaseDetailSet");
 
@@ -35,6 +36,8 @@ public class PurchaseRequestBusinessService {
         purchaseMaster.setOrderTime(new Date());
         purchaseMaster.setOperator(operator);
         purchaseMaster.setState(0L);
+        purchaseMaster.setRemark(remark);
+
         //建立关联
         Double totalPrice = 0d;
         for (PurchaseDetail purchaseDetail : purchaseDetailSet) {
@@ -44,7 +47,7 @@ public class PurchaseRequestBusinessService {
             totalPrice += purchaseDetail.getUnitPrice() * purchaseDetail.getQuantity();
         }
 
-        dataCenterService.setData("totalPrice", totalPrice);
+        //dataCenterService.setData("totalPrice", totalPrice);
         purchaseMaster.setTotalPrice(totalPrice);
         //存入数据库
         Session session = sessionFactory.openSession();

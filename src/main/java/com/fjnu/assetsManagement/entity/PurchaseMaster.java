@@ -15,25 +15,28 @@ import java.util.Set;
 public class PurchaseMaster {
 
     @Getter(onMethod_ = {@Id, @Column(name = "id"), @GeneratedValue(strategy = GenerationType.IDENTITY)})
-    private Long id;
+    private Long id;//主键
 
     @Getter(onMethod_ = {@Column(name = "order_no")})
-    private Long orderNo;
+    private Long orderNo;//采购单号
 
     @Getter(onMethod_ = {@Column(name = "order_time")})
-    private Date orderTime;
+    private Date orderTime;//采购时间
 
     @Getter(onMethod_ = {@Column(name = "total_price")})
-    private Double totalPrice;
+    private Double totalPrice;//总价
 
     @Getter(onMethod_ = {@Column(name = "operator")})
-    private String operator;
+    private String operator;//操作员
 
     @Getter(onMethod_ = {@Column(name = "state")})
-    private Long state;
+    private Long state;//状态
 
     @Getter(onMethod_ = {@Column(name = "remark")})
-    private String remark;
+    private String remark;//备注
+
+    @Getter(onMethod_ = {@Column(name = "entry_time")})
+    private Date entryTime;//入账时间
 
 
 //    @Getter(onMethod_= {@OneToMany(cascade = CascadeType.ALL), @JoinColumn(name = "master_id")})
@@ -54,6 +57,7 @@ public class PurchaseMaster {
                 ", operator='" + operator + '\'' +
                 ", state=" + state +
                 ", remark='" + remark + '\'' +
+                ", entryTime=" + entryTime +
                 ", purchaseDetailSet=" + purchaseDetailSet +
                 '}';
     }
