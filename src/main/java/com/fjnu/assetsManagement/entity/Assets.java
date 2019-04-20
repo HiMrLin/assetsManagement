@@ -12,6 +12,7 @@ import java.util.Date;
 @Table(name = "assets")
 public class Assets {
 
+
     @Getter(onMethod_ = {@Id, @Column(name = "id"), @GeneratedValue(strategy = GenerationType.IDENTITY)})
     private Long cardId;//卡片编号，主键
 
