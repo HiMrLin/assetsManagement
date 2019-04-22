@@ -32,7 +32,7 @@ public class TestRequestBusinessService {
         //设置Date格式
         SimpleDateFormat sft = new SimpleDateFormat("yyyy-MM-dd");
         purchaseMasterTest.setId(12302L);
-        purchaseMasterTest.setOrderNo(20190419001L);
+        purchaseMasterTest.setOrderNo("122222");
         purchaseMasterTest.setTotalPrice(1000d);
         purchaseMasterTest.setOrderTime(sft.parse("2019-04-19"));
         purchaseMasterTest.setOperator("yzq");

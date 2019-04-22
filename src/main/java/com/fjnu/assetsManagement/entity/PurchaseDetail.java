@@ -1,5 +1,6 @@
 package com.fjnu.assetsManagement.entity;
 
+import com.fjnu.assetsManagement.module.purchase.vo.SummaryAssets;
 import lombok.Data;
 import lombok.Getter;
 
@@ -20,19 +21,27 @@ public class PurchaseDetail {
     @Getter(onMethod_ = {@Column(name = "kind")})
     private String kind;
 
+    @Getter(onMethod_ = {@Column(name = "kind_id")})
+    private Long kindId;
+
     @Getter(onMethod_ = {@Column(name = "name")})
     private String name;
 
     @Getter(onMethod_ = {@Column(name = "quantity")})
     private Long quantity;
 
-    @Getter(onMethod_ = {@ManyToOne(cascade = CascadeType.ALL), @JoinColumn(name = "master_id")})
+    @Getter(onMethod_ = {@ManyToOne(cascade = CascadeType.MERGE), @JoinColumn(name = "master_id")})
     private PurchaseMaster purchaseMaster;
+
+    //对应简单资产，忽略映射
+    @Getter(onMethod_ = {@Transient})
+    private SummaryAssets summaryAssets = new SummaryAssets();
 
     @Override
     public int hashCode() {
         return this.quantity.hashCode();
     }
+
 
     @Override
     public String toString() {
@@ -40,8 +49,10 @@ public class PurchaseDetail {
                 "id=" + id +
                 ", unitPrice=" + unitPrice +
                 ", kind='" + kind + '\'' +
+                ", kindId='" + kindId + '\'' +
                 ", name='" + name + '\'' +
                 ", quantity=" + quantity +
+                ", summaryAssets=" + summaryAssets +
                 '}';
     }
 }

@@ -18,7 +18,7 @@ public class PurchaseMaster {
     private Long id;//主键
 
     @Getter(onMethod_ = {@Column(name = "order_no")})
-    private Long orderNo;//采购单号
+    private String orderNo;//采购单号
 
     @Getter(onMethod_ = {@Column(name = "order_time")})
     private Date orderTime;//采购时间
@@ -38,6 +38,8 @@ public class PurchaseMaster {
     @Getter(onMethod_ = {@Column(name = "entry_time")})
     private Date entryTime;//入账时间
 
+    @Getter(onMethod_ = {@Column(name = "exist_state")})
+    private Integer existState;//逻辑存在状态
 
 //    @Getter(onMethod_= {@OneToMany(cascade = CascadeType.ALL), @JoinColumn(name = "master_id")})
 //    private List<PurchaseDetail> purchaseDetailList = new ArrayList<>();
@@ -51,13 +53,14 @@ public class PurchaseMaster {
     public String toString() {
         return "PurchaseMaster{" +
                 "id=" + id +
-                ", orderNo=" + orderNo +
+                ", orderNo='" + orderNo + '\'' +
                 ", orderTime=" + orderTime +
                 ", totalPrice=" + totalPrice +
                 ", operator='" + operator + '\'' +
                 ", state=" + state +
                 ", remark='" + remark + '\'' +
                 ", entryTime=" + entryTime +
+                ", existState=" + existState +
                 ", purchaseDetailSet=" + purchaseDetailSet +
                 '}';
     }
