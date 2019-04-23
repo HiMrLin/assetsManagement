@@ -13,11 +13,12 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 @ParentPackage("json-default")
 @Results({
         @Result(name = "success",type="json", params={"root","responseData"}),
-        @Result(name = "error",type="json", params={"root","responseData"})
+        @Result(name = "error", type = "json", params = {"root", "responseData"}),
+        @Result(name = "none", type = "json", params = {"root", "responseData"})
 })
 @CrossOrigin
 public class JsonAction {
-    protected ResponseData responseData;
+    protected ResponseData responseData = new ResponseData();
     public void setResponseData(ResponseData responseData) {
         this.responseData = responseData;
     }

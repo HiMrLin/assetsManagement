@@ -27,6 +27,9 @@ public class HelloWorldAction extends JsonAction {
     @Action(value="/hello")
     public String execute() throws Exception {
         String functionNo=dataCenterService.getFunctionNo();
+        if (functionNo == null) {
+            return "none";
+        }
         log.info("-----functionNo------" + functionNo);
         switch (functionNo) {
             case HelloWorldFunctionNoConstants.TEST:

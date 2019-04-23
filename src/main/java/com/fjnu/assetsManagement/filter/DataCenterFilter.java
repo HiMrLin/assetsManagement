@@ -57,7 +57,9 @@ public class DataCenterFilter implements Filter {
         }
         request.setAttribute("requestParamJson", requestParamJson);
         ResponseData responseData = ResponseDataUtil.createResponseData(request, response);
-
+        if (responseData == null) {
+            filterChain.doFilter(servletRequest, servletResponse);
+        }
         if (dataCenterService == null) {
             WebApplicationContext webApplicationContext = WebApplicationContextUtils.getWebApplicationContext(request.getServletContext());
             dataCenterService = webApplicationContext.getBean(DataCenterService.class);

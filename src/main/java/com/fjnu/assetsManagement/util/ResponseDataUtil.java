@@ -20,7 +20,10 @@ public class ResponseDataUtil {
 
 	public static ResponseData createResponseData(HttpServletRequest request, HttpServletResponse response) {
 		ResponseData responseData=new ResponseData();
-		String functionNo=HttpServletRequestUtil.getParamValueFromHeadByParamName(request,"functionNo");
+		String functionNo = HttpServletRequestUtil.getParamValueFromHeadByParamName(request, response, "functionNo");
+		if (functionNo == null) {
+			return null;
+		}
 		//String token = HttpServletRequestUtil.getParamValueFromHeadByParamName(request,"token");
 		ResponseHead head=new ResponseHead();
 		head.setFunctionNo(functionNo);

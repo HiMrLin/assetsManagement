@@ -3,13 +3,14 @@ package com.fjnu.assetsManagement.util;
 import com.alibaba.fastjson.JSONObject;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 public class HttpServletRequestUtil {
 
-	public static <T> T getParamValueFromHeadByParamName(HttpServletRequest request, String paramName) {
+	public static <T> T getParamValueFromHeadByParamName(HttpServletRequest request, HttpServletResponse response, String paramName) {
 			JSONObject requestParamJson=(JSONObject) request.getAttribute("requestParamJson");
 			if (requestParamJson==null) {
-//				requestParamJson=getRequestParamJsonFromRequest(request);
+				return null;
 			}
 			JSONObject head=requestParamJson.getJSONObject("head");
 			@SuppressWarnings("unchecked")

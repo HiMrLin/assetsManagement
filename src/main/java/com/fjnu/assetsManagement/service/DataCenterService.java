@@ -5,7 +5,6 @@ import com.fjnu.assetsManagement.entity.ResponseData;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
-import org.springframework.stereotype.Service;
 
 @Component
 
@@ -42,6 +41,9 @@ public class DataCenterService {
 	@SuppressWarnings("unchecked")
 	public <T> T getData(String dataName) {
 		JSONObject data = dataLocal.get();
+        if (data == null) {
+            return null;
+        }
 		T tempData = (T) data.get(dataName);
 		return tempData;
 	}
@@ -88,7 +90,13 @@ public class DataCenterService {
 	}
 	public <T> T getParamValueFromHeadOfRequestParamJsonByParamName(String paramName) {
 		JSONObject data=dataLocal.get();
+        if (data == null) {
+            return null;
+        }
 		JSONObject requestParamJson=data.getJSONObject("requestParamJson");
+        if (requestParamJson == null) {
+            return null;
+        }
 		JSONObject head=requestParamJson.getJSONObject("head");
 		@SuppressWarnings("unchecked")
 		T paramValue=(T) head.get(paramName);
