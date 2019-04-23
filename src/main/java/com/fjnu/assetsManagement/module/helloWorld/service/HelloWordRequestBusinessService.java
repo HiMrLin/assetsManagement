@@ -1,10 +1,9 @@
 package com.fjnu.assetsManagement.module.helloWorld.service;
 
 import com.fjnu.assetsManagement.entity.Product;
-import com.fjnu.assetsManagement.entity.PurchaseMaster;
 import com.fjnu.assetsManagement.entity.ResponseData;
-import com.fjnu.assetsManagement.module.purchase.util.PageUtil;
 import com.fjnu.assetsManagement.service.DataCenterService;
+import com.fjnu.assetsManagement.util.PageUtil;
 import com.fjnu.assetsManagement.util.ResponseDataUtil;
 import com.google.common.collect.Lists;
 import org.hibernate.Session;

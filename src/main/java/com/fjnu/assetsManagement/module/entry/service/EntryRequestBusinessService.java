@@ -3,8 +3,8 @@ package com.fjnu.assetsManagement.module.entry.service;
 import com.fjnu.assetsManagement.entity.PurchaseDetail;
 import com.fjnu.assetsManagement.entity.PurchaseMaster;
 import com.fjnu.assetsManagement.entity.ResponseData;
-import com.fjnu.assetsManagement.module.purchase.util.PageUtil;
 import com.fjnu.assetsManagement.service.DataCenterService;
+import com.fjnu.assetsManagement.util.PageUtil;
 import com.fjnu.assetsManagement.util.ResponseDataUtil;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -23,6 +23,7 @@ public class EntryRequestBusinessService {
     private DataCenterService dataCenterService;
     @Autowired
     private SessionFactory sessionFactory;
+
 
     private void updateAssets(Date nowDate, List<Long> orderDetailId) {
         Session session = sessionFactory.openSession();
@@ -47,6 +48,8 @@ public class EntryRequestBusinessService {
         //进行入库——将state属性改为1
         Session session = sessionFactory.openSession();
         session.beginTransaction();
+        session.flush();
+        session.clear();
         for (String orderNo : orderNoList) {
 
             String hql = "update PurchaseMaster p set p.state=1 where p.orderNo=:o";
@@ -65,12 +68,12 @@ public class EntryRequestBusinessService {
                     orderDetailId.add(purchaseDetail.getId());
                 }
             }
-
             this.updateAssets(nowDate, orderDetailId);
 
-
         }
+
         session.getTransaction().commit();
+        session.close();
     }
 
     //分页方法
@@ -93,6 +96,7 @@ public class EntryRequestBusinessService {
         getListQuery.setFirstResult(firstResult);
         getListQuery.setMaxResults(curPageSize);
         purchaseMasterList.setList(((org.hibernate.query.Query) getListQuery).list());
+
     }
 
     //得到已入库采购单列表
@@ -102,7 +106,7 @@ public class EntryRequestBusinessService {
         Integer pageNum = dataCenterService.getData("pageNum");
 
         //hql语句其他条件
-        String otherCondition = "WHERE c.existState<>0 or c.existState = null and c.state=1 or c.state=2 ";
+        String otherCondition = "WHERE (c.existState<>0 or c.existState = null) and (c.state=1 or c.state=2) ";
         PageUtil<PurchaseMaster> purchaseMasterList = new PageUtil<>();
         this.getPageList(purchaseMasterList, pageNum, pageSize, PurchaseMaster.class.getSimpleName(), otherCondition);
 
@@ -119,7 +123,7 @@ public class EntryRequestBusinessService {
         Integer pageNum = dataCenterService.getData("pageNum");
 
         //hql语句其他条件
-        String otherCondition = "WHERE c.existState<>0 or c.existState = null and c.state=0";
+        String otherCondition = "WHERE (c.existState<>0 or c.existState = null) and c.state=0";
         PageUtil<PurchaseMaster> purchaseMasterList = new PageUtil<>();
         this.getPageList(purchaseMasterList, pageNum, pageSize, PurchaseMaster.class.getSimpleName(), otherCondition);
 
@@ -132,6 +136,8 @@ public class EntryRequestBusinessService {
 
     //根据采购单号得到采购单记录
     public void getPurchaseMasterListByOrderNoProcess() {
+
+
         Session session = sessionFactory.openSession();
         String hql = "from PurchaseMaster p WHERE p.orderNo=:oo and (p.existState<>0 or p.existState = null)";
         Query query = session.createQuery(hql);
@@ -139,11 +145,11 @@ public class EntryRequestBusinessService {
         ((org.hibernate.query.Query) query).setString("oo", orderNo);
         PurchaseMaster purchaseMaster = (PurchaseMaster) ((org.hibernate.query.Query) query).uniqueResult();
 
+
         //操作完成后返回给前台数据
         ResponseData responseData = dataCenterService.getResponseDataFromDataLocal();
         ResponseDataUtil.setHeadOfResponseDataWithSuccessInfo(responseData);
         ResponseDataUtil.putValueToData(responseData, "purchaseMaster", purchaseMaster);
-
     }
 
 }

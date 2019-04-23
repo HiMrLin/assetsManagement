@@ -1,11 +1,10 @@
 package com.fjnu.assetsManagement.module.assets.service;
 
 import com.fjnu.assetsManagement.entity.Assets;
-import com.fjnu.assetsManagement.entity.PurchaseDetail;
 import com.fjnu.assetsManagement.entity.PurchaseMaster;
 import com.fjnu.assetsManagement.entity.ResponseData;
-import com.fjnu.assetsManagement.module.purchase.util.PageUtil;
 import com.fjnu.assetsManagement.service.DataCenterService;
+import com.fjnu.assetsManagement.util.PageUtil;
 import com.fjnu.assetsManagement.util.ResponseDataUtil;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -13,9 +12,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import javax.persistence.Query;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
 
 @Component
 public class AssetsRequestBusinessService {

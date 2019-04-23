@@ -2,6 +2,18 @@
 <web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://java.sun.com/xml/ns/javaee" xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd" version="3.0">
     <display-name></display-name>
 
+    <!-- 添加过滤器过滤跨域请求 -->
+    <filter>
+        <filter-name>cors</filter-name>
+        <!-- 这里配置上面刚刚设置的java过滤器文件 -->
+        <filter-class>com.fjnu.assetsManagement.filter.CORSFilter</filter-class>
+    </filter>
+    <filter-mapping>
+        <filter-name>cors</filter-name>
+        <!-- 这里配置你需要进行跨域的接口，*代表jsForSdp当前路径下所子有路径 -->
+        <url-pattern>/*</url-pattern>
+    </filter-mapping>
+
     <filter>
         <filter-name>encodingFilter</filter-name>
         <filter-class>org.springframework.web.filter.CharacterEncodingFilter</filter-class>
@@ -77,5 +89,6 @@
     <welcome-file-list>
         <welcome-file>index.jsp</welcome-file>
     </welcome-file-list>
+
 
 </web-app>

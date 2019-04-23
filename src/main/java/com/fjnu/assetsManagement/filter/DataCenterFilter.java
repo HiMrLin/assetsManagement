@@ -38,6 +38,7 @@ public class DataCenterFilter implements Filter {
 
         log.info("--------DataCenterFilter------doFilter---servletPath---{}", servletPath);
 
+
         JSONObject requestParamJson = null;
         BufferedReader streamReader = new BufferedReader(new InputStreamReader(request.getInputStream(), "UTF-8"));
         StringBuilder stringBuilder = new StringBuilder();

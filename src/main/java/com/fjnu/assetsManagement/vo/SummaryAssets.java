@@ -1,4 +1,4 @@
-package com.fjnu.assetsManagement.module.bill.vo;
+package com.fjnu.assetsManagement.vo;
 
 import lombok.Data;
 

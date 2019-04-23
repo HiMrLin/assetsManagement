@@ -1,6 +1,7 @@
 package com.fjnu.assetsManagement.entity;
 
-import com.fjnu.assetsManagement.module.purchase.vo.SummaryAssets;
+
+import com.fjnu.assetsManagement.vo.SummaryAssets;
 import lombok.Data;
 import lombok.Getter;
 

@@ -5,19 +5,17 @@ import com.fjnu.assetsManagement.entity.ResponseData;
 import com.fjnu.assetsManagement.entity.ResponseHead;
 import com.fjnu.assetsManagement.enums.IReasonOfFailure;
 import com.fjnu.assetsManagement.enums.ResponseHeadEnum;
-import com.google.common.collect.Maps;
 import org.apache.struts2.convention.annotation.ParentPackage;
 import org.apache.struts2.convention.annotation.Result;
 import org.apache.struts2.convention.annotation.Results;
-
-import java.util.HashMap;
-import java.util.Map;
+import org.springframework.web.bind.annotation.CrossOrigin;
 
 @ParentPackage("json-default")
 @Results({
         @Result(name = "success",type="json", params={"root","responseData"}),
         @Result(name = "error",type="json", params={"root","responseData"})
 })
+@CrossOrigin
 public class JsonAction {
     protected ResponseData responseData;
     public void setResponseData(ResponseData responseData) {

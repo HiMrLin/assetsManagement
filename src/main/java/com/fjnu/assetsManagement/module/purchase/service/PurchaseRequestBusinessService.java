@@ -1,11 +1,11 @@
 package com.fjnu.assetsManagement.module.purchase.service;
 
 import com.fjnu.assetsManagement.entity.*;
-import com.fjnu.assetsManagement.module.purchase.util.BarcodeUtil;
-import com.fjnu.assetsManagement.module.purchase.util.PageUtil;
-import com.fjnu.assetsManagement.module.purchase.vo.SummaryAssets;
 import com.fjnu.assetsManagement.service.DataCenterService;
+import com.fjnu.assetsManagement.util.BarcodeUtil;
+import com.fjnu.assetsManagement.util.PageUtil;
 import com.fjnu.assetsManagement.util.ResponseDataUtil;
+import com.fjnu.assetsManagement.vo.SummaryAssets;
 import org.hibernate.Hibernate;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -28,6 +28,7 @@ public class PurchaseRequestBusinessService {
     private SessionFactory sessionFactory;
 
 
+
     //生成资产编码
     //详表ID+13位当前时间戳+随机两位0-9数字+当前同类别资产顺序
     public String genernateAssetsId(Long purchaseDetailId, int cur) {
@@ -45,21 +46,6 @@ public class PurchaseRequestBusinessService {
 
         Session session = sessionFactory.openSession();
         session.beginTransaction();
-        //第一种方法
-//        String hql = "from PurchaseDetail p where p.purchaseMaster = (select pm.id from PurchaseMaster pm WHERE pm.orderNo=:o)";
-//        Query query = session.createQuery(hql);
-//        String orderNo = dataCenterService.getData("orderNo");
-//        ((org.hibernate.query.Query) query).setString("o", orderNo);
-//        // 3. 执行查询
-//        List<PurchaseDetail> purchaseDetailList = ((org.hibernate.query.Query) query).list();
-
-        //第二种方法
-//        String hql = "from PurchaseMaster pm WHERE pm.orderNo=:o";
-//        Query query = session.createQuery(hql);
-//        String orderNo = dataCenterService.getData("orderNo");
-//        ((org.hibernate.query.Query) query).setString("o", orderNo);
-//        PurchaseMaster purchaseMaster  = (PurchaseMaster)((org.hibernate.query.Query) query).uniqueResult();
-//        Set<PurchaseDetail> purchaseDetailSet = purchaseMaster.getPurchaseDetailSet();
 
         Set<PurchaseDetail> purchaseDetailSet = dataCenterService.getData("purchaseDetailSet");
 
@@ -138,6 +124,7 @@ public class PurchaseRequestBusinessService {
         Query query = session.createQuery(hql);
         ((org.hibernate.query.Query) query).setString("k", kind);
         Dictionary dictionary = (Dictionary) ((org.hibernate.query.Query) query).uniqueResult();
+        session.close();
         return dictionary.getId();
     }
 
@@ -177,7 +164,10 @@ public class PurchaseRequestBusinessService {
 
         //存入数据库
         Session session = sessionFactory.openSession();
+
         session.beginTransaction();
+        session.flush();
+        session.clear();
         session.save(purchaseMaster);
 
         session.getTransaction().commit();
@@ -267,6 +257,7 @@ public class PurchaseRequestBusinessService {
 
         }
         session.getTransaction().commit();
+        session.close();
     }
 
 }
