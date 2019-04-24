@@ -52,9 +52,11 @@ public class EntryRequestBusinessService {
         session.clear();
         for (String orderNo : orderNoList) {
 
-            String hql = "update PurchaseMaster p set p.state=1 where p.orderNo=:o";
+            Date nowDate = new Date();
+            String hql = "update PurchaseMaster p set p.state=1, p.inTime=:n where p.orderNo=:o";
             Query query = session.createQuery(hql);
             ((org.hibernate.query.Query) query).setString("o", orderNo);
+            ((org.hibernate.query.Query) query).setDate("n", nowDate);
             query.executeUpdate();
 
             String getPurchaseDetailHql = "from PurchaseMaster pm where pm.orderNo=:o";
@@ -62,7 +64,6 @@ public class EntryRequestBusinessService {
             ((org.hibernate.query.Query) query1).setString("o", orderNo);
             List<PurchaseMaster> purchaseMasterList = ((org.hibernate.query.Query) query1).list();
             List<Long> orderDetailId = new ArrayList<>();
-            Date nowDate = new Date();
             for (PurchaseMaster purchaseMaster : purchaseMasterList) {
                 for (PurchaseDetail purchaseDetail : purchaseMaster.getPurchaseDetailSet()) {
                     orderDetailId.add(purchaseDetail.getId());

@@ -120,14 +120,15 @@ public class PurchaseRequestBusinessService {
 
     }
 
-    public Long getKindId(String kind) {
+    //从数据字典根据ID得到类别名称
+    public String getKind(Long id) {
         Session session = sessionFactory.openSession();
-        String hql = "from Dictionary d where d.kind=:k";
+        String hql = "from Dictionary d where d.id=:k";
         Query query = session.createQuery(hql);
-        ((org.hibernate.query.Query) query).setString("k", kind);
+        ((org.hibernate.query.Query) query).setLong("k", id);
         Dictionary dictionary = (Dictionary) ((org.hibernate.query.Query) query).uniqueResult();
         session.close();
-        return dictionary.getId();
+        return dictionary.getKind();
     }
 
 
@@ -155,7 +156,7 @@ public class PurchaseRequestBusinessService {
         //建立关联
         Double totalPrice = 0.00d;
         for (PurchaseDetail purchaseDetail : purchaseDetailSet) {
-            purchaseDetail.setKindId(this.getKindId(purchaseDetail.getKind()));
+            purchaseDetail.setKind(this.getKind(purchaseDetail.getKindId()));
             purchaseDetail.setPurchaseMaster(purchaseMaster);
             purchaseMaster.getPurchaseDetailSet().add(purchaseDetail);
             //计算总价
@@ -265,4 +266,18 @@ public class PurchaseRequestBusinessService {
         session.close();
     }
 
+    //得到数据字典列表
+    public void getDictionaryListProcess() {
+        Session session = sessionFactory.openSession();
+        String hql = "from Dictionary d ";
+        Query query = session.createQuery(hql);
+        List<Dictionary> dictionaryList = ((org.hibernate.query.Query) query).list();
+
+        session.close();
+        //操作完成后返回给前台数据
+        ResponseData responseData = dataCenterService.getResponseDataFromDataLocal();
+        ResponseDataUtil.setHeadOfResponseDataWithSuccessInfo(responseData);
+        ResponseDataUtil.putValueToData(responseData, "dictionaryList", dictionaryList);
+
+    }
 }

@@ -35,11 +35,11 @@ public class PurchaseRequestCheckService {
         return orderNo;
     }
 
-    public Dictionary getDictionary(String kind) {
+    public Dictionary getDictionary(Long id) {
         Session session = sessionFactory.openSession();
-        String hql = "from Dictionary d where d.kind=:k";
+        String hql = "from Dictionary d where d.id=:k";
         Query query = session.createQuery(hql);
-        ((org.hibernate.query.Query) query).setString("k", kind);
+        ((org.hibernate.query.Query) query).setLong("k", id);
         Dictionary dictionary = (Dictionary) ((org.hibernate.query.Query) query).uniqueResult();
         return dictionary;
     }
@@ -68,7 +68,7 @@ public class PurchaseRequestCheckService {
         }
         //对于每个purchaseDetail进行判空
         for (PurchaseDetail purchaseDetail : purchaseDetailSet) {
-            if (StringUtils.isBlank(purchaseDetail.getKind())) {
+            if (purchaseDetail.getKindId() == null) {
                 ExceptionUtil.setFailureMsgAndThrow(dataCenterService.getResponseDataFromDataLocal(), PurchaseReasonOfFailure.PURCHASEDETAIL_IS_NOT_ENOUGH);
             }
             if (StringUtils.isBlank(purchaseDetail.getName())) {
@@ -80,7 +80,7 @@ public class PurchaseRequestCheckService {
             if (purchaseDetail.getUnitPrice() == null) {
                 ExceptionUtil.setFailureMsgAndThrow(dataCenterService.getResponseDataFromDataLocal(), PurchaseReasonOfFailure.PURCHASEDETAIL_IS_NOT_ENOUGH);
             }
-            if (this.getDictionary(purchaseDetail.getKind()) == null) {
+            if (this.getDictionary(purchaseDetail.getKindId()) == null) {
                 ExceptionUtil.setFailureMsgAndThrow(dataCenterService.getResponseDataFromDataLocal(), PurchaseReasonOfFailure.KIND_IS_NOT_CORRECT);
             }
 

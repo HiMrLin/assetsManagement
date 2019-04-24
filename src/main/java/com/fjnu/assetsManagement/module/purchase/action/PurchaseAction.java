@@ -58,6 +58,12 @@ public class PurchaseAction extends JsonAction {
                 this.setHeadOfResponseDataWithSuccessInfo(dataCenterService.getResponseDataFromDataLocal());
                 this.responseData = dataCenterService.getResponseDataFromDataLocal();
                 break;
+            //得到数据字典列表
+            case PurchaseFunctionNoConstants.GET_DICTIONARY_ITEM:
+                purchaseRequestService.getDictionaryList();
+                this.setHeadOfResponseDataWithSuccessInfo(dataCenterService.getResponseDataFromDataLocal());
+                this.responseData = dataCenterService.getResponseDataFromDataLocal();
+                break;
             default:
                 this.setResponseDataWithFailureInfo(dataCenterService.getResponseDataFromDataLocal(), ReasonOfFailure.FUNCTION_NO_ARE_INCORRECT);
                 break;

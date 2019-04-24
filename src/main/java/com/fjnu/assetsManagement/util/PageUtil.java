@@ -2,8 +2,6 @@ package com.fjnu.assetsManagement.util;
 
 import lombok.Data;
 
-import java.math.BigDecimal;
-import java.text.DecimalFormat;
 import java.util.Arrays;
 import java.util.List;
 
@@ -126,42 +124,5 @@ public class PageUtil<T> {
                 '}';
     }
 
-    public static void main(String[] args) {
-        Double d1 = 0d;
-        Double d2 = 0.00d;
-        Double d3 = 0.000d;
-        Double d4 = 1d;
-        Double dd = 1.23d;
-        Double d5 = 1.111d;
-        BigDecimal bg1 = new BigDecimal(d1);
-        BigDecimal bg2 = new BigDecimal(d2);
-        BigDecimal bg3 = new BigDecimal(d3);
-        BigDecimal bg4 = new BigDecimal(d4);
-        BigDecimal bgd = new BigDecimal(dd);
-        BigDecimal bg5 = new BigDecimal(d5);
-        Double ad1 = bg1.setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue();
-        Double ad2 = bg2.setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue();
-        Double ad3 = bg3.setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue();
-        Double ad4 = bg4.setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue();
-        Double add = bgd.setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue();
-        Double ad5 = bg5.setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue();
-        System.out.println("d1:" + d1 + "   ");
-        System.out.println(ad1);
-        System.out.println("d2:" + d2 + "   ");
-        System.out.println(ad2);
-        System.out.println("d3:" + d3 + "   ");
-        System.out.println(ad3);
-        System.out.println("d4:" + d4 + "   ");
-        System.out.println(ad4);
-        System.out.println("dd:" + dd + "   ");
-        System.out.println(add);
-        System.out.println("d5:" + d5 + "   ");
-        System.out.println(ad5);
-        System.out.println("===========第二种==========");
-        DecimalFormat df = new DecimalFormat("0.00");
-        String temp = df.format(d1);
-        System.out.println(temp);
-        Double ddd1 = Double.parseDouble(temp);
-        System.out.println(ddd1);
-    }
+
 }

@@ -38,6 +38,8 @@ public class PurchaseMaster {
     @Getter(onMethod_ = {@Column(name = "entry_time")})
     private String entryTime;//入账时间
 
+    @Getter(onMethod_ = {@Column(name = "in_time")})
+    private String inTime;//入账时间
 
 
     @Getter(onMethod_ = {@Column(name = "exist_state")})
@@ -51,16 +53,16 @@ public class PurchaseMaster {
 
     @Override
     public String toString() {
-
         return "PurchaseMaster{" +
                 "id=" + id +
                 ", orderNo='" + orderNo + '\'' +
-                ", orderTime=" + orderTime +
-                ", totalPrice=" + totalPrice +
+                ", orderTime='" + orderTime + '\'' +
+                ", totalPrice='" + totalPrice + '\'' +
                 ", operator='" + operator + '\'' +
                 ", state=" + state +
                 ", remark='" + remark + '\'' +
-                ", entryTime=" + entryTime +
+                ", entryTime='" + entryTime + '\'' +
+                ", inTime='" + inTime + '\'' +
                 ", existState=" + existState +
                 ", purchaseDetailSet=" + purchaseDetailSet +
                 '}';

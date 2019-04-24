@@ -38,4 +38,9 @@ public class PurchaseRequestService {
         purchaseRequestCheckService.deletePurchaseMasterListByOrderNoCheck();
         purchaseRequestBusinessService.deletePurchaseMasterListByOrderNoProcess();
     }
+
+    //得到数据字典列表
+    public void getDictionaryList() {
+        purchaseRequestBusinessService.getDictionaryListProcess();
+    }
 }
