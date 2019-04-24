@@ -27,6 +27,9 @@ public class AssetsAction extends JsonAction {
     @Action(value="/assets")
     public String execute() throws Exception {
         String functionNo=dataCenterService.getFunctionNo();
+        if (functionNo == null) {
+            return "none";
+        }
         log.info("-----functionNo------" + functionNo);
         switch (functionNo) {
             case AssetsFunctionNoConstants.AESSETS_LIST:

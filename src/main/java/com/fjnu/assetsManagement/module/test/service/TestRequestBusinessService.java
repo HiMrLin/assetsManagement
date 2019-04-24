@@ -11,6 +11,7 @@ import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.List;
 
@@ -31,10 +32,10 @@ public class TestRequestBusinessService {
 
         //设置Date格式
         SimpleDateFormat sft = new SimpleDateFormat("yyyy-MM-dd");
+        DecimalFormat df = new DecimalFormat("0.00");
         purchaseMasterTest.setId(12302L);
         purchaseMasterTest.setOrderNo("122222");
-        purchaseMasterTest.setTotalPrice(1000d);
-        purchaseMasterTest.setOrderTime(sft.parse("2019-04-19"));
+        purchaseMasterTest.setTotalPrice(df.format(1000d));
         purchaseMasterTest.setOperator("yzq");
         //purchaseMasterTest.setRemark("测试插入");
         purchaseMasterTest.setState(0L);
@@ -45,14 +46,14 @@ public class TestRequestBusinessService {
         purchaseDetail1.setName("电脑");
         purchaseDetail1.setKind("电脑");
         purchaseDetail1.setQuantity(11L);
-        purchaseDetail1.setUnitPrice(6000d);
+        purchaseDetail1.setUnitPrice(df.format(1000d));
 
 
         PurchaseDetail purchaseDetail2 = new PurchaseDetail();
         purchaseDetail2.setName("手机");
         purchaseDetail2.setKind("手机");
         purchaseDetail2.setQuantity(11L);
-        purchaseDetail2.setUnitPrice(3000d);
+        purchaseDetail2.setUnitPrice(df.format(1000d));
 
 //        Set<PurchaseDetail> purchaseDetailSet = new HashSet<>();
 //        purchaseDetailSet.add(purchaseDetail1);

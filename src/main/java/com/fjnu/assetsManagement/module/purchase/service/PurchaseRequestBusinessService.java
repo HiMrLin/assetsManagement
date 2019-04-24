@@ -15,6 +15,8 @@ import org.springframework.stereotype.Component;
 import javax.persistence.Query;
 import java.io.IOException;
 import java.sql.Blob;
+import java.text.DecimalFormat;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 import java.util.Set;
@@ -128,6 +130,7 @@ public class PurchaseRequestBusinessService {
         return dictionary.getId();
     }
 
+
     //添加采购主表记录以及采购详表记录
     public void addPurchaseItemServiceProcess() {
 
@@ -140,27 +143,29 @@ public class PurchaseRequestBusinessService {
         //获取采购的详细物品
         Set<PurchaseDetail> purchaseDetailSet = dataCenterService.getData("purchaseDetailSet");
 
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 
         PurchaseMaster purchaseMaster = new PurchaseMaster();
         purchaseMaster.setOrderNo(orderNo);
-        purchaseMaster.setOrderTime(new Date());
+        purchaseMaster.setOrderTime(sdf.format(new Date()));
         purchaseMaster.setOperator(operator);
         purchaseMaster.setState(0L);
         purchaseMaster.setRemark(remark);
 
         //建立关联
-        Double totalPrice = 0d;
+        Double totalPrice = 0.00d;
         for (PurchaseDetail purchaseDetail : purchaseDetailSet) {
             purchaseDetail.setKindId(this.getKindId(purchaseDetail.getKind()));
             purchaseDetail.setPurchaseMaster(purchaseMaster);
             purchaseMaster.getPurchaseDetailSet().add(purchaseDetail);
             //计算总价
-            totalPrice += purchaseDetail.getUnitPrice() * purchaseDetail.getQuantity();
+            totalPrice += Double.parseDouble(purchaseDetail.getUnitPrice()) * purchaseDetail.getQuantity();
             //测试输出
         }
 
         //dataCenterService.setData("totalPrice", totalPrice);
-        purchaseMaster.setTotalPrice(totalPrice);
+        DecimalFormat df = new DecimalFormat("0.00");
+        purchaseMaster.setTotalPrice(df.format(totalPrice));
 
         //存入数据库
         Session session = sessionFactory.openSession();

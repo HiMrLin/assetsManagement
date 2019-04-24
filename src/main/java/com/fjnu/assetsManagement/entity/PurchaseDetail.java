@@ -17,7 +17,7 @@ public class PurchaseDetail {
 
 
     @Getter(onMethod_ = {@Column(name = "unit_price")})
-    private Double unitPrice;
+    private String unitPrice;
 
     @Getter(onMethod_ = {@Column(name = "kind")})
     private String kind;

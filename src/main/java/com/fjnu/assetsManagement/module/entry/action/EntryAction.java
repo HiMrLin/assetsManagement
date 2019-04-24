@@ -30,6 +30,9 @@ public class EntryAction extends JsonAction {
     @Action(value = "/entry")
     public String execute() throws Exception {
         String functionNo = dataCenterService.getFunctionNo();
+        if (functionNo == null) {
+            return "none";
+        }
         log.info("-----functionNo------" + functionNo);
         switch (functionNo) {
             //入库

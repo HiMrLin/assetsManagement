@@ -27,6 +27,9 @@ public class BillAction extends JsonAction {
     @Action(value="/bill")
     public String execute() throws Exception {
         String functionNo=dataCenterService.getFunctionNo();
+        if (functionNo == null) {
+            return "none";
+        }
         log.info("-----functionNo------" + functionNo);
         switch (functionNo) {
             case BillFunctionNoConstants.BILL_OUT_LIST:

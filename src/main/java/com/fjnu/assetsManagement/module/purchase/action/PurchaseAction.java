@@ -29,6 +29,9 @@ public class PurchaseAction extends JsonAction {
     @Action(value = "/purchase")
     public String execute() throws Exception {
         String functionNo = dataCenterService.getFunctionNo();
+        if (functionNo == null) {
+            return "none";
+        }
         log.info("-----functionNo------" + functionNo);
         switch (functionNo) {
             //添加采购单

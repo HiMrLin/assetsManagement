@@ -5,7 +5,6 @@ import lombok.Data;
 import lombok.Getter;
 
 import javax.persistence.*;
-import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -21,10 +20,11 @@ public class PurchaseMaster {
     private String orderNo;//采购单号
 
     @Getter(onMethod_ = {@Column(name = "order_time")})
-    private Date orderTime;//采购时间
+    private String orderTime;//采购时间
 
     @Getter(onMethod_ = {@Column(name = "total_price")})
-    private Double totalPrice;//总价
+    private String totalPrice;//总价
+
 
     @Getter(onMethod_ = {@Column(name = "operator")})
     private String operator;//操作员
@@ -36,13 +36,13 @@ public class PurchaseMaster {
     private String remark;//备注
 
     @Getter(onMethod_ = {@Column(name = "entry_time")})
-    private Date entryTime;//入账时间
+    private String entryTime;//入账时间
+
+
 
     @Getter(onMethod_ = {@Column(name = "exist_state")})
     private Integer existState;//逻辑存在状态
 
-//    @Getter(onMethod_= {@OneToMany(cascade = CascadeType.ALL), @JoinColumn(name = "master_id")})
-//    private List<PurchaseDetail> purchaseDetailList = new ArrayList<>();
 
     //不能使用set,会出现栈溢出
     @Getter(onMethod_ = {@OneToMany(cascade = CascadeType.ALL), @JoinColumn(name = "master_id")})
@@ -51,6 +51,7 @@ public class PurchaseMaster {
 
     @Override
     public String toString() {
+
         return "PurchaseMaster{" +
                 "id=" + id +
                 ", orderNo='" + orderNo + '\'' +
