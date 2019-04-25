@@ -3,8 +3,8 @@ package com.fjnu.assetsManagement.entity;
 
 import lombok.Data;
 import lombok.Getter;
+
 import javax.persistence.*;
-import java.sql.Blob;
 import java.util.Date;
 
 @Data
@@ -35,10 +35,10 @@ public class Assets {
     private String supplier;//供应商
 
     @Getter(onMethod_ = {@Column(name = "in_time")})
-    private String inTime;//入库时间
+    private Date inTime;//入库时间
 
     @Getter(onMethod_ = {@Column(name = "in_account_time")})
-    private String inAccountTime;//入账时间
+    private Date inAccountTime;//入账时间
 
     @Getter(onMethod_ = {@Column(name = "account_id")})
     private Long accountId;//凭证号
@@ -56,10 +56,7 @@ public class Assets {
     private Integer inState;//入库审核状态
 
     @Getter(onMethod_ = {@Column(name = "code")})
-    private Blob  code;//条形码
-
-    @Getter(onMethod_ = {@Transient})
-    private String codeToString;
+    private String code;//条形码
 
     @Getter(onMethod_ = {@Column(name = "orderdetail_id")})
     private Long orderDetailId;//详表ID
@@ -75,14 +72,5 @@ public class Assets {
 
     @Getter(onMethod_ = {@Column(name = "fix_year")})
     private Integer fixYear;//保修年限
-
-    @Getter(onMethod_ = {@Column(name = "scrap_state")})
-    private Integer scrapState;//报销状态
-
-    @Getter(onMethod_ = {@Column(name = "user_name")})
-    private String userName;//使用人
-
-    @Getter(onMethod_ = {@Column(name = "get_state")})
-    private Integer getState;
 
 }
