@@ -24,11 +24,17 @@ public class EntryRequestCheckService {
     public void entryCheck() {
         JSONArray array = dataCenterService.getParamValueFromParamOfRequestParamJsonByParamName("orderNoOfEntryPurchaseItems");
         List<String> orderNoList = array.toJavaList(String.class);
+        //得到入库操作员
+        String inOperator = dataCenterService.getParamValueFromParamOfRequestParamJsonByParamName("inOperator");
 
         if (orderNoList.size() <= 0) {
             ExceptionUtil.setFailureMsgAndThrow(dataCenterService.getResponseDataFromDataLocal(), EntryReasonOfFailure.ORDERNO_IS_NOT_BLANK);
         }
+        if (StringUtils.isBlank(inOperator)) {
+            ExceptionUtil.setFailureMsgAndThrow(dataCenterService.getResponseDataFromDataLocal(), EntryReasonOfFailure.OPERATOR_IS_NOT_BLANK);
+        }
 
+        dataCenterService.setData("inOperator", inOperator);
         dataCenterService.setData("orderNoList", orderNoList);
     }
 

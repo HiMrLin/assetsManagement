@@ -41,6 +41,11 @@ public class PurchaseMaster {
     @Getter(onMethod_ = {@Column(name = "in_time")})
     private String inTime;//入账时间
 
+    @Getter(onMethod_ = {@Column(name = "entry_operator")})
+    private String entryOperator;//入账操作员
+
+    @Getter(onMethod_ = {@Column(name = "in_operator")})
+    private String inOperator;//入库操作员
 
     @Getter(onMethod_ = {@Column(name = "exist_state")})
     private Integer existState;//逻辑存在状态

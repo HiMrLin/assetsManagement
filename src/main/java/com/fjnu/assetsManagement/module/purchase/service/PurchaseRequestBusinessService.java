@@ -266,18 +266,4 @@ public class PurchaseRequestBusinessService {
         session.close();
     }
 
-    //得到数据字典列表
-    public void getDictionaryListProcess() {
-        Session session = sessionFactory.openSession();
-        String hql = "from Dictionary d ";
-        Query query = session.createQuery(hql);
-        List<Dictionary> dictionaryList = ((org.hibernate.query.Query) query).list();
-
-        session.close();
-        //操作完成后返回给前台数据
-        ResponseData responseData = dataCenterService.getResponseDataFromDataLocal();
-        ResponseDataUtil.setHeadOfResponseDataWithSuccessInfo(responseData);
-        ResponseDataUtil.putValueToData(responseData, "dictionaryList", dictionaryList);
-
-    }
 }

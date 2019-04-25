@@ -23,6 +23,4 @@ public interface PurchaseFunctionNoConstants {
     //删除采购主表记录(多选)
     String DELETE_PURCHASE_ITEM = "delete purchase item";
 
-    //删除采购主表记录(多选)
-    String GET_DICTIONARY_ITEM = "get dictionary item";
 }
