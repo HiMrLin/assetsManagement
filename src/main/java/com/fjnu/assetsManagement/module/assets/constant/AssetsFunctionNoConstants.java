@@ -6,4 +6,6 @@ public interface AssetsFunctionNoConstants {
 	String USE="Use";
 	String USED_LIST="UsedList";
 	String RETURN="Return";
+	String SCRAP="Scrap";
+	String SCRAP_LIST="ScrapList";
 }

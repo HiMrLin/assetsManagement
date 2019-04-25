@@ -1,8 +1,6 @@
 package com.fjnu.assetsManagement.module.assets.service;
 
-import com.fjnu.assetsManagement.entity.Assets;
-import com.fjnu.assetsManagement.entity.RecordReceive;
-import com.fjnu.assetsManagement.entity.ResponseData;
+import com.fjnu.assetsManagement.entity.*;
 import com.fjnu.assetsManagement.service.DataCenterService;
 import com.fjnu.assetsManagement.util.PageUtil;
 import com.fjnu.assetsManagement.util.ResponseDataUtil;
@@ -31,7 +29,7 @@ public class AssetsRequestBusinessService {
         Integer pageSize = dataCenterService.getData("pageSize");
         Integer pageNum = dataCenterService.getData("pageNum");
         PageUtil<Assets> assets = new PageUtil<>();
-        String otherCondition = "c.scrapState=0";
+        String otherCondition = "where c.scrapState=0";
         this.getPageList(assets, pageNum, pageSize, Assets.class.getSimpleName(),otherCondition);
         List<Assets> assetsList = assets.getList();
         for (Assets x:assets.getList()) {
@@ -45,7 +43,7 @@ public class AssetsRequestBusinessService {
     //分页设置
     public void getPageList(PageUtil list, int pageNum, int pageSize, String className,String otherCondition) {
         Session session = sessionFactory.openSession();
-        String getSizeHql = "select count(*) from " + className + " c  where " +otherCondition;
+        String getSizeHql = "select count(*) from " + className + " c " +otherCondition;
         Query getSizeQuery = session.createQuery(getSizeHql);
         Long sizeLong = (Long) ((org.hibernate.query.Query) getSizeQuery).uniqueResult();
         int size = sizeLong.intValue();
@@ -53,7 +51,7 @@ public class AssetsRequestBusinessService {
         int curPageNum = list.getPageNum();
         int curPageSize = list.getPageSize();
         int firstResult = (curPageNum - 1) * curPageSize;
-        String getListHql = "from " + className + " c where " +otherCondition ;
+        String getListHql = "from " + className + " c  " +otherCondition ;
         Query getListQuery = session.createQuery(getListHql);
         getListQuery.setFirstResult(firstResult);
         getListQuery.setMaxResults(curPageSize);
@@ -76,7 +74,7 @@ public class AssetsRequestBusinessService {
         Session session = sessionFactory.openSession();
         session.beginTransaction();
         for (Long id : cardId) {
-            String hql = "update Assets a set a.userName=:u, a.depository=:t where a.cardId=:o";
+            String hql = "update Assets a set a.userName=:u, a.depository=:t, a.getState=1 where a.cardId=:o";
             Query query = session.createQuery(hql);
             ((org.hibernate.query.Query) query).setString("u",userName);
             ((org.hibernate.query.Query) query).setString("t",depository);
@@ -89,6 +87,7 @@ public class AssetsRequestBusinessService {
     //领用
     public void useRequestProcess(){
         String Name = dataCenterService.getData("userName");
+        String recorder = dataCenterService.getData("recorder");
         String depository = dataCenterService.getData("depository");
         String department = dataCenterService.getData("department");
         String purpose = dataCenterService.getData("purpose");
@@ -111,9 +110,8 @@ public class AssetsRequestBusinessService {
             recordReceive.setPurpose(purpose);
             SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
             recordReceive.setReceiveTime(sdf.format(new Date()));
-            recordReceive.setRecorder("刘光文");
-            long now = System.currentTimeMillis();
-            recordReceive.setReceiveId(now);
+            recordReceive.setRecorder(recorder);
+            recordReceive.setReceiveId(System.currentTimeMillis());
             recordReceive.setGetState(1);
             session.save(recordReceive);
         }
@@ -130,7 +128,7 @@ public class AssetsRequestBusinessService {
         Session session = sessionFactory.openSession();
         session.beginTransaction();
         PageUtil<RecordReceive> recordReceive = new PageUtil<>();
-        String otherCondition = "c.getState=1";
+        String otherCondition = "where c.getState=1";
         this.getPageList(recordReceive, pageNum, pageSize, RecordReceive.class.getSimpleName(),otherCondition);
         List<Receive> receives = new ArrayList<>();
         for (RecordReceive recordReceive1:recordReceive.getList()) {
@@ -142,7 +140,7 @@ public class AssetsRequestBusinessService {
             receive.setPurpose(recordReceive1.getPurpose());
             receive.setRecorder(recordReceive1.getRecorder());
             receive.setNote(recordReceive1.getNote());
-            String Hql = "from Assets a where a. = "+ recordReceive1.getAssetsId();
+            String Hql = "from Assets a where a.assetsId = "+ recordReceive1.getAssetsId();
             Query getQuery =session.createQuery(Hql);
             List<Assets> assetsList = ((org.hibernate.query.Query) getQuery).list();
             for (Assets assets1:assetsList) {
@@ -160,8 +158,96 @@ public class AssetsRequestBusinessService {
     //归还
     public void returnRequestProcess(){
         List<Long> receiveIdList = dataCenterService.getData("receiveIdList");
-        for (Long long1:receiveIdList) {
-
+        String returnName =dataCenterService.getData("returnName");
+        Session session = sessionFactory.openSession();
+        session.beginTransaction();
+        session.flush();
+        session.clear();
+        List<String> assets = new ArrayList<>();
+        for (Long receiveId:receiveIdList) {
+            RecordReturn recordReturn = new RecordReturn();
+            String Hql = "from RecordReceive  where receiveId = "+ receiveId ;
+            Query getQuery =session.createQuery(Hql);
+            List<RecordReceive> recordReceives = ((org.hibernate.query.Query) getQuery).list();
+            for (RecordReceive recordReceive1:recordReceives) {
+                String assId = recordReceive1.getAssetsId();
+                assets.add(assId);
+                recordReturn.setAssetsId(assId);
+            }
+            recordReturn.setReturnName(returnName);
+            recordReturn.setReturnId(System.currentTimeMillis());
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+            recordReturn.setReturnTime(sdf.format(new Date()));
+            session.save(recordReturn);
         }
+        updateRecordReceive(receiveIdList);
+        updateAssetsList(assets);
+        session.getTransaction().commit();
+        session.close();
+    }
+
+    public void updateRecordReceive(List<Long> receiveIdList){
+        Session session = sessionFactory.openSession();
+        session.beginTransaction();
+        for (Long receiveIdList1:receiveIdList) {
+            String hql = "update RecordReceive a set a.getState=0 where a.receiveId=:o";
+            Query query = session.createQuery(hql);
+            ((org.hibernate.query.Query) query).setLong("o", receiveIdList1);
+            query.executeUpdate();
+        }
+        session.getTransaction().commit();
+    }
+
+    public void updateAssetsList(List<String>assetsId){
+        Session session = sessionFactory.openSession();
+        session.beginTransaction();
+        for (String assets:assetsId) {
+            String shql = "update Assets a set a.userName=null,a.getState=0, a.depository=:t where a.assetsId=:o";
+            Query query1 = session.createQuery(shql);
+            ((org.hibernate.query.Query) query1).setString("t", "仓库");
+            ((org.hibernate.query.Query) query1).setString("o", assets);
+            query1.executeUpdate();
+        }
+        session.getTransaction().commit();
+    }
+
+    //报废
+    public void scrapRequestProcess(){
+        String notifier = dataCenterService.getData("notifier");
+        String recorder = dataCenterService.getData("recorder");
+        String department = dataCenterService.getData("department");
+        String assetsId = dataCenterService.getData("assetsId");
+        String note = dataCenterService.getData("note");
+        Session session = sessionFactory.openSession();
+        session.beginTransaction();
+        RecordScrap recordScrap = new RecordScrap();
+        recordScrap.setAssetsId(assetsId);
+        recordScrap.setNote(note);
+        recordScrap.setDepartment(department);
+        recordScrap.setNotifier(notifier);
+        recordScrap.setRecorder(recorder);
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        recordScrap.setScrapId(System.currentTimeMillis());
+        recordScrap.setScrapTime(sdf.format(new Date()));
+        String hql = "update Assets a set a.scrapState=1 where a.assetsId=:o";
+        Query query = session.createQuery(hql);
+        ((org.hibernate.query.Query) query).setString("o", assetsId);
+        query.executeUpdate();
+        session.save(recordScrap);
+        session.getTransaction().commit();
+        session.close();
+    }
+
+    //报废列表
+    public void scrapListRequestProcess(){
+        Integer pageSize = dataCenterService.getData("pageSize");
+        Integer pageNum = dataCenterService.getData("pageNum");
+        PageUtil<RecordScrap> recordScrap = new PageUtil<>();
+        String otherCondition = " ";
+        this.getPageList(recordScrap, pageNum, pageSize, RecordScrap.class.getSimpleName(),otherCondition);
+        ResponseData responseData = dataCenterService.getResponseDataFromDataLocal();
+        ResponseDataUtil.setHeadOfResponseDataWithSuccessInfo(responseData);
+        ResponseDataUtil.putValueToData(responseData, "RecordScrap", recordScrap);
+
     }
 }

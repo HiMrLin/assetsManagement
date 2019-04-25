@@ -81,4 +81,8 @@ public class Assets {
 
     @Getter(onMethod_ = {@Column(name = "user_name")})
     private String userName;//使用人
+
+    @Getter(onMethod_ = {@Column(name = "get_state")})
+    private Integer getState;
+
 }

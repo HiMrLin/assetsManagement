@@ -40,4 +40,14 @@ public class AssetsRequestService {
         assetsRequestCheckService.returnRequestCheck(); //检查参数合法性
         assetsRequestBusinessService.returnRequestProcess();//获取数据后的具体操作
     }
+
+    public void scrapRequest(){
+        assetsRequestCheckService.scrapRequestCheck(); //检查参数合法性
+        assetsRequestBusinessService.scrapRequestProcess();//获取数据后的具体操作
+    }
+
+    public void scrapListRequest(){
+        assetsRequestCheckService.scrapListRequestCheck(); //检查参数合法性
+        assetsRequestBusinessService.scrapListRequestProcess();//获取数据后的具体操作
+    }
 }

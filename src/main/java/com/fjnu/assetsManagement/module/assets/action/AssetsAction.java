@@ -57,6 +57,16 @@ public class AssetsAction extends JsonAction {
                 this.setHeadOfResponseDataWithSuccessInfo(dataCenterService.getResponseDataFromDataLocal());
                 this.responseData=dataCenterService.getResponseDataFromDataLocal();
                 break;
+            case AssetsFunctionNoConstants.SCRAP:
+                assetsRequestService.scrapRequest();
+                this.setHeadOfResponseDataWithSuccessInfo(dataCenterService.getResponseDataFromDataLocal());
+                this.responseData=dataCenterService.getResponseDataFromDataLocal();
+                break;
+            case AssetsFunctionNoConstants.SCRAP_LIST:
+                assetsRequestService.scrapListRequest();
+                this.setHeadOfResponseDataWithSuccessInfo(dataCenterService.getResponseDataFromDataLocal());
+                this.responseData=dataCenterService.getResponseDataFromDataLocal();
+                break;
             default:
                 this.setResponseDataWithFailureInfo(dataCenterService.getResponseDataFromDataLocal(),ReasonOfFailure.FUNCTION_NO_ARE_INCORRECT);
                 break;

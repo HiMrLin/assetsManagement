@@ -32,6 +32,7 @@ public class AssetsRequestCheckService {
 
     public void useRequestCheck(){
         String userName = dataCenterService.getParamValueFromParamOfRequestParamJsonByParamName("userName");
+        String recorder = dataCenterService.getParamValueFromParamOfRequestParamJsonByParamName("recorder");
         String depository = dataCenterService.getParamValueFromParamOfRequestParamJsonByParamName("depository");
         String department = dataCenterService.getParamValueFromParamOfRequestParamJsonByParamName("department");
         String purpose = dataCenterService.getParamValueFromParamOfRequestParamJsonByParamName("purpose");
@@ -47,6 +48,9 @@ public class AssetsRequestCheckService {
         if (StringUtils.isBlank(department)){
             ExceptionUtil.setFailureMsgAndThrow(dataCenterService.getResponseDataFromDataLocal(), AssetsReasonOfFailure.DEPARTMENT_IS_NOT_BLANK); //验证数据不合法后返回前台提示信息
         }
+        if (StringUtils.isBlank(recorder)){
+            ExceptionUtil.setFailureMsgAndThrow(dataCenterService.getResponseDataFromDataLocal(), AssetsReasonOfFailure.RECORDER_IS_NOT_BLANK); //验证数据不合法后返回前台提示信息
+        }
         if (StringUtils.isBlank(purpose)){
             ExceptionUtil.setFailureMsgAndThrow(dataCenterService.getResponseDataFromDataLocal(), AssetsReasonOfFailure.PURPOSE_IS_NOT_BLANK); //验证数据不合法后返回前台提示信息
         }
@@ -59,6 +63,7 @@ public class AssetsRequestCheckService {
         dataCenterService.setData("department", department);
         dataCenterService.setData("purpose", purpose);
         dataCenterService.setData("note", note);
+        dataCenterService.setData("recorder", recorder);
     }
 
     public void usedListRequestCheck(){
@@ -68,9 +73,43 @@ public class AssetsRequestCheckService {
     public void returnRequestCheck(){
         JSONArray array = dataCenterService.getParamValueFromParamOfRequestParamJsonByParamName("receiveIdList");
         List<Long> receiveIdList = array.toJavaList(Long.class);
+        String returnName = dataCenterService.getParamValueFromParamOfRequestParamJsonByParamName("returnName");
         if (receiveIdList.size()<=0){
             ExceptionUtil.setFailureMsgAndThrow(dataCenterService.getResponseDataFromDataLocal(), AssetsReasonOfFailure.USER_ID_LIST_IS_NOT_BLANK); //验证数据不合法后返回前台提示信息
         }
+        if(StringUtils.isBlank(returnName)){
+            ExceptionUtil.setFailureMsgAndThrow(dataCenterService.getResponseDataFromDataLocal(), AssetsReasonOfFailure.RETURN_NAME_IS_NOT_BLANK); //验证数据不合法后返回前台提示信息
+        }
         dataCenterService.setData("receiveIdList", receiveIdList);
+        dataCenterService.setData("returnName", returnName);
+    }
+
+    public void scrapRequestCheck(){
+        String notifier = dataCenterService.getParamValueFromParamOfRequestParamJsonByParamName("notifier");
+        String recorder = dataCenterService.getParamValueFromParamOfRequestParamJsonByParamName("recorder");
+        String department = dataCenterService.getParamValueFromParamOfRequestParamJsonByParamName("department");
+        String note = dataCenterService.getParamValueFromParamOfRequestParamJsonByParamName("note");
+        String assetsId =dataCenterService.getParamValueFromParamOfRequestParamJsonByParamName("assetsId");
+        if (StringUtils.isBlank(notifier)){
+            ExceptionUtil.setFailureMsgAndThrow(dataCenterService.getResponseDataFromDataLocal(), AssetsReasonOfFailure.NOTIFITOR_IS_NOT_BLANK); //验证数据不合法后返回前台提示信息
+        }
+        if (StringUtils.isBlank(recorder)){
+            ExceptionUtil.setFailureMsgAndThrow(dataCenterService.getResponseDataFromDataLocal(), AssetsReasonOfFailure.RECORDER_IS_NOT_BLANK); //验证数据不合法后返回前台提示信息
+        }
+        if (StringUtils.isBlank(department)){
+            ExceptionUtil.setFailureMsgAndThrow(dataCenterService.getResponseDataFromDataLocal(), AssetsReasonOfFailure.DEPARTMENT_IS_NOT_BLANK); //验证数据不合法后返回前台提示信息
+        }
+        if (StringUtils.isBlank(assetsId)){
+            ExceptionUtil.setFailureMsgAndThrow(dataCenterService.getResponseDataFromDataLocal(), AssetsReasonOfFailure.ASSETS_IS_NOT_BLANK); //验证数据不合法后返回前台提示信息
+        }
+        dataCenterService.setData("notifier", notifier);
+        dataCenterService.setData("department", department);
+        dataCenterService.setData("assetsId", assetsId);
+        dataCenterService.setData("note", note);
+        dataCenterService.setData("recorder", recorder);
+    }
+
+    public void scrapListRequestCheck(){
+        pageCheck();
     }
 }
