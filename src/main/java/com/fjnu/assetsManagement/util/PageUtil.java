@@ -34,27 +34,35 @@ public class PageUtil<T> {
     //初始化参数以及调整
     public void init(int si, int pN, int pS) {
         //参数判断及赋值
-        this.size = si;
-        if (pS > 0 && pS <= this.size) {
-            this.pageSize = pS;
-        } else if (pS > this.size) {
-            this.pageSize = this.size;
-        }
-        if (this.size % this.pageSize == 0) {
-            this.pages = this.size / this.pageSize;
-        } else
-            this.pages = (this.size / this.pageSize) + 1;
+        if (si > 0) {
+            this.size = si;
+            if (pS > 0 && pS <= this.size) {
+                this.pageSize = pS;
+            } else if (pS > this.size) {
+                this.pageSize = this.size;
+            }
+            if (this.size % this.pageSize == 0) {
+                this.pages = this.size / this.pageSize;
+            } else
+                this.pages = (this.size / this.pageSize) + 1;
 
-        if (pN > 0 && pN <= this.pages) {
-            this.pageNum = pN;
-        } else if (pN > this.pages) {
-            this.pageNum = this.pages;
+            if (pN > 0 && pN <= this.pages) {
+                this.pageNum = pN;
+            } else if (pN > this.pages) {
+                this.pageNum = this.pages;
+            }
+
+            //设置导航页数
+            this.caclNavigatePageNums();
+            //判断边界
+            this.judgePageBoudary();
+        } else {
+            this.size = 0;
+            this.pageSize = 0;
+            this.pageNum = 0;
+            this.pages = 0;
         }
 
-        //设置导航页数
-        this.caclNavigatePageNums();
-        //判断边界
-        this.judgePageBoudary();
     }
 
     //设置导航页数

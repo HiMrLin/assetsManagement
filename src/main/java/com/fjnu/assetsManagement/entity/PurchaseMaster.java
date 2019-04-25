@@ -36,7 +36,7 @@ public class PurchaseMaster {
     private String remark;//备注
 
     @Getter(onMethod_ = {@Column(name = "entry_time")})
-    private String entryTime;//入账时间
+    private String entryTime;//入库时间
 
     @Getter(onMethod_ = {@Column(name = "in_time")})
     private String inTime;//入账时间
