@@ -29,4 +29,48 @@ public class AssetsRequestCheckService {
     public void assetsListRequestCheck() {
        pageCheck();
     }
+
+    public void useRequestCheck(){
+        String userName = dataCenterService.getParamValueFromParamOfRequestParamJsonByParamName("userName");
+        String depository = dataCenterService.getParamValueFromParamOfRequestParamJsonByParamName("depository");
+        String department = dataCenterService.getParamValueFromParamOfRequestParamJsonByParamName("department");
+        String purpose = dataCenterService.getParamValueFromParamOfRequestParamJsonByParamName("purpose");
+        String note = dataCenterService.getParamValueFromParamOfRequestParamJsonByParamName("note");
+        JSONArray array = dataCenterService.getParamValueFromParamOfRequestParamJsonByParamName("cardIdItems");
+        List<Long> cardIdList = array.toJavaList(Long.class);
+        if (StringUtils.isBlank(userName)){
+            ExceptionUtil.setFailureMsgAndThrow(dataCenterService.getResponseDataFromDataLocal(), AssetsReasonOfFailure.USERNAME_IS_NOT_BLANK); //验证数据不合法后返回前台提示信息
+        }
+        if (StringUtils.isBlank(depository)){
+            ExceptionUtil.setFailureMsgAndThrow(dataCenterService.getResponseDataFromDataLocal(), AssetsReasonOfFailure.DEPOSITORY_IS_NOT_BLANK); //验证数据不合法后返回前台提示信息
+        }
+        if (StringUtils.isBlank(department)){
+            ExceptionUtil.setFailureMsgAndThrow(dataCenterService.getResponseDataFromDataLocal(), AssetsReasonOfFailure.DEPARTMENT_IS_NOT_BLANK); //验证数据不合法后返回前台提示信息
+        }
+        if (StringUtils.isBlank(purpose)){
+            ExceptionUtil.setFailureMsgAndThrow(dataCenterService.getResponseDataFromDataLocal(), AssetsReasonOfFailure.PURPOSE_IS_NOT_BLANK); //验证数据不合法后返回前台提示信息
+        }
+        if (cardIdList.size()<=0){
+            ExceptionUtil.setFailureMsgAndThrow(dataCenterService.getResponseDataFromDataLocal(), AssetsReasonOfFailure.CARD_ID_LIST_IS_NOT_BLANK); //验证数据不合法后返回前台提示信息
+        }
+        dataCenterService.setData("cardIdList", cardIdList);
+        dataCenterService.setData("userName", userName);
+        dataCenterService.setData("depository", depository);
+        dataCenterService.setData("department", department);
+        dataCenterService.setData("purpose", purpose);
+        dataCenterService.setData("note", note);
+    }
+
+    public void usedListRequestCheck(){
+        pageCheck();
+    }
+
+    public void returnRequestCheck(){
+        JSONArray array = dataCenterService.getParamValueFromParamOfRequestParamJsonByParamName("receiveIdList");
+        List<Long> receiveIdList = array.toJavaList(Long.class);
+        if (receiveIdList.size()<=0){
+            ExceptionUtil.setFailureMsgAndThrow(dataCenterService.getResponseDataFromDataLocal(), AssetsReasonOfFailure.USER_ID_LIST_IS_NOT_BLANK); //验证数据不合法后返回前台提示信息
+        }
+        dataCenterService.setData("receiveIdList", receiveIdList);
+    }
 }

@@ -32,8 +32,28 @@ public class AssetsAction extends JsonAction {
         }
         log.info("-----functionNo------" + functionNo);
         switch (functionNo) {
-            case AssetsFunctionNoConstants.AESSETS_LIST:
+            case AssetsFunctionNoConstants.ASSETS_LIST:
                 assetsRequestService.assetsListRequest();
+                this.setHeadOfResponseDataWithSuccessInfo(dataCenterService.getResponseDataFromDataLocal());
+                this.responseData=dataCenterService.getResponseDataFromDataLocal();
+                break;
+            case AssetsFunctionNoConstants.USE_LIST:
+                assetsRequestService.useListRequest();
+                this.setHeadOfResponseDataWithSuccessInfo(dataCenterService.getResponseDataFromDataLocal());
+                this.responseData=dataCenterService.getResponseDataFromDataLocal();
+                break;
+            case AssetsFunctionNoConstants.USE:
+                assetsRequestService.useRequest();
+                this.setHeadOfResponseDataWithSuccessInfo(dataCenterService.getResponseDataFromDataLocal());
+                this.responseData=dataCenterService.getResponseDataFromDataLocal();
+                break;
+            case AssetsFunctionNoConstants.USED_LIST:
+                assetsRequestService.usedListRequest();
+                this.setHeadOfResponseDataWithSuccessInfo(dataCenterService.getResponseDataFromDataLocal());
+                this.responseData=dataCenterService.getResponseDataFromDataLocal();
+                break;
+            case AssetsFunctionNoConstants.RETURN:
+                assetsRequestService.returnRequest();
                 this.setHeadOfResponseDataWithSuccessInfo(dataCenterService.getResponseDataFromDataLocal());
                 this.responseData=dataCenterService.getResponseDataFromDataLocal();
                 break;
