@@ -19,4 +19,14 @@ public class TestRequestCheckService {
         }
         dataCenterService.setData("userName", userName);//验证合法后插入容器
     }
+
+    public void testTransferImagesCheck() {
+        Integer curCardId = dataCenterService.getParamValueFromParamOfRequestParamJsonByParamName("cardId");
+        Long cardId = curCardId.longValue();
+
+        if (cardId == null) {//判空操作
+            ExceptionUtil.setFailureMsgAndThrow(dataCenterService.getResponseDataFromDataLocal(), TestReasonOfFailure.ASSETSID_IS_NOT_BLANK); //验证数据不合法后返回前台提示信息
+        }
+        dataCenterService.setData("cardId", cardId);//验证合法后插入容器
+    }
 }

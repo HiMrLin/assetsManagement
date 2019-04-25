@@ -4,7 +4,8 @@ import com.fjnu.assetsManagement.enums.IReasonOfFailure;
 
 public enum TestReasonOfFailure implements IReasonOfFailure {
 
-    NAME_IS_NOT_BLANK("name is not blank", "一级部门不可移动");
+    NAME_IS_NOT_BLANK("name is not blank", "一级部门不可移动"),
+    ASSETSID_IS_NOT_BLANK("assetsId is not blank", "资产编码不能为空");
 
     private String en_msg;
     private String zh_msg;

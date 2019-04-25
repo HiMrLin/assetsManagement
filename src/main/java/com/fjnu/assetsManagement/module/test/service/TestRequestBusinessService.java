@@ -1,5 +1,6 @@
 package com.fjnu.assetsManagement.module.test.service;
 
+import com.fjnu.assetsManagement.entity.Assets;
 import com.fjnu.assetsManagement.entity.PurchaseDetail;
 import com.fjnu.assetsManagement.entity.PurchaseMaster;
 import com.fjnu.assetsManagement.entity.ResponseData;
@@ -10,7 +11,10 @@ import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import sun.misc.BASE64Decoder;
 
+import java.io.FileOutputStream;
+import java.io.OutputStream;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.List;
@@ -21,6 +25,44 @@ public class TestRequestBusinessService {
     DataCenterService dataCenterService;
     @Autowired
     private SessionFactory sessionFactory;
+
+    public boolean GenerateImage(String imgStr) { //对字节数组字符串进行Base64解码并生成图片
+        if (imgStr == null) //图像数据为空
+            return false;
+        BASE64Decoder decoder = new BASE64Decoder();
+        try {
+            //Base64解码
+            byte[] b = decoder.decodeBuffer(imgStr);
+            for (int i = 0; i < b.length; ++i) {
+                if (b[i] < 0) {//调整异常数据
+                    b[i] += 256;
+                }
+            }
+            //生成jpeg图片
+            String imgFilePath = "C:\\Users\\Administrator\\Desktop\\AssetsManagement\\barcode.jpg";//新生成的图片
+            OutputStream out = new FileOutputStream(imgFilePath);
+            out.write(b);
+            out.flush();
+            out.close();
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
+    }
+
+    //测试从数据库取出条形码转化成图片
+    public void testTransferImagesProcess() {
+        Long cardId = dataCenterService.getData("cardId");
+
+        Session session = sessionFactory.openSession();
+        Assets assets = session.get(Assets.class, cardId);
+        System.out.println(assets.getCode());
+
+        this.GenerateImage(assets.getCode());
+        //转化为图片
+
+
+    }
 
     public void testRequestProcess() throws Exception {
         //从容器中获取数据

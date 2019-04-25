@@ -20,4 +20,10 @@ public class TestRequestService {
         testRequestBusinessService.testRequestProcess();//获取数据后的具体操作
 
     }
+
+    public void testTransferImagesProcess() {
+
+        testRequestCheckService.testTransferImagesCheck(); //检查参数合法性
+        testRequestBusinessService.testTransferImagesProcess();//获取数据后的具体操作
+    }
 }

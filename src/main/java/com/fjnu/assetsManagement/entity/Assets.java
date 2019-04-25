@@ -5,7 +5,6 @@ import lombok.Data;
 import lombok.Getter;
 
 import javax.persistence.*;
-import java.sql.Blob;
 import java.util.Date;
 
 @Data
@@ -57,7 +56,7 @@ public class Assets {
     private Integer inState;//入库审核状态
 
     @Getter(onMethod_ = {@Column(name = "code")})
-    private Blob code;//条形码
+    private String code;//条形码
 
     @Getter(onMethod_ = {@Column(name = "orderdetail_id")})
     private Long orderDetailId;//详表ID

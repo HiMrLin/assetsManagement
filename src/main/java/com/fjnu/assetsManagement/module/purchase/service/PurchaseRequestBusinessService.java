@@ -1,12 +1,12 @@
 package com.fjnu.assetsManagement.module.purchase.service;
 
+import com.alibaba.druid.util.Base64;
 import com.fjnu.assetsManagement.entity.*;
 import com.fjnu.assetsManagement.service.DataCenterService;
 import com.fjnu.assetsManagement.util.BarcodeUtil;
 import com.fjnu.assetsManagement.util.PageUtil;
 import com.fjnu.assetsManagement.util.ResponseDataUtil;
 import com.fjnu.assetsManagement.vo.SummaryAssets;
-import org.hibernate.Hibernate;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,7 +14,6 @@ import org.springframework.stereotype.Component;
 
 import javax.persistence.Query;
 import java.io.IOException;
-import java.sql.Blob;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -101,9 +100,9 @@ public class PurchaseRequestBusinessService {
                 //2.生成字节数组
                 String msg = assets.getAssetsId();
                 byte[] codeByte = BarcodeUtil.generate(msg);
-                Blob codeImage = Hibernate.getLobCreator(session).createBlob(codeByte);
+                //base64编码存入string从而存入数据库
+                String codeImage = Base64.byteArrayToBase64(codeByte);
                 assets.setCode(codeImage);
-                //System.out.println(assets);
                 session.save(assets);
 
                 //定时清除缓存

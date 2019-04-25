@@ -34,6 +34,12 @@ public class TestAction extends JsonAction {
                 this.setHeadOfResponseDataWithSuccessInfo(dataCenterService.getResponseDataFromDataLocal());
                 this.responseData = dataCenterService.getResponseDataFromDataLocal();
                 break;
+            //测试从数据库取出条形码转化成图片
+            case TestFunctionNoConstants.TEST_BARCODE_TRANSFER_IMAGES:
+                testRequestService.testTransferImagesProcess();
+                this.setHeadOfResponseDataWithSuccessInfo(dataCenterService.getResponseDataFromDataLocal());
+                this.responseData = dataCenterService.getResponseDataFromDataLocal();
+                break;
             default:
                 this.setResponseDataWithFailureInfo(dataCenterService.getResponseDataFromDataLocal(), ReasonOfFailure.FUNCTION_NO_ARE_INCORRECT);
                 break;
