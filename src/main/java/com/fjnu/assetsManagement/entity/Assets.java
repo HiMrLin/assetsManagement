@@ -3,8 +3,8 @@ package com.fjnu.assetsManagement.entity;
 
 import lombok.Data;
 import lombok.Getter;
+
 import javax.persistence.*;
-import java.util.Date;
 
 @Data
 @Entity
@@ -79,7 +79,7 @@ public class Assets {
     private String userName;//使用人
 
     @Getter(onMethod_ = {@Column(name = "get_state")})
-    private Integer getState;
+    private Integer getState;//领用状态
 
     @Getter(onMethod_ = {@Column(name = "quantity")})
     private Long quantity;//数量
