@@ -11,12 +11,14 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.struts2.convention.annotation.Action;
 import org.apache.struts2.convention.annotation.Namespace;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
 import static com.opensymphony.xwork2.Action.ERROR;
 import static com.opensymphony.xwork2.Action.SUCCESS;
 
 @Slf4j
+@CrossOrigin
 @Namespace("/assetsAction")
 public class AssetsAction extends JsonAction {
     @Autowired

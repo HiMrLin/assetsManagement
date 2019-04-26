@@ -5,7 +5,6 @@ import com.fjnu.assetsManagement.module.entry.enums.EntryReasonOfFailure;
 import com.fjnu.assetsManagement.module.purchase.enums.PurchaseReasonOfFailure;
 import com.fjnu.assetsManagement.service.DataCenterService;
 import com.fjnu.assetsManagement.util.ExceptionUtil;
-import com.fjnu.assetsManagement.vo.SummaryPurchaseMaster;
 import org.apache.commons.lang3.StringUtils;
 import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,22 +22,20 @@ public class EntryRequestCheckService {
 
     //入库
     public void entryCheck() {
-        JSONArray array = dataCenterService.getParamValueFromParamOfRequestParamJsonByParamName("entryPurchaseMasterList");
-        List<SummaryPurchaseMaster> entryPurchaseMasterList = array.toJavaList(SummaryPurchaseMaster.class);
+        String inOperator = dataCenterService.getParamValueFromParamOfRequestParamJsonByParamName("inOperator");
+        JSONArray array = dataCenterService.getParamValueFromParamOfRequestParamJsonByParamName("orderNoList");
+        List<String> orderNoList = array.toJavaList(String.class);
 
-        if (entryPurchaseMasterList.size() <= 0) {
+        if (orderNoList.size() <= 0) {
             ExceptionUtil.setFailureMsgAndThrow(dataCenterService.getResponseDataFromDataLocal(), EntryReasonOfFailure.ENTRY_IS_NOT_ENOUGH);
         }
-        for (SummaryPurchaseMaster summaryPurchaseMaster : entryPurchaseMasterList) {
-            if (StringUtils.isBlank(summaryPurchaseMaster.getOrderNo())) {
-                ExceptionUtil.setFailureMsgAndThrow(dataCenterService.getResponseDataFromDataLocal(), EntryReasonOfFailure.ENTRY_IS_NOT_ENOUGH);
-            }
-            if (StringUtils.isBlank(summaryPurchaseMaster.getInOperator())) {
-                ExceptionUtil.setFailureMsgAndThrow(dataCenterService.getResponseDataFromDataLocal(), EntryReasonOfFailure.ENTRY_IS_NOT_ENOUGH);
-            }
+
+        if (StringUtils.isBlank(inOperator)) {
+            ExceptionUtil.setFailureMsgAndThrow(dataCenterService.getResponseDataFromDataLocal(), EntryReasonOfFailure.ENTRY_IS_NOT_ENOUGH);
         }
 
-        dataCenterService.setData("entryPurchaseMasterList", entryPurchaseMasterList);
+        dataCenterService.setData("orderNoList", orderNoList);
+        dataCenterService.setData("inOperator", inOperator);
     }
 
     //得到已入库采购单列表

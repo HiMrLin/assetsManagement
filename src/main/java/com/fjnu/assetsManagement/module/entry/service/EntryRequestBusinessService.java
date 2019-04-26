@@ -6,7 +6,6 @@ import com.fjnu.assetsManagement.entity.ResponseData;
 import com.fjnu.assetsManagement.service.DataCenterService;
 import com.fjnu.assetsManagement.util.PageUtil;
 import com.fjnu.assetsManagement.util.ResponseDataUtil;
-import com.fjnu.assetsManagement.vo.SummaryPurchaseMaster;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -44,26 +43,27 @@ public class EntryRequestBusinessService {
     //入库
     public void entryProcess() {
         //取得数据
-        List<SummaryPurchaseMaster> entryPurchaseMasterList = dataCenterService.getData("entryPurchaseMasterList");
+        List<String> orderNoList = dataCenterService.getData("orderNoList");
+        String inOperator = dataCenterService.getData("inOperator");
 
         //进行入库——将state属性改为1
         Session session = sessionFactory.openSession();
         session.beginTransaction();
         session.flush();
         session.clear();
-        for (SummaryPurchaseMaster summaryPurchaseMaster : entryPurchaseMasterList) {
+        for (String ordeNo : orderNoList) {
 
             Date nowDate = new Date();
             String hql = "update PurchaseMaster p set p.state=1, p.inTime=:n, p.inOperator=:i where p.orderNo=:o";
             Query query = session.createQuery(hql);
-            ((org.hibernate.query.Query) query).setString("o", summaryPurchaseMaster.getOrderNo());
-            ((org.hibernate.query.Query) query).setString("i", summaryPurchaseMaster.getInOperator());
+            ((org.hibernate.query.Query) query).setString("o", ordeNo);
+            ((org.hibernate.query.Query) query).setString("i", inOperator);
             ((org.hibernate.query.Query) query).setDate("n", nowDate);
             query.executeUpdate();
 
             String getPurchaseDetailHql = "from PurchaseMaster pm where pm.orderNo=:o";
             Query query1 = session.createQuery(getPurchaseDetailHql);
-            ((org.hibernate.query.Query) query1).setString("o", summaryPurchaseMaster.getOrderNo());
+            ((org.hibernate.query.Query) query1).setString("o", ordeNo);
             List<PurchaseMaster> purchaseMasterList = ((org.hibernate.query.Query) query1).list();
             List<Long> orderDetailId = new ArrayList<>();
             for (PurchaseMaster purchaseMaster : purchaseMasterList) {
