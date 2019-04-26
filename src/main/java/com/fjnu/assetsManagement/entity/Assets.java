@@ -73,4 +73,9 @@ public class Assets {
     @Getter(onMethod_ = {@Column(name = "fix_year")})
     private Integer fixYear;//保修年限
 
+    @Getter(onMethod_ = {@Column(name = "quantity")})
+    private Long quantity;//数量
+
+    @Getter(onMethod_ = {@Column(name = "unit_price")})
+    private String unitPrice;//单价
 }

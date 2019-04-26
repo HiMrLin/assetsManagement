@@ -55,8 +55,9 @@ public class PurchaseRequestBusinessService {
             //得到详表ID和一些数据
             Long purchaseDetailId = purchaseDetail.getId();
             SummaryAssets summaryAssets = purchaseDetail.getSummaryAssets();
-            //对于每条记录的每个个体创建资产对象和保存
-            for (int i = 0; i < purchaseDetail.getQuantity(); i++, count++) {
+            //判断数量是否可以为多
+            Dictionary dictionary = this.getDictionary(purchaseDetail.getKindId());
+            if (dictionary.getQuantityState() == 2) {
                 Assets assets = new Assets();
                 //从summaryAssets获取部分信息
                 //地区
@@ -76,17 +77,64 @@ public class PurchaseRequestBusinessService {
                 //保修年限
                 assets.setFixYear(summaryAssets.getFixYear());
 
+                //数量
+                assets.setQuantity(purchaseDetail.getQuantity());
+                //单价
+                assets.setUnitPrice(purchaseDetail.getUnitPrice());
                 //详表ID
                 assets.setOrderDetailId(purchaseDetailId);
                 //资产编码
-                assets.setAssetsId(this.genernateAssetsId(purchaseDetailId, i + 1));
+                assets.setAssetsId(this.genernateAssetsId(purchaseDetailId, 1));
                 //类别
                 assets.setKind(purchaseDetail.getKind());
                 //货物名称
                 assets.setAssetsName(purchaseDetail.getName());
 
+
                 //生成条形码
-                //1.生成图片文件
+                String msg = assets.getAssetsId();
+                byte[] codeByte = BarcodeUtil.generate(msg);
+                //base64编码存入string从而存入数据库
+                String codeImage = Base64.byteArrayToBase64(codeByte);
+                assets.setCode(codeImage);
+                session.save(assets);
+            } else {
+                //对于每条记录的每个个体创建资产对象和保存
+                for (int i = 0; i < purchaseDetail.getQuantity(); i++, count++) {
+                    Assets assets = new Assets();
+                    //从summaryAssets获取部分信息
+                    //地区
+                    assets.setArea(summaryAssets.getArea());
+                    //货物归属
+                    assets.setAscription(summaryAssets.getAscription());
+                    //制造商
+                    assets.setMaker(summaryAssets.getMaker());
+                    //供应商
+                    assets.setSupplier(summaryAssets.getSupplier());
+                    //凭证号
+                    assets.setAccountId(summaryAssets.getAccountId());
+                    //保管人
+                    assets.setDepository(summaryAssets.getDepository());
+                    //使用年限
+                    assets.setLifeFactor(summaryAssets.getLifeFactor());
+                    //保修年限
+                    assets.setFixYear(summaryAssets.getFixYear());
+
+                    //数量
+                    assets.setQuantity(1l);
+                    //单价
+                    assets.setUnitPrice(purchaseDetail.getUnitPrice());
+                    //详表ID
+                    assets.setOrderDetailId(purchaseDetailId);
+                    //资产编码
+                    assets.setAssetsId(this.genernateAssetsId(purchaseDetailId, i + 1));
+                    //类别
+                    assets.setKind(purchaseDetail.getKind());
+                    //货物名称
+                    assets.setAssetsName(purchaseDetail.getName());
+
+                    //生成条形码
+                    //1.生成图片文件
 //                String msg = assets.getAssetsId();
 //                String path = "C:\\Users\\Administrator\\Desktop\\AssetsManagement\\" + msg + ".png";
 //                System.out.println(path);
@@ -97,20 +145,22 @@ public class PurchaseRequestBusinessService {
 //                Blob codeImage = Hibernate.getLobCreator(session).createBlob(input, input.available());
 //                assets.setCode(codeImage);
 
-                //2.生成字节数组
-                String msg = assets.getAssetsId();
-                byte[] codeByte = BarcodeUtil.generate(msg);
-                //base64编码存入string从而存入数据库
-                String codeImage = Base64.byteArrayToBase64(codeByte);
-                assets.setCode(codeImage);
-                session.save(assets);
+                    //2.生成字节数组
+                    String msg = assets.getAssetsId();
+                    byte[] codeByte = BarcodeUtil.generate(msg);
+                    //base64编码存入string从而存入数据库
+                    String codeImage = Base64.byteArrayToBase64(codeByte);
+                    assets.setCode(codeImage);
+                    session.save(assets);
 
-                //定时清除缓存
-                if (count / 10 == 0) {
-                    session.flush();
-                    session.clear();
+                    //定时清除缓存
+                    if (count / 10 == 0) {
+                        session.flush();
+                        session.clear();
+                    }
                 }
             }
+
 
         }
 
@@ -119,15 +169,12 @@ public class PurchaseRequestBusinessService {
 
     }
 
-    //从数据字典根据ID得到类别名称
-    public String getKind(Long id) {
+    //从数据字典根据ID得到数据字典
+    public Dictionary getDictionary(Long id) {
         Session session = sessionFactory.openSession();
-        String hql = "from Dictionary d where d.id=:k";
-        Query query = session.createQuery(hql);
-        ((org.hibernate.query.Query) query).setLong("k", id);
-        Dictionary dictionary = (Dictionary) ((org.hibernate.query.Query) query).uniqueResult();
+        Dictionary dictionary = session.get(Dictionary.class, id);
         session.close();
-        return dictionary.getKind();
+        return dictionary;
     }
 
 
@@ -155,7 +202,7 @@ public class PurchaseRequestBusinessService {
         //建立关联
         Double totalPrice = 0.00d;
         for (PurchaseDetail purchaseDetail : purchaseDetailSet) {
-            purchaseDetail.setKind(this.getKind(purchaseDetail.getKindId()));
+            purchaseDetail.setKind(this.getDictionary(purchaseDetail.getKindId()).getKind());
             purchaseDetail.setPurchaseMaster(purchaseMaster);
             purchaseMaster.getPurchaseDetailSet().add(purchaseDetail);
             //计算总价

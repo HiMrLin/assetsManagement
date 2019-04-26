@@ -23,12 +23,17 @@ public class DictionaryRequestCheckService {
     public void addDictionaryItemServiceCheck() {
         //得到要添加的类别名称
         String kind = dataCenterService.getParamValueFromParamOfRequestParamJsonByParamName("kind");
+        Integer quantityState = dataCenterService.getParamValueFromParamOfRequestParamJsonByParamName("quantityState");
 
         if (StringUtils.isBlank(kind)) {
             ExceptionUtil.setFailureMsgAndThrow(dataCenterService.getResponseDataFromDataLocal(), DictionaryReasonOfFailure.KIND_IS_NOT_BLANK);
         }
+        if (quantityState == null) {
+            ExceptionUtil.setFailureMsgAndThrow(dataCenterService.getResponseDataFromDataLocal(), DictionaryReasonOfFailure.QUANTITY_STATE_IS_NOT_BLANK);
+        }
 
         dataCenterService.setData("kind", kind);
+        dataCenterService.setData("quantityState", quantityState);
     }
 
     //验证根据ID得到数据字典参数

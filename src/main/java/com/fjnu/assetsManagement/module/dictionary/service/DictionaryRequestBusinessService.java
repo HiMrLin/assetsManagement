@@ -25,11 +25,13 @@ public class DictionaryRequestBusinessService {
     public void addDictionaryItemServiceProcess() {
         //得到数据
         String kind = dataCenterService.getData("kind");
+        Integer quantityState = dataCenterService.getData("quantityState");
 
         Session session = sessionFactory.openSession();
         session.beginTransaction();
         Dictionary dictionary = new Dictionary();
         dictionary.setKind(kind);
+        dictionary.setQuantityState(quantityState);
         session.save(dictionary);
         session.getTransaction().commit();
         session.close();
@@ -47,6 +49,7 @@ public class DictionaryRequestBusinessService {
 
         Session session = sessionFactory.openSession();
         Dictionary dictionary = (Dictionary) session.get(Dictionary.class, id);
+
         //操作完成后返回给前台数据
         ResponseData responseData = dataCenterService.getResponseDataFromDataLocal();
         ResponseDataUtil.setHeadOfResponseDataWithSuccessInfo(responseData);

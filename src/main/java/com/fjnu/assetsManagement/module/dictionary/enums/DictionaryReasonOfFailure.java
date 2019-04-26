@@ -6,7 +6,7 @@ public enum DictionaryReasonOfFailure implements IReasonOfFailure {
 
     KIND_IS_NOT_BLANK("kind is not blank", "类别名称不可为空"),
     ID_IS_NOT_BLANK("id is not blank", "id不可为空"),
-    KIND_IS_NOT_CORRECT("kind is not correct", "类别错误");
+    QUANTITY_STATE_IS_NOT_BLANK("quantity state is not blank", "数量状态不可为空");
 
 
     private String en_msg;

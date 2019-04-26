@@ -58,7 +58,7 @@ public class TestRequestBusinessService {
         Assets assets = session.get(Assets.class, cardId);
         System.out.println(assets.getCode());
 
-        this.GenerateImage(assets.getCode());
+        //this.GenerateImage(assets.getCode());
         //转化为图片
 
 
