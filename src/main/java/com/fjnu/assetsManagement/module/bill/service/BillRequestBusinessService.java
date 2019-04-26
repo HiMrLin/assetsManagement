@@ -6,6 +6,8 @@ import com.fjnu.assetsManagement.entity.ResponseData;
 import com.fjnu.assetsManagement.service.DataCenterService;
 import com.fjnu.assetsManagement.util.PageUtil;
 import com.fjnu.assetsManagement.util.ResponseDataUtil;
+import com.fjnu.assetsManagement.vo.Entry;
+import com.fjnu.assetsManagement.vo.SummaryPurchaseMaster;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -55,19 +57,20 @@ public class BillRequestBusinessService {
 
     //入账
     public void inBillRequestProcess(){
-        List<String> orderNoList = dataCenterService.getData("orderNoList");
+        List<Entry> entries = dataCenterService.getData("Entry");
         Session session = sessionFactory.openSession();
         session.beginTransaction();
-        for (String orderNo : orderNoList) {
+        for (Entry entry : entries) {
             Date nowDate = new Date();
-            String hql = "update PurchaseMaster p set p.state=2,p.entryTime=:t where p.orderNo=:o";
+            String hql = "update PurchaseMaster p set p.state=2,p.entryTime=:t,p.entryOperator=:e where p.orderNo=:o";
             Query query = session.createQuery(hql);
             ((org.hibernate.query.Query) query).setDate("t", nowDate);
-            ((org.hibernate.query.Query) query).setString("o", orderNo);
+            ((org.hibernate.query.Query) query).setString("o", entry.getOrderNo());
+            ((org.hibernate.query.Query) query).setString("e", entry.getEntryOperator());
             query.executeUpdate();
             String getPurchaseDetailHql = "from PurchaseMaster pm where pm.orderNo=:o";
             Query query1 = session.createQuery(getPurchaseDetailHql);
-            ((org.hibernate.query.Query) query1).setString("o", orderNo);
+            ((org.hibernate.query.Query) query1).setString("o", entry.getOrderNo());
             List<PurchaseMaster> purchaseMasterList = ((org.hibernate.query.Query) query1).list();
             List<Long> orderDetailId = new ArrayList<>();
             for (PurchaseMaster purchaseMaster : purchaseMasterList) {

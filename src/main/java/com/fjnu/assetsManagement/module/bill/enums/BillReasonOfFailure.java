@@ -5,6 +5,8 @@ import com.fjnu.assetsManagement.enums.IReasonOfFailure;
 public enum BillReasonOfFailure implements IReasonOfFailure {
 
     ORDERNO_IS_NOT_BLANK("orderNo is not blank", "采购单号不可为空"),
+    ENTRY_INFOMATION_IS_NOT_BLANK("entry information is not blank","入账不可为空"),
+    ENTRYOPERATOR_IS_NOT_BLANK("entryOperator is not blank","入账操作员不可为空"),
     PAGE_PARAMS_IS_NOT_CORRECT("page params is not correct", "分页参数错误");
 
     private String en_msg;

@@ -7,7 +7,10 @@ import com.fjnu.assetsManagement.module.helloWorld.enums.HelloWorldReasonOfFailu
 import com.fjnu.assetsManagement.service.DataCenterService;
 import com.fjnu.assetsManagement.util.CheckVariableUtil;
 import com.fjnu.assetsManagement.util.ExceptionUtil;
+import com.fjnu.assetsManagement.vo.Entry;
+import com.fjnu.assetsManagement.vo.SummaryPurchaseMaster;
 import org.apache.commons.lang3.StringUtils;
+import org.omg.CORBA.DATA_CONVERSION;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -32,14 +35,20 @@ public class BillRequestCheckService {
     }
 
     public void inBillRequestCheck(){
-        JSONArray array = dataCenterService.getParamValueFromParamOfRequestParamJsonByParamName("orderNoItems");
-        List<String> orderNoList = array.toJavaList(String.class);
-
-        if (orderNoList.size() <= 0) {
-            ExceptionUtil.setFailureMsgAndThrow(dataCenterService.getResponseDataFromDataLocal(), BillReasonOfFailure.ORDERNO_IS_NOT_BLANK);
+        JSONArray array = dataCenterService.getParamValueFromParamOfRequestParamJsonByParamName("entryPurchaseMasterList");
+        List<Entry> entry = array.toJavaList(Entry.class);
+        if (entry.size() <= 0) {
+            ExceptionUtil.setFailureMsgAndThrow(dataCenterService.getResponseDataFromDataLocal(), BillReasonOfFailure.ENTRY_INFOMATION_IS_NOT_BLANK);
         }
-
-        dataCenterService.setData("orderNoList", orderNoList);
+        for (Entry entry1 : entry) {
+            if (StringUtils.isBlank(entry1.getOrderNo())) {
+                ExceptionUtil.setFailureMsgAndThrow(dataCenterService.getResponseDataFromDataLocal(), BillReasonOfFailure.ORDERNO_IS_NOT_BLANK);
+            }
+            if (StringUtils.isBlank(entry1.getEntryOperator())) {
+                ExceptionUtil.setFailureMsgAndThrow(dataCenterService.getResponseDataFromDataLocal(), BillReasonOfFailure.ORDERNO_IS_NOT_BLANK);
+            }
+        }
+        dataCenterService.setData("Entry", entry);
     }
 
     public void billListRequestCheck(){

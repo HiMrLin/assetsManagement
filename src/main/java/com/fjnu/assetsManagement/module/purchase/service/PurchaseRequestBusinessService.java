@@ -191,7 +191,6 @@ public class PurchaseRequestBusinessService {
         Set<PurchaseDetail> purchaseDetailSet = dataCenterService.getData("purchaseDetailSet");
 
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-
         PurchaseMaster purchaseMaster = new PurchaseMaster();
         purchaseMaster.setOrderNo(orderNo);
         purchaseMaster.setOrderTime(sdf.format(new Date()));
