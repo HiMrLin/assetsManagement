@@ -23,6 +23,7 @@ public class AssetsRequestService {
     }
 
     public void useListRequest(){
+        assetsRequestCheckService.useListRequestCheck(); //检查参数合法性
         assetsRequestBusinessService.useListRequestProcess();//获取数据后的具体操作
     }
 

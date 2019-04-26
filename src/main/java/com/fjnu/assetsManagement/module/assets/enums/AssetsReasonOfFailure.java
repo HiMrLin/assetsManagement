@@ -14,6 +14,7 @@ public enum AssetsReasonOfFailure implements IReasonOfFailure {
     NOTIFITOR_IS_NOT_BLANK("notifier is not blank","报备者不可为空"),
     RECORDER_IS_NOT_BLANK("recorder is not blank","记录员不可为空"),
     ASSETS_IS_NOT_BLANK("assets is not blank","资产编码不可为空"),
+    KINDIN_IS_NOT_BLANK("kindid is not blank", "资产类别ID不可未负"),
     PAGE_PARAMS_IS_NOT_CORRECT("page params is not correct", "分页参数错误");
 
     private String en_msg;

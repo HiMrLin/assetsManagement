@@ -2,7 +2,6 @@ package com.fjnu.assetsManagement.module.assets.service;
 
 import com.alibaba.fastjson.JSONArray;
 import com.fjnu.assetsManagement.module.assets.enums.AssetsReasonOfFailure;
-import com.fjnu.assetsManagement.module.helloWorld.enums.HelloWorldReasonOfFailure;
 import com.fjnu.assetsManagement.service.DataCenterService;
 import com.fjnu.assetsManagement.util.CheckVariableUtil;
 import com.fjnu.assetsManagement.util.ExceptionUtil;
@@ -111,5 +110,19 @@ public class AssetsRequestCheckService {
 
     public void scrapListRequestCheck(){
         pageCheck();
+    }
+
+    public void useListRequestCheck() {
+        String kindId = dataCenterService.getParamValueFromParamOfRequestParamJsonByParamName("kindId");
+        Integer kind;
+        if (StringUtils.isBlank(kindId)) {
+            kind = null;
+        } else {
+            kind = Integer.valueOf(kindId).intValue();
+            if (kind < 0) {
+                ExceptionUtil.setFailureMsgAndThrow(dataCenterService.getResponseDataFromDataLocal(), AssetsReasonOfFailure.KINDIN_IS_NOT_BLANK); //验证数据不合法后返回前台提示信息
+            }
+        }
+        dataCenterService.setData("kindId", kind);
     }
 }

@@ -48,9 +48,6 @@ public class Assets {
     @Getter(onMethod_ = {@Column(name = "assets_state")})
     private Integer assetsState;//资产状态
 
-    @Getter(onMethod_ = {@Column(name = "finance_state")})
-    private Integer financeState;//财务审核状态
-
     @Getter(onMethod_ = {@Column(name = "in_state")})
     private Integer inState;//入库审核状态
 
@@ -72,14 +69,9 @@ public class Assets {
     @Getter(onMethod_ = {@Column(name = "fix_year")})
     private Integer fixYear;//保修年限
 
-    @Getter(onMethod_ = {@Column(name = "scrap_state")})
-    private Integer scrapState;//报销状态
 
     @Getter(onMethod_ = {@Column(name = "user_name")})
     private String userName;//使用人
-
-    @Getter(onMethod_ = {@Column(name = "get_state")})
-    private Integer getState;//领用状态
 
     @Getter(onMethod_ = {@Column(name = "quantity")})
     private Long quantity;//数量

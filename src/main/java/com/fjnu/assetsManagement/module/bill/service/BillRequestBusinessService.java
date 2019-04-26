@@ -42,7 +42,7 @@ public class BillRequestBusinessService {
         for (Long id : orderDetailId) {
             long now = System.currentTimeMillis();
             long nowadd = now + 12345;
-            String hql = "update Assets a set a.financeState=1, a.inAccountTime=:t, a.financeId=:f, a.accountId=:q where a.orderDetailId=:o";
+            String hql = "update Assets a set a.inStateState=2, a.inAccountTime=:t, a.financeId=:f, a.accountId=:q where a.orderDetailId=:o";
             Query query = session.createQuery(hql);
             ((org.hibernate.query.Query) query).setLong("o", id);
             ((org.hibernate.query.Query) query).setLong("f", now);

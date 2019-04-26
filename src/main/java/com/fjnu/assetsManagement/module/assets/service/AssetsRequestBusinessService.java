@@ -9,6 +9,7 @@ import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+
 import javax.persistence.Query;
 import java.io.UnsupportedEncodingException;
 import java.sql.SQLException;
@@ -29,11 +30,8 @@ public class AssetsRequestBusinessService {
         Integer pageSize = dataCenterService.getData("pageSize");
         Integer pageNum = dataCenterService.getData("pageNum");
         PageUtil<Assets> assets = new PageUtil<>();
-        String otherCondition = "where c.scrapState=0";
+        String otherCondition = "where c.assetsState=0 and inState=1 or inState=2";
         this.getPageList(assets, pageNum, pageSize, Assets.class.getSimpleName(),otherCondition);
-        List<Assets> assetsList = assets.getList();
-        for (Assets x:assets.getList()) {
-        }
         ResponseData responseData = dataCenterService.getResponseDataFromDataLocal();
         ResponseDataUtil.setHeadOfResponseDataWithSuccessInfo(responseData);
         ResponseDataUtil.putValueToData(responseData, "Assets", assets);
@@ -60,8 +58,20 @@ public class AssetsRequestBusinessService {
 
     //显示可领用资产列表
     public void useListRequestProcess(){
+        Integer kindId = dataCenterService.getData("kindId");
+        String Hql;
+        String hqlKind;
         Session session = sessionFactory.openSession();
-        String Hql = "from Assets where scrapState=0 and getState=0" ;
+        if (kindId == null) {
+            Hql = "from Assets where assetsState=0 and inState=1 or inState=2";
+        } else {
+            hqlKind = "from Dictionary where id=" + kindId;
+            Query getQuery = session.createQuery(hqlKind);
+            List<Dictionary> dictionaryList = ((org.hibernate.query.Query) getQuery).list();
+            dictionaryList.get(0).getKind();
+            Hql = "from Assets a where a.assetsState=0 and (a.inState=1 or a.inState=2) and a.kind= '" + dictionaryList.get(0).getKind() + "'";
+
+        }
         Query getListQuery =session.createQuery(Hql);
         List<Assets> assetsList = ((org.hibernate.query.Query) getListQuery).list();
         ResponseData responseData = dataCenterService.getResponseDataFromDataLocal();
@@ -74,7 +84,7 @@ public class AssetsRequestBusinessService {
         Session session = sessionFactory.openSession();
         session.beginTransaction();
         for (Long id : cardId) {
-            String hql = "update Assets a set a.userName=:u, a.depository=:t, a.getState=1 where a.cardId=:o";
+            String hql = "update Assets a set a.userName=:u, a.depository=:t, a.assetsState=1 where a.cardId=:o";
             Query query = session.createQuery(hql);
             ((org.hibernate.query.Query) query).setString("u",userName);
             ((org.hibernate.query.Query) query).setString("t",depository);
@@ -128,7 +138,7 @@ public class AssetsRequestBusinessService {
         Session session = sessionFactory.openSession();
         session.beginTransaction();
         PageUtil<RecordReceive> recordReceive = new PageUtil<>();
-        String otherCondition = "where c.getState=1";
+        String otherCondition = "  ";
         this.getPageList(recordReceive, pageNum, pageSize, RecordReceive.class.getSimpleName(),otherCondition);
         List<Receive> receives = new ArrayList<>();
         for (RecordReceive recordReceive1:recordReceive.getList()) {
@@ -202,9 +212,9 @@ public class AssetsRequestBusinessService {
         Session session = sessionFactory.openSession();
         session.beginTransaction();
         for (String assets:assetsId) {
-            String shql = "update Assets a set a.userName=null,a.getState=0, a.depository=:t where a.assetsId=:o";
+            String shql = "update Assets a set a.userName=null,a.assetsState=0, a.depository=:t where a.assetsId=:o";
             Query query1 = session.createQuery(shql);
-            ((org.hibernate.query.Query) query1).setString("t", "仓库");
+            ((org.hibernate.query.Query) query1).setString("t", "刘在宁");
             ((org.hibernate.query.Query) query1).setString("o", assets);
             query1.executeUpdate();
         }
@@ -229,7 +239,7 @@ public class AssetsRequestBusinessService {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
         recordScrap.setScrapId(System.currentTimeMillis());
         recordScrap.setScrapTime(sdf.format(new Date()));
-        String hql = "update Assets a set a.scrapState=1 where a.assetsId=:o";
+        String hql = "update Assets a set a.assetsState=2 where a.assetsId=:o";
         Query query = session.createQuery(hql);
         ((org.hibernate.query.Query) query).setString("o", assetsId);
         query.executeUpdate();
