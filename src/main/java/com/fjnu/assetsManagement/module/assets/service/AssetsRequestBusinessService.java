@@ -107,6 +107,7 @@ public class AssetsRequestBusinessService {
         session.beginTransaction();
         session.flush();
         session.clear();
+        Long Id = System.currentTimeMillis();
         for (Long car:cardIdList) {
             RecordReceive recordReceive = new RecordReceive();
             String Hql = "from Assets a where cardId = "+ car ;
@@ -121,7 +122,7 @@ public class AssetsRequestBusinessService {
             SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
             recordReceive.setReceiveTime(sdf.format(new Date()));
             recordReceive.setRecorder(recorder);
-            recordReceive.setReceiveId(System.currentTimeMillis());
+            recordReceive.setReceiveId(Id);
             recordReceive.setGetState(1);
             session.save(recordReceive);
         }
@@ -137,11 +138,13 @@ public class AssetsRequestBusinessService {
         Integer pageNum = dataCenterService.getData("pageNum");
         Session session = sessionFactory.openSession();
         session.beginTransaction();
+        Integer state;
         PageUtil<RecordReceive> recordReceive = new PageUtil<>();
         String otherCondition = "  ";
         this.getPageList(recordReceive, pageNum, pageSize, RecordReceive.class.getSimpleName(),otherCondition);
         List<Receive> receives = new ArrayList<>();
         for (RecordReceive recordReceive1:recordReceive.getList()) {
+            state = 0;
             Receive receive = new Receive();
             receive.setAssetsId(recordReceive1.getAssetsId());
             receive.setDate(recordReceive1.getReceiveTime());
@@ -150,13 +153,24 @@ public class AssetsRequestBusinessService {
             receive.setPurpose(recordReceive1.getPurpose());
             receive.setRecorder(recordReceive1.getRecorder());
             receive.setNote(recordReceive1.getNote());
+            state=recordReceive1.getGetState();
+            receive.setAssetsState(state);
             String Hql = "from Assets a where a.assetsId = "+ recordReceive1.getAssetsId();
             Query getQuery =session.createQuery(Hql);
             List<Assets> assetsList = ((org.hibernate.query.Query) getQuery).list();
             for (Assets assets1:assetsList) {
-                receive.setAssetsName(assets1.getAssetsName());
                 receive.setDepository(assets1.getDepository());
                 receive.setUserName(assets1.getUserName());
+            }
+            if(state==0){
+                String receiveIdHql = "from RecordReturn a where a.receiveId = "+ recordReceive1.getReceiveId();
+                Query receiveIdQuery =session.createQuery(receiveIdHql);
+                List<RecordReturn> recordRetruns = ((org.hibernate.query.Query) receiveIdQuery).list();
+                for (RecordReturn recordreturn1:recordRetruns) {
+                    receive.setReturnTime(recordreturn1.getReturnTime());
+                    receive.setReturnName(recordreturn1.getReturnName());
+                    receive.setReturnId(recordreturn1.getReturnId());
+                }
             }
             receives.add(receive);
         }
@@ -173,17 +187,25 @@ public class AssetsRequestBusinessService {
         session.beginTransaction();
         session.flush();
         session.clear();
+        Integer state;
         List<String> assets = new ArrayList<>();
         for (Long receiveId:receiveIdList) {
+            state=0;
             RecordReturn recordReturn = new RecordReturn();
             String Hql = "from RecordReceive  where receiveId = "+ receiveId ;
             Query getQuery =session.createQuery(Hql);
             List<RecordReceive> recordReceives = ((org.hibernate.query.Query) getQuery).list();
-            for (RecordReceive recordReceive1:recordReceives) {
-                String assId = recordReceive1.getAssetsId();
+            for (RecordReceive receive:recordReceives) {
+                String assId = receive.getAssetsId();
+            String assetsIdHql = "from Assets a where a.assetsId = "+ assId;
+            Query assetsIdQuery =session.createQuery(assetsIdHql);
+            List<Assets> assetsList = ((org.hibernate.query.Query) assetsIdQuery).list();
+            state=assetsList.get(0).getAssetsState();
+            if(state==1) {
                 assets.add(assId);
-                recordReturn.setAssetsId(assId);
             }
+            }
+            recordReturn.setReceiveId(receiveId);
             recordReturn.setReturnName(returnName);
             recordReturn.setReturnId(System.currentTimeMillis());
             SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
@@ -239,9 +261,11 @@ public class AssetsRequestBusinessService {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
         recordScrap.setScrapId(System.currentTimeMillis());
         recordScrap.setScrapTime(sdf.format(new Date()));
-        String hql = "update Assets a set a.assetsState=2 where a.assetsId=:o";
+        String hql = "update Assets a set a.assetsState=2 and userName=:n where a.assetsId=:o";
         Query query = session.createQuery(hql);
         ((org.hibernate.query.Query) query).setString("o", assetsId);
+        ((org.hibernate.query.Query) query).setString("o", null);
+
         query.executeUpdate();
         session.save(recordScrap);
         session.getTransaction().commit();

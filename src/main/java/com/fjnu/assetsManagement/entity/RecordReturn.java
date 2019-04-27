@@ -14,13 +14,12 @@ import java.util.Date;
 @Entity
 @Table(name = "record_return")
 public class RecordReturn {
-    @Getter(onMethod_ = {@Column(name = "assets_id")})
-    private String assetsId;
     @Getter(onMethod_ = {@Column(name = "return_name")})
     private String returnName;
     @Getter(onMethod_ = {@Column(name = "return_time")})
     private String returnTime;
     @Getter(onMethod_ = {@Id,@Column(name = "return_id")})
     private Long returnId;
-
+    @Getter(onMethod_ = {@Column(name = "receive_id")})
+    private Long receiveId;
 }

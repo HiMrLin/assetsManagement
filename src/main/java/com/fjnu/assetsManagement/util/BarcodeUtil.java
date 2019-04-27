@@ -58,7 +58,7 @@ public class BarcodeUtil {
         Code39Bean bean = new Code39Bean();
 
         // 精细度
-        final int dpi = 150;
+        final int dpi = 200;
         // module宽度
         final double moduleWidth = UnitConv.in2mm(1.0f / dpi);
 
