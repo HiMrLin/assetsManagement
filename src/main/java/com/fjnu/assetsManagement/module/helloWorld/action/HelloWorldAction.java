@@ -25,7 +25,7 @@ public class HelloWorldAction extends JsonAction {
     HelloWordRequestService helloWordRequestService;
 
     @Action(value="/hello")
-    public String execute() throws Exception {
+    public String execute() {
         String functionNo=dataCenterService.getFunctionNo();
         if (functionNo == null) {
             return "none";
@@ -33,7 +33,12 @@ public class HelloWorldAction extends JsonAction {
         log.info("-----functionNo------" + functionNo);
         switch (functionNo) {
             case HelloWorldFunctionNoConstants.TEST:
-                helloWordRequestService.helloWorldRequestProcess();
+                try {
+                    helloWordRequestService.helloWorldRequestProcess();
+                } catch (RequestFailureException e) {
+                    this.responseData = e.getResponseData();
+                    return ERROR;
+                }
                 this.setHeadOfResponseDataWithSuccessInfo(dataCenterService.getResponseDataFromDataLocal());
                 this.responseData=dataCenterService.getResponseDataFromDataLocal();
                 break;
@@ -43,7 +48,8 @@ public class HelloWorldAction extends JsonAction {
         }
         return SUCCESS;
     }
-    @ExceptionHandler(RequestFailureException.class)
+
+    @ExceptionHandler
     public Object handleException(RequestFailureException requestFailureException){
         ResponseData responseData=requestFailureException.getResponseData();
         this.responseData=responseData;
