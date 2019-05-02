@@ -35,34 +35,39 @@ public class DictionaryAction extends JsonAction {
             return "none";
         }
         log.info("-----functionNo------" + functionNo);
-        switch (functionNo) {
-            //添加数据字典
-            case DictionaryFunctionNoConstants.ADD_DICTIONARY_ITEM:
-                dictionaryRequestService.addDictionaryItemServiceProcess();
-                this.setHeadOfResponseDataWithSuccessInfo(dataCenterService.getResponseDataFromDataLocal());
-                this.responseData = dataCenterService.getResponseDataFromDataLocal();
-                break;
-            //根据id得到数据字典
-            case DictionaryFunctionNoConstants.GET_DICTIONARY_ITEM_BY_ID:
-                dictionaryRequestService.getDictionaryByIdProcess();
-                this.setHeadOfResponseDataWithSuccessInfo(dataCenterService.getResponseDataFromDataLocal());
-                this.responseData = dataCenterService.getResponseDataFromDataLocal();
-                break;
-            //得到数据字典列表
-            case DictionaryFunctionNoConstants.GET_DICTIONARY_ITEM:
-                dictionaryRequestService.getDictionaryList();
-                this.setHeadOfResponseDataWithSuccessInfo(dataCenterService.getResponseDataFromDataLocal());
-                this.responseData = dataCenterService.getResponseDataFromDataLocal();
-                break;
-            //删除数据字典
-            case DictionaryFunctionNoConstants.DELETE_DICTIONARY_ITEM:
-                dictionaryRequestService.deleteDictionaryListByIdProcess();
-                this.setHeadOfResponseDataWithSuccessInfo(dataCenterService.getResponseDataFromDataLocal());
-                this.responseData = dataCenterService.getResponseDataFromDataLocal();
-                break;
-            default:
-                this.setResponseDataWithFailureInfo(dataCenterService.getResponseDataFromDataLocal(), ReasonOfFailure.FUNCTION_NO_ARE_INCORRECT);
-                break;
+        try {
+            switch (functionNo) {
+                //添加数据字典
+                case DictionaryFunctionNoConstants.ADD_DICTIONARY_ITEM:
+                    dictionaryRequestService.addDictionaryItemServiceProcess();
+                    this.setHeadOfResponseDataWithSuccessInfo(dataCenterService.getResponseDataFromDataLocal());
+                    this.responseData = dataCenterService.getResponseDataFromDataLocal();
+                    break;
+                //根据id得到数据字典
+                case DictionaryFunctionNoConstants.GET_DICTIONARY_ITEM_BY_ID:
+                    dictionaryRequestService.getDictionaryByIdProcess();
+                    this.setHeadOfResponseDataWithSuccessInfo(dataCenterService.getResponseDataFromDataLocal());
+                    this.responseData = dataCenterService.getResponseDataFromDataLocal();
+                    break;
+                //得到数据字典列表
+                case DictionaryFunctionNoConstants.GET_DICTIONARY_ITEM:
+                    dictionaryRequestService.getDictionaryList();
+                    this.setHeadOfResponseDataWithSuccessInfo(dataCenterService.getResponseDataFromDataLocal());
+                    this.responseData = dataCenterService.getResponseDataFromDataLocal();
+                    break;
+                //删除数据字典
+                case DictionaryFunctionNoConstants.DELETE_DICTIONARY_ITEM:
+                    dictionaryRequestService.deleteDictionaryListByIdProcess();
+                    this.setHeadOfResponseDataWithSuccessInfo(dataCenterService.getResponseDataFromDataLocal());
+                    this.responseData = dataCenterService.getResponseDataFromDataLocal();
+                    break;
+                default:
+                    this.setResponseDataWithFailureInfo(dataCenterService.getResponseDataFromDataLocal(), ReasonOfFailure.FUNCTION_NO_ARE_INCORRECT);
+                    break;
+            }
+        } catch (RequestFailureException e) {
+            this.responseData = e.getResponseData();
+            return ERROR;
         }
         return SUCCESS;
     }

@@ -33,45 +33,50 @@ public class AssetsAction extends JsonAction {
             return "none";
         }
         log.info("-----functionNo------" + functionNo);
-        switch (functionNo) {
-            case AssetsFunctionNoConstants.ASSETS_LIST:
-                assetsRequestService.assetsListRequest();
-                this.setHeadOfResponseDataWithSuccessInfo(dataCenterService.getResponseDataFromDataLocal());
-                this.responseData=dataCenterService.getResponseDataFromDataLocal();
-                break;
-            case AssetsFunctionNoConstants.USE_LIST:
-                assetsRequestService.useListRequest();
-                this.setHeadOfResponseDataWithSuccessInfo(dataCenterService.getResponseDataFromDataLocal());
-                this.responseData=dataCenterService.getResponseDataFromDataLocal();
-                break;
-            case AssetsFunctionNoConstants.USE:
-                assetsRequestService.useRequest();
-                this.setHeadOfResponseDataWithSuccessInfo(dataCenterService.getResponseDataFromDataLocal());
-                this.responseData=dataCenterService.getResponseDataFromDataLocal();
-                break;
-            case AssetsFunctionNoConstants.USED_LIST:
-                assetsRequestService.usedListRequest();
-                this.setHeadOfResponseDataWithSuccessInfo(dataCenterService.getResponseDataFromDataLocal());
-                this.responseData=dataCenterService.getResponseDataFromDataLocal();
-                break;
-            case AssetsFunctionNoConstants.RETURN:
-                assetsRequestService.returnRequest();
-                this.setHeadOfResponseDataWithSuccessInfo(dataCenterService.getResponseDataFromDataLocal());
-                this.responseData=dataCenterService.getResponseDataFromDataLocal();
-                break;
-            case AssetsFunctionNoConstants.SCRAP:
-                assetsRequestService.scrapRequest();
-                this.setHeadOfResponseDataWithSuccessInfo(dataCenterService.getResponseDataFromDataLocal());
-                this.responseData=dataCenterService.getResponseDataFromDataLocal();
-                break;
-            case AssetsFunctionNoConstants.SCRAP_LIST:
-                assetsRequestService.scrapListRequest();
-                this.setHeadOfResponseDataWithSuccessInfo(dataCenterService.getResponseDataFromDataLocal());
-                this.responseData=dataCenterService.getResponseDataFromDataLocal();
-                break;
-            default:
-                this.setResponseDataWithFailureInfo(dataCenterService.getResponseDataFromDataLocal(),ReasonOfFailure.FUNCTION_NO_ARE_INCORRECT);
-                break;
+        try {
+            switch (functionNo) {
+                case AssetsFunctionNoConstants.ASSETS_LIST:
+                    assetsRequestService.assetsListRequest();
+                    this.setHeadOfResponseDataWithSuccessInfo(dataCenterService.getResponseDataFromDataLocal());
+                    this.responseData = dataCenterService.getResponseDataFromDataLocal();
+                    break;
+                case AssetsFunctionNoConstants.USE_LIST:
+                    assetsRequestService.useListRequest();
+                    this.setHeadOfResponseDataWithSuccessInfo(dataCenterService.getResponseDataFromDataLocal());
+                    this.responseData = dataCenterService.getResponseDataFromDataLocal();
+                    break;
+                case AssetsFunctionNoConstants.USE:
+                    assetsRequestService.useRequest();
+                    this.setHeadOfResponseDataWithSuccessInfo(dataCenterService.getResponseDataFromDataLocal());
+                    this.responseData = dataCenterService.getResponseDataFromDataLocal();
+                    break;
+                case AssetsFunctionNoConstants.USED_LIST:
+                    assetsRequestService.usedListRequest();
+                    this.setHeadOfResponseDataWithSuccessInfo(dataCenterService.getResponseDataFromDataLocal());
+                    this.responseData = dataCenterService.getResponseDataFromDataLocal();
+                    break;
+                case AssetsFunctionNoConstants.RETURN:
+                    assetsRequestService.returnRequest();
+                    this.setHeadOfResponseDataWithSuccessInfo(dataCenterService.getResponseDataFromDataLocal());
+                    this.responseData = dataCenterService.getResponseDataFromDataLocal();
+                    break;
+                case AssetsFunctionNoConstants.SCRAP:
+                    assetsRequestService.scrapRequest();
+                    this.setHeadOfResponseDataWithSuccessInfo(dataCenterService.getResponseDataFromDataLocal());
+                    this.responseData = dataCenterService.getResponseDataFromDataLocal();
+                    break;
+                case AssetsFunctionNoConstants.SCRAP_LIST:
+                    assetsRequestService.scrapListRequest();
+                    this.setHeadOfResponseDataWithSuccessInfo(dataCenterService.getResponseDataFromDataLocal());
+                    this.responseData = dataCenterService.getResponseDataFromDataLocal();
+                    break;
+                default:
+                    this.setResponseDataWithFailureInfo(dataCenterService.getResponseDataFromDataLocal(), ReasonOfFailure.FUNCTION_NO_ARE_INCORRECT);
+                    break;
+            }
+        } catch (RequestFailureException e) {
+            this.responseData = e.getResponseData();
+            return ERROR;
         }
         return SUCCESS;
     }

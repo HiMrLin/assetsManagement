@@ -34,34 +34,39 @@ public class EntryAction extends JsonAction {
             return "none";
         }
         log.info("-----functionNo------" + functionNo);
-        switch (functionNo) {
-            //入库
-            case EntryFunctionNoConstants.ENTRY:
-                entryRequestService.entryProcess();
-                this.setHeadOfResponseDataWithSuccessInfo(dataCenterService.getResponseDataFromDataLocal());
-                this.responseData = dataCenterService.getResponseDataFromDataLocal();
-                break;
-            //得到已入库采购单列表
-            case EntryFunctionNoConstants.GET_PURCHASE_IN_LIST:
-                entryRequestService.getInPurchaseMasterListProcess();
-                this.setHeadOfResponseDataWithSuccessInfo(dataCenterService.getResponseDataFromDataLocal());
-                this.responseData = dataCenterService.getResponseDataFromDataLocal();
-                break;
-            //得到未入库采购单列表
-            case EntryFunctionNoConstants.GET_PURCHASE_OUT_LIST:
-                entryRequestService.getOutPurchaseMasterListProcess();
-                this.setHeadOfResponseDataWithSuccessInfo(dataCenterService.getResponseDataFromDataLocal());
-                this.responseData = dataCenterService.getResponseDataFromDataLocal();
-                break;
-            //根据采购单号得到采购单记录
-            case EntryFunctionNoConstants.GET_PURCHASE_BY_ORDERNO:
-                entryRequestService.getPurchaseMasterListByOrderNoProcess();
-                this.setHeadOfResponseDataWithSuccessInfo(dataCenterService.getResponseDataFromDataLocal());
-                this.responseData = dataCenterService.getResponseDataFromDataLocal();
-                break;
-            default:
-                this.setResponseDataWithFailureInfo(dataCenterService.getResponseDataFromDataLocal(), ReasonOfFailure.FUNCTION_NO_ARE_INCORRECT);
-                break;
+        try {
+            switch (functionNo) {
+                //入库
+                case EntryFunctionNoConstants.ENTRY:
+                    entryRequestService.entryProcess();
+                    this.setHeadOfResponseDataWithSuccessInfo(dataCenterService.getResponseDataFromDataLocal());
+                    this.responseData = dataCenterService.getResponseDataFromDataLocal();
+                    break;
+                //得到已入库采购单列表
+                case EntryFunctionNoConstants.GET_PURCHASE_IN_LIST:
+                    entryRequestService.getInPurchaseMasterListProcess();
+                    this.setHeadOfResponseDataWithSuccessInfo(dataCenterService.getResponseDataFromDataLocal());
+                    this.responseData = dataCenterService.getResponseDataFromDataLocal();
+                    break;
+                //得到未入库采购单列表
+                case EntryFunctionNoConstants.GET_PURCHASE_OUT_LIST:
+                    entryRequestService.getOutPurchaseMasterListProcess();
+                    this.setHeadOfResponseDataWithSuccessInfo(dataCenterService.getResponseDataFromDataLocal());
+                    this.responseData = dataCenterService.getResponseDataFromDataLocal();
+                    break;
+                //根据采购单号得到采购单记录
+                case EntryFunctionNoConstants.GET_PURCHASE_BY_ORDERNO:
+                    entryRequestService.getPurchaseMasterListByOrderNoProcess();
+                    this.setHeadOfResponseDataWithSuccessInfo(dataCenterService.getResponseDataFromDataLocal());
+                    this.responseData = dataCenterService.getResponseDataFromDataLocal();
+                    break;
+                default:
+                    this.setResponseDataWithFailureInfo(dataCenterService.getResponseDataFromDataLocal(), ReasonOfFailure.FUNCTION_NO_ARE_INCORRECT);
+                    break;
+            }
+        } catch (RequestFailureException e) {
+            this.responseData = e.getResponseData();
+            return ERROR;
         }
         return SUCCESS;
     }
