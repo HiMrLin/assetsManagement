@@ -38,6 +38,7 @@
                 <prop key="hibernate.dialect">org.hibernate.dialect.MySQL5Dialect</prop>
                 <prop key="hibernate.show_sql">true</prop>
                 <prop key="hibernate.hbm2ddl.auto">update</prop>
+                <!--<prop key="hibernate.current_session_context_class">org.springframework.orm.hibernate5.SpringSessionContext</prop>-->
             </props>
         </property>
 
@@ -57,6 +58,12 @@
         </property>
     </bean>
     <tx:annotation-driven transaction-manager="txManager" />
+
+
+    <!-- 配置HibernateTemplate -->
+    <bean id="hibernateTemplate" class="org.springframework.orm.hibernate5.HibernateTemplate">
+        <property name="sessionFactory" ref="sessionFactory"/>
+    </bean>
 
 
 </beans>
