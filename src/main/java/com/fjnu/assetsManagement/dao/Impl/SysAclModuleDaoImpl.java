@@ -8,8 +8,8 @@ import org.hibernate.query.Query;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.orm.hibernate5.HibernateTemplate;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
-import javax.transaction.Transactional;
 import java.util.List;
 
 @Repository
@@ -25,8 +25,8 @@ public class SysAclModuleDaoImpl implements SysAclModuleDao {
         Query q = session.createQuery("from SysAclModule s where s.id IN (:list)");
         q.setParameterList("list", ids);
         List<SysAclModule> sysAclModules = q.list();
-        session.close();
-        sf.close();
+//        session.close();
+//        sf.close();
         return sysAclModules;
     }
 }

@@ -8,8 +8,8 @@ import org.hibernate.query.Query;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.orm.hibernate5.HibernateTemplate;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
-import javax.transaction.Transactional;
 import java.util.List;
 
 @Repository
@@ -19,19 +19,12 @@ public class SysUserDaoImpl implements SysUserDao {
     private HibernateTemplate hibernateTemplate;
 
     @Override
+//    @Transactional(readOnly=true)
     public SysUser getByAccountAndPassword(String account, String password) {
         SysUser user = new SysUser();
         user.setAccount(account);
         user.setPassword(password);
-//        String [] condition={account,password};
-//        SessionFactory sf = hibernateTemplate.getSessionFactory();
-//        Session session=sf.getCurrentSession();
-//        Query q= session.createSQLQuery("select * from  sys_user where account="+account+" and password="+password);
-//        List<SysUser>result=q.list();
         List<SysUser> result = hibernateTemplate.findByExample(user);
-//        List<SysUser>result=hibernateTemplate.find("from SysUser s where s.account=? and s.password=?",condition);
-//        session.close();
-//        sf.close();
         if (result == null || result.size() == 0) {
             return null;
         }
@@ -39,33 +32,42 @@ public class SysUserDaoImpl implements SysUserDao {
     }
 
     @Override
+//    @Transactional
     public void addUser(SysUser user) {
         hibernateTemplate.save(user);
-        ;
+
     }
 
     @Override
+//    @Transactional
     public void updateUser(SysUser user) {
         hibernateTemplate.update(user);
     }
 
     @Override
-    public void removeUser(int id) {
+//    @Transactional
+    public void removeUser(Long id) {
         SysUser user = new SysUser();
         user.setId(id);
         hibernateTemplate.delete(user);
     }
 
     @Override
+//    @Transactional(readOnly=true)
     public List<SysUser> getAllUserByDepartment(List<Long> departmentId) {
         SessionFactory sf = hibernateTemplate.getSessionFactory();
         Session session = sf.getCurrentSession();
         Query q = session.createQuery("from SysUser s where s.department IN (:list)");
         q.setParameterList("list", departmentId);
         List<SysUser> userList = q.list();
-        session.close();
-        sf.close();
+//        session.close();
+//        sf.close();
         return userList;
+    }
+
+    @Override
+    public SysUser getCurrentUser(Long id) {
+        return hibernateTemplate.get(SysUser.class, id);
     }
 
 

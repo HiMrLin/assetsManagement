@@ -12,7 +12,10 @@ public interface SysUserDao {
 
     void updateUser(SysUser user);
 
-    void removeUser(int id);
+    void removeUser(Long id);
 
     List<SysUser> getAllUserByDepartment(List<Long> departmentId);
+
+    SysUser getCurrentUser(Long id);//按照人id查询人员信息
+
 }

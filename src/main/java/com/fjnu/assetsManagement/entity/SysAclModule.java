@@ -27,7 +27,7 @@ public class SysAclModule {
     private Integer status;
     @Getter(onMethod_ = {@Column(name = "remark")})
     private String remark;
-    @Getter(onMethod_ = {@Column(name = "role_name")})
+    @Getter(onMethod_ = {@Column(name = "route_name")})
     private String routeName;
     @Getter(onMethod_ = {@Column(name = "icon")})
     private String icon;
@@ -35,7 +35,7 @@ public class SysAclModule {
     private String componentPath;
     @Getter(onMethod_ = {@Column(name = "component")})
     private String component;
-    @Getter(onMethod_ = {@Column(name = "account")})
+    @Getter(onMethod_ = {@Column(name = "cache")})
     private boolean cache;
     @Getter(onMethod_ = {@Column(name = "path")})
     private String path;

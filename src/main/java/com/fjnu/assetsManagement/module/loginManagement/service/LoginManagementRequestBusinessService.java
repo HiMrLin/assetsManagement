@@ -19,7 +19,6 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Multimap;
 import com.google.common.primitives.Longs;
 import org.apache.commons.collections4.CollectionUtils;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -55,10 +54,11 @@ public class LoginManagementRequestBusinessService {
         if (sysRoleAcl == null) {
             ExceptionUtil.setFailureMsgAndThrow(dataCenterService.getResponseDataFromDataLocal(), LoginManagementReasonOfFailure.NO_ACL);
         }
-        String[] aclCode = StringUtils.split(sysRoleAcl.getAclCode(), LoginManagementConstants.SEPORATOR);
+        String[] aclCode = sysRoleAcl.getAclCode().split(LoginManagementConstants.SEPORATOR);
         List<Long> moduleIds = Lists.newArrayList(); //获取当前角色所拥有的可操控的权限块
         for (String s : aclCode) {
-            moduleIds.add(Longs.tryParse(s));
+            Long id = Longs.tryParse(s);
+            moduleIds.add(id);
         }
         //获取权限对应的权限部门信息
         List<SysAclModule> sysAclModules = sysAclModuleDao.getModuleByIds(moduleIds);
@@ -108,7 +108,10 @@ public class LoginManagementRequestBusinessService {
         ResponseData responseData = dataCenterService.getResponseDataFromDataLocal();
         ResponseDataUtil.setHeadOfResponseDataWithSuccessInfo(responseData);
         ResponseDataUtil.putValueToData(responseData, "userName", user.getUserName());
-        ResponseDataUtil.putValueToData(responseData, "userCompany", sysDepartment.getParentId());
+        ResponseDataUtil.putValueToData(responseData, "account", user.getAccount());
+        ResponseDataUtil.putValueToData(responseData, "userId", user.getId());
+        ResponseDataUtil.putValueToData(responseData, "userCompanyType", sysDepartment.getParentId());
+        ResponseDataUtil.putValueToData(responseData, "userCompanyId", sysDepartment.getId());
         ResponseDataUtil.putValueToData(responseData, "userRole", sysRoleAcl.getRoleName());
         ResponseDataUtil.putValueToData(responseData, "userPermissions", moduleIds);
         ResponseDataUtil.putValueToData(responseData, "accessMenus", accessMenueRootList);

@@ -5,8 +5,8 @@ import com.fjnu.assetsManagement.entity.SysRoleAcl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.orm.hibernate5.HibernateTemplate;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
-import javax.transaction.Transactional;
 
 @Repository
 @Transactional
@@ -15,6 +15,7 @@ public class SysRoleAclDaoImpl implements SysRoleAclDao {
     private HibernateTemplate hibernateTemplate;
 
     @Override
+//    @Transactional(readOnly=true)
     public SysRoleAcl getAcl(Long id) {
         return hibernateTemplate.get(SysRoleAcl.class, id);
     }
