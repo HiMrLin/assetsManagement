@@ -1,4 +1,4 @@
-package com.fjnu.assetsManagement.module.loginManagement.service;
+package com.fjnu.assetsManagement.module.getSysMenue.service;
 
 import com.fjnu.assetsManagement.dao.SysAclModuleDao;
 import com.fjnu.assetsManagement.dao.SysDepartmentDao;
@@ -8,13 +8,12 @@ import com.fjnu.assetsManagement.dto.AccessMenuDto;
 import com.fjnu.assetsManagement.dto.AccessRouteDto;
 import com.fjnu.assetsManagement.dto.MetaDto;
 import com.fjnu.assetsManagement.entity.*;
-import com.fjnu.assetsManagement.module.loginManagement.constant.LoginManagementConstants;
-import com.fjnu.assetsManagement.module.loginManagement.enums.LoginManagementReasonOfFailure;
+import com.fjnu.assetsManagement.module.getSysMenue.constant.GetSysMenueConstants;
+import com.fjnu.assetsManagement.module.getSysMenue.enums.GetSysMenueReasonOfFailure;
 import com.fjnu.assetsManagement.service.DataCenterService;
 import com.fjnu.assetsManagement.util.ExceptionUtil;
 import com.fjnu.assetsManagement.util.LevelUtil;
 import com.fjnu.assetsManagement.util.ResponseDataUtil;
-import com.fjnu.assetsManagement.vo.PersonInfoVo;
 import com.fjnu.assetsManagement.vo.SysInfoVo;
 import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.Lists;
@@ -28,7 +27,7 @@ import java.util.Comparator;
 import java.util.List;
 
 @Component
-public class LoginManagementRequestBusinessService {
+public class GetSysMenueRequestBusinessService {
     @Autowired
     private DataCenterService dataCenterService;
 
@@ -42,21 +41,20 @@ public class LoginManagementRequestBusinessService {
     private SysDepartmentDao sysDepartmentDao;
 
 
-    public void loginRequestProcess() {
+    public void getSysMenueRequestProcess() {
         String account = dataCenterService.getData("account");
-        String password = dataCenterService.getData("password");
-        SysUser user = sysUserDao.getByAccountAndPassword(account, password);
+        SysUser user = sysUserDao.getByAccountAndPassword(account, null);
         if (user == null) {
-            ExceptionUtil.setFailureMsgAndThrow(dataCenterService.getResponseDataFromDataLocal(), LoginManagementReasonOfFailure.USERNAME_OR_PASSWORD_IS_WRONG);
+            ExceptionUtil.setFailureMsgAndThrow(dataCenterService.getResponseDataFromDataLocal(), GetSysMenueReasonOfFailure.USERNAME_OR_PASSWORD_IS_WRONG);
         }
         Long roleId = user.getRole();
         Long departmentId = user.getDepartment(); //当前登录用户所属部门id
         SysDepartment sysDepartment = sysDepartmentDao.getDepartmentById(departmentId);//获取当前登录用户的部门，判断是否是总公司
         SysRoleAcl sysRoleAcl = sysRoleAclDao.getAcl(roleId);
         if (sysRoleAcl == null) {
-            ExceptionUtil.setFailureMsgAndThrow(dataCenterService.getResponseDataFromDataLocal(), LoginManagementReasonOfFailure.NO_ACL);
+            ExceptionUtil.setFailureMsgAndThrow(dataCenterService.getResponseDataFromDataLocal(), GetSysMenueReasonOfFailure.NO_ACL);
         }
-        String[] aclCode = sysRoleAcl.getAclCode().split(LoginManagementConstants.SEPORATOR);
+        String[] aclCode = sysRoleAcl.getAclCode().split(GetSysMenueConstants.SEPORATOR);
         List<Long> moduleIds = Lists.newArrayList(); //获取当前角色所拥有的可操控的权限块
         for (String s : aclCode) {
             Long id = Longs.tryParse(s);
@@ -108,21 +106,12 @@ public class LoginManagementRequestBusinessService {
         transformAccessRouteTree(accessRouteRootList, LevelUtil.ROOT, accessRouteLeveltMap);
 
         ResponseData responseData = dataCenterService.getResponseDataFromDataLocal();
-        //封装返回对象
-        PersonInfoVo personInfoVo = new PersonInfoVo();
-        personInfoVo.setUserName(user.getUserName());
-        personInfoVo.setAccount(user.getAccount());
-        personInfoVo.setUserId(user.getId());
-        personInfoVo.setUserCompanyType(sysDepartment.getParentId());
-        personInfoVo.setUserCompanyId(sysDepartment.getId());
-        personInfoVo.setUserRole(sysRoleAcl.getRoleName());
         SysInfoVo sysInfoVo = new SysInfoVo();
         sysInfoVo.setAccessMenus(accessMenueRootList);
         sysInfoVo.setAccessRoutes(accessRouteRootList);
         sysInfoVo.setUserPermissions(moduleIds);
 
         ResponseDataUtil.setHeadOfResponseDataWithSuccessInfo(responseData);
-        ResponseDataUtil.putValueToData(responseData, "personInfoVo", personInfoVo);
         ResponseDataUtil.putValueToData(responseData, "sysInfoVo", sysInfoVo);
 //        ResponseDataUtil.putValueToData(responseData, "userName", );
 //        ResponseDataUtil.putValueToData(responseData, "account", user.getAccount());
