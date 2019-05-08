@@ -26,6 +26,8 @@ public class PersonManagementRequestCheckService {
     //人员列表
     public void getPersonListRequestCheck() {
         String account = dataCenterService.getParamValueFromHeadOfRequestParamJsonByParamName("account");
+        Integer pageNum = dataCenterService.getParamValueFromParamOfRequestParamJsonByParamName("pageNum");
+        Integer pageSize = dataCenterService.getParamValueFromParamOfRequestParamJsonByParamName("pageSize");
 //        String sex=dataCenterService.getParamValueFromParamOfRequestParamJsonByParamName("sex");
 //        String phone=dataCenterService.getParamValueFromParamOfRequestParamJsonByParamName("phone");
 //        String roleStr=dataCenterService.getParamValueFromParamOfRequestParamJsonByParamName("role");
@@ -54,6 +56,8 @@ public class PersonManagementRequestCheckService {
 //            user.setDepartment(department);
 //        }
         dataCenterService.setData("user", user);
+        dataCenterService.setData("pageNum", pageNum);
+        dataCenterService.setData("pageSize", pageSize);
 
 
     }

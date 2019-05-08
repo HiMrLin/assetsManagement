@@ -66,6 +66,32 @@ public class SysUserDaoImpl implements SysUserDao {
     }
 
     @Override
+    public List<SysUser> getAllUserByDepartmentByPage(List<Long> departmentId, Integer pageNum, Integer pageSize) {
+        SessionFactory sf = hibernateTemplate.getSessionFactory();
+        Session session = sf.getCurrentSession();
+        Query q = session.createQuery("from SysUser s where s.department IN (:list)");
+        q.setParameterList("list", departmentId);
+        q.setFirstResult((pageNum - 1) * pageSize);
+        q.setMaxResults(pageSize);
+        List<SysUser> userList = q.list();
+        return userList;
+    }
+
+    @Override
+    public int totalCount(List<Long> departmentId) {
+        SessionFactory sf = hibernateTemplate.getSessionFactory();
+        Session session = sf.getCurrentSession();
+        Query q = session.createQuery("from SysUser s where s.department IN (:list)");
+        q.setParameterList("list", departmentId);
+        List<SysUser> userList = q.list();
+        if (userList == null) {
+            return 0;
+        }
+        return userList.size();
+    }
+
+
+    @Override
     public SysUser getCurrentUser(Long id) {
         return hibernateTemplate.get(SysUser.class, id);
     }

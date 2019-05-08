@@ -37,6 +37,12 @@ public class PersonManagementRequestBusinessService {
     public void getPersonListRequestProcess() {
         //获取登录用户信息
         SysUser condition = dataCenterService.getData("user");//条件查询所有的条件
+        Integer pageNum = dataCenterService.getData("pageNum");
+        Integer pageSize = dataCenterService.getData("pageSize");
+        if (pageNum == null || pageSize == null) {
+            pageNum = 1;
+            pageSize = 10;
+        }
         String account = condition.getAccount();
         SysUser currentLoginUser = sysUserDao.getByAccountAndPassword(account, null);
         if (currentLoginUser == null) {
@@ -65,16 +71,21 @@ public class PersonManagementRequestBusinessService {
         List<SysDepartment> childDepartment = sysDepartmentDao.getChildrenDepartment(newLevel);
         List<Long> departmentIds = childDepartment.stream().map(SysDepartment::getId).collect(Collectors.toList());
         departmentIds.add(departmentId);
-        List<SysUser> userList = sysUserDao.getAllUserByDepartment(departmentIds);
+        List<SysUser> userList = sysUserDao.getAllUserByDepartmentByPage(departmentIds, pageNum, pageSize);
+        int total = sysUserDao.totalCount(departmentIds);//数据总条数
         List<SysUserVo> userVoList = Lists.newArrayList();
         for (SysUser user : userList) {
             SysUserVo sysUserVo = new SysUserVo();
             BeanUtils.copyProperties(user, sysUserVo);
             userVoList.add(sysUserVo);
         }
+
         ResponseData responseData = dataCenterService.getResponseDataFromDataLocal();
         ResponseDataUtil.setHeadOfResponseDataWithSuccessInfo(responseData);
         ResponseDataUtil.putValueToData(responseData, "userList", userVoList);
+        ResponseDataUtil.putValueToData(responseData, "total", total);
+        ResponseDataUtil.putValueToData(responseData, "pageNum", pageNum);
+        ResponseDataUtil.putValueToData(responseData, "pageSize", pageSize);
 
     }
 

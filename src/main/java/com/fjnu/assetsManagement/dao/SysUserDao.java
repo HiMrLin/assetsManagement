@@ -16,6 +16,9 @@ public interface SysUserDao {
 
     List<SysUser> getAllUserByDepartment(List<Long> departmentId);
 
+    List<SysUser> getAllUserByDepartmentByPage(List<Long> departmentId, Integer pageNum, Integer pageSize);
+
+    int totalCount(List<Long> departmentId);
     SysUser getCurrentUser(Long id);//按照人id查询人员信息
 
 }
