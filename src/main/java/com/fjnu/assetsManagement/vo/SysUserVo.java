@@ -14,4 +14,6 @@ public class SysUserVo {
     private Integer status;
     private String sex;
     private String phone;
+    private String departmentName;
+    private String roleName;
 }

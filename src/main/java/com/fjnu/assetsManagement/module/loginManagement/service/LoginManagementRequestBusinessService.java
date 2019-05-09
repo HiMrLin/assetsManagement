@@ -52,8 +52,9 @@ public class LoginManagementRequestBusinessService {
         if (user.getStatus().equals(LoginManagementConstants.LIZHI) || user.getStatus().equals(LoginManagementConstants.LOCK)) {
             ExceptionUtil.setFailureMsgAndThrow(dataCenterService.getResponseDataFromDataLocal(), LoginManagementReasonOfFailure.USERNAME_OR_PASSWORD_IS_WRONG);
         }
-        Long roleId = user.getRole();
-        Long departmentId = user.getDepartment(); //当前登录用户所属部门id
+//        Long roleId = user.getRole();
+        Long roleId = user.getSysRoleAcl().getId();
+        Long departmentId = user.getSysDepartment().getId(); //当前登录用户所属部门id
         SysDepartment sysDepartment = sysDepartmentDao.getDepartmentById(departmentId);//获取当前登录用户的部门，判断是否是总公司
         SysRoleAcl sysRoleAcl = sysRoleAclDao.getAcl(roleId);
         if (sysRoleAcl == null) {

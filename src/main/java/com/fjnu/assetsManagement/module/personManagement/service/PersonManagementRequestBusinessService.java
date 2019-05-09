@@ -14,6 +14,7 @@ import com.fjnu.assetsManagement.util.LevelUtil;
 import com.fjnu.assetsManagement.util.ResponseDataUtil;
 import com.fjnu.assetsManagement.vo.SysUserVo;
 import com.google.common.collect.Lists;
+import com.google.common.primitives.Longs;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -48,8 +49,8 @@ public class PersonManagementRequestBusinessService {
         if (currentLoginUser == null) {
             ExceptionUtil.setFailureMsgAndThrow(dataCenterService.getResponseDataFromDataLocal(), PersonManagementReasonOfFailure.NO_USER);
         }
-        Long roleId = currentLoginUser.getRole();
-        Long departmentId = currentLoginUser.getDepartment(); //当前登录用户所属部门id
+        Long roleId = currentLoginUser.getSysRoleAcl().getId();
+        Long departmentId = currentLoginUser.getSysDepartment().getId(); //当前登录用户所属部门id
         SysDepartment sysDepartment = sysDepartmentDao.getDepartmentById(departmentId);//获取当前登录用户的部门
         SysRoleAcl sysRoleAcl = sysRoleAclDao.getAcl(roleId);//获取当前登录用户的角色对应权限信息
         //判断当前用户的角色是不是管理员，否则无权查询
@@ -77,6 +78,10 @@ public class PersonManagementRequestBusinessService {
         for (SysUser user : userList) {
             SysUserVo sysUserVo = new SysUserVo();
             BeanUtils.copyProperties(user, sysUserVo);
+            sysUserVo.setRole(user.getSysRoleAcl().getId());
+            sysUserVo.setDepartment(user.getSysDepartment().getId());
+            sysUserVo.setDepartmentName(user.getSysDepartment().getName());
+            sysUserVo.setRoleName(user.getSysRoleAcl().getRoleName());
             userVoList.add(sysUserVo);
         }
 
@@ -125,7 +130,7 @@ public class PersonManagementRequestBusinessService {
         if (currentLoginUser == null) {
             ExceptionUtil.setFailureMsgAndThrow(dataCenterService.getResponseDataFromDataLocal(), PersonManagementReasonOfFailure.NO_USER);
         }
-        Long departmentId = currentLoginUser.getDepartment(); //当前登录用户所属部门id
+        Long departmentId = currentLoginUser.getSysDepartment().getId(); //当前登录用户所属部门id
         SysDepartment sysDepartment = sysDepartmentDao.getDepartmentById(departmentId);//获取当前登录用户的部门
         //查询子部门
         String level = sysDepartment.getLevel();
@@ -139,6 +144,24 @@ public class PersonManagementRequestBusinessService {
         ResponseData responseData = dataCenterService.getResponseDataFromDataLocal();
         ResponseDataUtil.setHeadOfResponseDataWithSuccessInfo(responseData);
         ResponseDataUtil.putValueToData(responseData, "departmentList", departmentList);
+
+    }
+
+    public void getCurrentPersonRequestProcess() {
+        String idStr = dataCenterService.getParamValueFromHeadOfRequestParamJsonByParamName("id");
+        Long id = Longs.tryParse(idStr);
+        SysUser sysUser = sysUserDao.getCurrentUser(id);
+        SysRoleAcl sysRoleAcl = sysUser.getSysRoleAcl();
+        SysDepartment sysDepartment = sysUser.getSysDepartment();
+        SysUserVo sysUserVo = new SysUserVo();
+        BeanUtils.copyProperties(sysUser, sysUserVo);
+        sysUserVo.setRoleName(sysRoleAcl.getRoleName());
+        sysUserVo.setDepartmentName(sysDepartment.getName());
+        sysUserVo.setDepartment(sysDepartment.getId());
+        sysUserVo.setRole(sysRoleAcl.getId());
+        ResponseData responseData = dataCenterService.getResponseDataFromDataLocal();
+        ResponseDataUtil.setHeadOfResponseDataWithSuccessInfo(responseData);
+        ResponseDataUtil.putValueToData(responseData, "user", sysUserVo);
 
     }
 }

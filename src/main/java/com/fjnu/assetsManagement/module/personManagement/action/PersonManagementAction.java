@@ -66,6 +66,11 @@ public class PersonManagementAction extends JsonAction {
                     this.setHeadOfResponseDataWithSuccessInfo(dataCenterService.getResponseDataFromDataLocal());
                     this.responseData = dataCenterService.getResponseDataFromDataLocal();
                     break;
+                case PersonManagementFunctionNoConstants.Get_CURRENT_PERSON:
+                    personManagementRequestService.getCurrentPersonRequestProcess();
+                    this.setHeadOfResponseDataWithSuccessInfo(dataCenterService.getResponseDataFromDataLocal());
+                    this.responseData = dataCenterService.getResponseDataFromDataLocal();
+                    break;
                 default:
                     this.setResponseDataWithFailureInfo(dataCenterService.getResponseDataFromDataLocal(), ReasonOfFailure.FUNCTION_NO_ARE_INCORRECT);
                     break;

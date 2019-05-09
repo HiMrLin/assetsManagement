@@ -18,14 +18,19 @@ public class SysUser {
     private String userName;
     @Getter(onMethod_ = {@Column(name = "password")})
     private String password;
-    @Getter(onMethod_ = {@Column(name = "role")})
-    private Long role;
-    @Getter(onMethod_ = {@Column(name = "department")})
-    private Long department;
-    @Getter(onMethod_ = {@Column(name = "status")})
-    private Integer status;
     @Getter(onMethod_ = {@Column(name = "sex")})
     private String sex;
     @Getter(onMethod_ = {@Column(name = "phone")})
     private String phone;
+    @Getter(onMethod_ = {@Column(name = "status")})
+    private Integer status;
+    //    @Getter(onMethod_ = {@Column(name = "role")})
+//    private Long role;
+//    @Getter(onMethod_ = {@Column(name = "department")})
+//    private Long department;
+    @Getter(onMethod_ = {@ManyToOne, @JoinColumn(name = "department")})
+    private SysDepartment sysDepartment;
+
+    @Getter(onMethod_ = {@ManyToOne, @JoinColumn(name = "role")})
+    private SysRoleAcl sysRoleAcl;
 }

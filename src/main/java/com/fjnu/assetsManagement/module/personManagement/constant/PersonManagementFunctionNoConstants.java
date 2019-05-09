@@ -9,5 +9,6 @@ public interface PersonManagementFunctionNoConstants {
     String UPDATE_PASSWORD = "UpdatePassword";//修改密码
     String UPDATE_STATUS = "UpdataStatus";//修改状态
     String GET_DEPARTMENT_LIST = "GetDepartmentList";//获取当前登录用户以及子部门
+    String Get_CURRENT_PERSON = "GetCurrentPerson";//获取当前登录用户信息
 
 }

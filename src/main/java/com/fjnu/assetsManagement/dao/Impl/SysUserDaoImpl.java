@@ -57,7 +57,7 @@ public class SysUserDaoImpl implements SysUserDao {
     public List<SysUser> getAllUserByDepartment(List<Long> departmentId) {
         SessionFactory sf = hibernateTemplate.getSessionFactory();
         Session session = sf.getCurrentSession();
-        Query q = session.createQuery("from SysUser s where s.department IN (:list)");
+        Query q = session.createQuery("from SysUser s where s.sysDepartment.id IN (:list)");
         q.setParameterList("list", departmentId);
         List<SysUser> userList = q.list();
 //        session.close();
@@ -69,7 +69,7 @@ public class SysUserDaoImpl implements SysUserDao {
     public List<SysUser> getAllUserByDepartmentByPage(List<Long> departmentId, Integer pageNum, Integer pageSize) {
         SessionFactory sf = hibernateTemplate.getSessionFactory();
         Session session = sf.getCurrentSession();
-        Query q = session.createQuery("from SysUser s where s.department IN (:list)");
+        Query q = session.createQuery("from SysUser s where s.sysDepartment.id IN (:list)");
         q.setParameterList("list", departmentId);
         q.setFirstResult((pageNum - 1) * pageSize);
         q.setMaxResults(pageSize);
@@ -81,7 +81,7 @@ public class SysUserDaoImpl implements SysUserDao {
     public int totalCount(List<Long> departmentId) {
         SessionFactory sf = hibernateTemplate.getSessionFactory();
         Session session = sf.getCurrentSession();
-        Query q = session.createQuery("from SysUser s where s.department IN (:list)");
+        Query q = session.createQuery("from SysUser s where s.sysDepartment.id IN (:list)");
         q.setParameterList("list", departmentId);
         List<SysUser> userList = q.list();
         if (userList == null) {
