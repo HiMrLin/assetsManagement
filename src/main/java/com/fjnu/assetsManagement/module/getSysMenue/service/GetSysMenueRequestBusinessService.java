@@ -42,8 +42,10 @@ public class GetSysMenueRequestBusinessService {
 
 
     public void getSysMenueRequestProcess() {
-        String account = dataCenterService.getData("account");
-        SysUser user = sysUserDao.getByAccountAndPassword(account, null);
+        Long id = dataCenterService.getData("id");
+
+//        String account = dataCenterService.getData("account");
+        SysUser user = sysUserDao.getCurrentUser(id);
         if (user == null) {
             ExceptionUtil.setFailureMsgAndThrow(dataCenterService.getResponseDataFromDataLocal(), GetSysMenueReasonOfFailure.USERNAME_OR_PASSWORD_IS_WRONG);
         }
@@ -57,8 +59,8 @@ public class GetSysMenueRequestBusinessService {
         String[] aclCode = sysRoleAcl.getAclCode().split(GetSysMenueConstants.SEPORATOR);
         List<Long> moduleIds = Lists.newArrayList(); //获取当前角色所拥有的可操控的权限块
         for (String s : aclCode) {
-            Long id = Longs.tryParse(s);
-            moduleIds.add(id);
+            Long moduleId = Longs.tryParse(s);
+            moduleIds.add(moduleId);
         }
         //获取权限对应的权限部门信息
         List<SysAclModule> sysAclModules = sysAclModuleDao.getModuleByIds(moduleIds);

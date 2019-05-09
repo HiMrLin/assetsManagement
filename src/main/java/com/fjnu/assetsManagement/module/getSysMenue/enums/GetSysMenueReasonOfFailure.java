@@ -4,7 +4,7 @@ import com.fjnu.assetsManagement.enums.IReasonOfFailure;
 
 public enum GetSysMenueReasonOfFailure implements IReasonOfFailure {
 
-    ACCOUNT_IS_BLANK("Account is blank", "账号不为空"),
+    Id_IS_BLANK("Id is blank", "账号不为空"),
     PASSWORD_IS_BLANK("Password is blank", "密码不为空"),
     NO_ACL("No acl", "无权限"),
     NO_USER("No user", "无此用户"),
