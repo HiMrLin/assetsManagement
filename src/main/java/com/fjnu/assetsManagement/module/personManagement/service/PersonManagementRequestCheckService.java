@@ -1,6 +1,8 @@
 package com.fjnu.assetsManagement.module.personManagement.service;
 
 import com.fjnu.assetsManagement.dao.SysUserDao;
+import com.fjnu.assetsManagement.entity.SysDepartment;
+import com.fjnu.assetsManagement.entity.SysRoleAcl;
 import com.fjnu.assetsManagement.entity.SysUser;
 import com.fjnu.assetsManagement.module.personManagement.constant.PersonManagementConstants;
 import com.fjnu.assetsManagement.module.personManagement.enums.PersonManagementReasonOfFailure;
@@ -113,9 +115,13 @@ public class PersonManagementRequestCheckService {
         user.setPhone(phone);
         user.setSex(sex);
         user.setUserName(userName);
-        user.setRole(role);
-        user.setDepartment(department);
         user.setStatus(status);
+        SysRoleAcl sysRoleAcl = new SysRoleAcl();
+        sysRoleAcl.setId(role);
+        SysDepartment sysDepartment = new SysDepartment();
+        sysDepartment.setId(department);
+        user.setSysRoleAcl(sysRoleAcl);
+        user.setSysDepartment(sysDepartment);
         dataCenterService.setData("user", user);
 
 
@@ -176,9 +182,13 @@ public class PersonManagementRequestCheckService {
         user.setPhone(phone);
         user.setSex(sex);
         user.setUserName(userName);
-        user.setRole(role);
-        user.setDepartment(department);
         user.setStatus(status);
+        SysRoleAcl sysRoleAcl = new SysRoleAcl();
+        sysRoleAcl.setId(role);
+        SysDepartment sysDepartment = new SysDepartment();
+        sysDepartment.setId(department);
+        user.setSysRoleAcl(sysRoleAcl);
+        user.setSysDepartment(sysDepartment);
         dataCenterService.setData("user", user);
 
     }

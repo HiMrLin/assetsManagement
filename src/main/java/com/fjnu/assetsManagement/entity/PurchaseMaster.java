@@ -70,10 +70,14 @@ public class PurchaseMaster {
                 ", orderTime='" + orderTime + '\'' +
                 ", totalPrice='" + totalPrice + '\'' +
                 ", operator='" + operator + '\'' +
+                ", operatorId=" + operatorId +
                 ", state=" + state +
                 ", remark='" + remark + '\'' +
                 ", entryTime='" + entryTime + '\'' +
                 ", inTime='" + inTime + '\'' +
+                ", entryOperator='" + entryOperator + '\'' +
+                ", inOperator='" + inOperator + '\'' +
+                ", inOperatorId=" + inOperatorId +
                 ", existState=" + existState +
                 ", purchaseDetailSet=" + purchaseDetailSet +
                 '}';

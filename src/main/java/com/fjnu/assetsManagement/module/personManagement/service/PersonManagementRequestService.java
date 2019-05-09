@@ -55,4 +55,8 @@ public class PersonManagementRequestService {
         personManagementRequestBusinessService.getDepartmentListRequestProcess();
 
     }
+
+    public void getCurrentPersonRequestProcess() {
+        personManagementRequestBusinessService.getCurrentPersonRequestProcess();
+    }
 }
