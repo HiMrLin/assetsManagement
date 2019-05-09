@@ -4,6 +4,7 @@ import com.fjnu.assetsManagement.entity.*;
 import com.fjnu.assetsManagement.service.DataCenterService;
 import com.fjnu.assetsManagement.util.PageUtil;
 import com.fjnu.assetsManagement.util.ResponseDataUtil;
+import com.fjnu.assetsManagement.vo.AssetsItem;
 import com.fjnu.assetsManagement.vo.Receive;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -24,6 +25,7 @@ public class AssetsRequestBusinessService {
     DataCenterService dataCenterService;
     @Autowired
     SessionFactory sessionFactory;
+
 
     //资产列表
     public void assetsListRequestProcess() throws SQLException, UnsupportedEncodingException {
@@ -56,7 +58,7 @@ public class AssetsRequestBusinessService {
         list.setList(((org.hibernate.query.Query) getListQuery).list());
     }
 
-    //显示可领用资产列表
+    //按条件查询资产表
     public void useListRequestProcess(){
         Integer kindId = dataCenterService.getData("kindId");
         String Hql;
@@ -94,10 +96,16 @@ public class AssetsRequestBusinessService {
         session.getTransaction().commit();
     }
 
+    private List find(String hql){
+        Session session = sessionFactory.openSession();
+        session.beginTransaction();
+        Query getQuery =session.createQuery(hql);
+        return ((org.hibernate.query.Query) getQuery).list();
+    }
+
     //领用
     public void useRequestProcess(){
         String Name = dataCenterService.getData("userName");
-        String recorder = dataCenterService.getData("recorder");
         String depository = dataCenterService.getData("depository");
         String department = dataCenterService.getData("department");
         String purpose = dataCenterService.getData("purpose");
@@ -108,54 +116,63 @@ public class AssetsRequestBusinessService {
         session.flush();
         session.clear();
         Long Id = System.currentTimeMillis();
+        ReceiveMaster receiveMaster = new ReceiveMaster();
+        receiveMaster.setDepart(department);
+        receiveMaster.setGetState(1);
+        receiveMaster.setNote(note);
+        receiveMaster.setPurpose(purpose);
+        receiveMaster.setReceiveId(Id);
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        receiveMaster.setReceiveTime(sdf.format(new Date()));
+        session.save(receiveMaster);
         for (Long car:cardIdList) {
             RecordReceive recordReceive = new RecordReceive();
             String Hql = "from Assets a where cardId = "+ car ;
-            Query getQuery =session.createQuery(Hql);
-            List<Assets> assetsList = ((org.hibernate.query.Query) getQuery).list();
-            for (Assets assets1:assetsList) {
-                recordReceive.setAssetsId(assets1.getAssetsId());
-            }
-            recordReceive.setDepart(department);
-            recordReceive.setNote(note);
-            recordReceive.setPurpose(purpose);
-            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-            recordReceive.setReceiveTime(sdf.format(new Date()));
-            recordReceive.setRecorder(recorder);
+            List<Assets> assetsList = find(Hql);
+            recordReceive.setAssetsId(assetsList.get(0).getAssetsId());
             recordReceive.setReceiveId(Id);
-            recordReceive.setGetState(1);
             session.save(recordReceive);
         }
         updateAssets(cardIdList,Name,depository);
         session.getTransaction().commit();
-        //关闭
         session.close();
     }
 
-    //领用记录
+   /* //领用记录
     public void usedListRequestProcess(){
         Integer pageSize = dataCenterService.getData("pageSize");
         Integer pageNum = dataCenterService.getData("pageNum");
         Session session = sessionFactory.openSession();
         session.beginTransaction();
+        String Hql;
+        String hql;
         Integer state;
-        PageUtil<RecordReceive> recordReceive = new PageUtil<>();
+        PageUtil<ReceiveMaster> receiveMaster = new PageUtil<>();
         String otherCondition = "  ";
-        this.getPageList(recordReceive, pageNum, pageSize, RecordReceive.class.getSimpleName(),otherCondition);
+        this.getPageList(receiveMaster, pageNum, pageSize, ReceiveMaster.class.getSimpleName(),otherCondition);
         List<Receive> receives = new ArrayList<>();
-        for (RecordReceive recordReceive1:recordReceive.getList()) {
-            state = 0;
+        for (ReceiveMaster receiveMaster1:receiveMaster.getList()) {
             Receive receive = new Receive();
-            receive.setAssetsId(recordReceive1.getAssetsId());
-            receive.setDate(recordReceive1.getReceiveTime());
-            receive.setDepartment(recordReceive1.getDepart());
-            receive.setReceiveId(recordReceive1.getReceiveId());
-            receive.setPurpose(recordReceive1.getPurpose());
-            receive.setRecorder(recordReceive1.getRecorder());
-            receive.setNote(recordReceive1.getNote());
-            state=recordReceive1.getGetState();
+            receive.setDate(receiveMaster1.getReceiveTime());
+            receive.setDepartment(receiveMaster1.getDepart());
+            receive.setReceiveId(receiveMaster1.getReceiveId());
+            receive.setPurpose(receiveMaster1.getPurpose());
+            receive.setNote(receiveMaster1.getNote());
+            state=receiveMaster1.getGetState();
             receive.setAssetsState(state);
-            String Hql = "from Assets a where a.assetsId = "+ recordReceive1.getAssetsId();
+            hql = "from RecordReceive where assetsId = "+ receiveMaster1.getReceiveId();
+            List<RecordReceive> recordReceives = find(hql);
+            for (RecordReceive recordReceive1: recordReceives) {
+                AssetsItem assetsItem1 = new AssetsItem();
+                Hql = "from Assets a where a.assetsId = "+ recordReceive1.getAssetsId();
+                List<Assets> assetsList = find(Hql);
+                assetsItem1.setAssetsId(assetsList.get(0).getAssetsId());
+                assetsItem1.setKind(assetsList.get(0).getKind());
+                assetsItem1.setQuantity(assetsList.get(0).getQuantity());
+                assetsItem1.setAsssetsName(assetsList.get(0).getAssetsName());
+                assetsItem1.setPrice(assetsList.get(0).getUnitPrice());
+
+            }
             Query getQuery =session.createQuery(Hql);
             List<Assets> assetsList = ((org.hibernate.query.Query) getQuery).list();
             for (Assets assets1:assetsList) {
@@ -178,7 +195,7 @@ public class AssetsRequestBusinessService {
         ResponseDataUtil.setHeadOfResponseDataWithSuccessInfo(responseData);
         ResponseDataUtil.putValueToData(responseData, "Receives", receives);
     }
-
+*/
     //归还
     public void returnRequestProcess(){
         List<Long> receiveIdList = dataCenterService.getData("receiveIdList");

@@ -31,7 +31,6 @@ public class AssetsRequestCheckService {
 
     public void useRequestCheck(){
         String userName = dataCenterService.getParamValueFromParamOfRequestParamJsonByParamName("userName");
-        String recorder = dataCenterService.getParamValueFromParamOfRequestParamJsonByParamName("recorder");
         String depository = dataCenterService.getParamValueFromParamOfRequestParamJsonByParamName("depository");
         String department = dataCenterService.getParamValueFromParamOfRequestParamJsonByParamName("department");
         String purpose = dataCenterService.getParamValueFromParamOfRequestParamJsonByParamName("purpose");
@@ -47,9 +46,6 @@ public class AssetsRequestCheckService {
         if (StringUtils.isBlank(department)){
             ExceptionUtil.setFailureMsgAndThrow(dataCenterService.getResponseDataFromDataLocal(), AssetsReasonOfFailure.DEPARTMENT_IS_NOT_BLANK); //验证数据不合法后返回前台提示信息
         }
-        if (StringUtils.isBlank(recorder)){
-            ExceptionUtil.setFailureMsgAndThrow(dataCenterService.getResponseDataFromDataLocal(), AssetsReasonOfFailure.RECORDER_IS_NOT_BLANK); //验证数据不合法后返回前台提示信息
-        }
         if (StringUtils.isBlank(purpose)){
             ExceptionUtil.setFailureMsgAndThrow(dataCenterService.getResponseDataFromDataLocal(), AssetsReasonOfFailure.PURPOSE_IS_NOT_BLANK); //验证数据不合法后返回前台提示信息
         }
@@ -62,7 +58,6 @@ public class AssetsRequestCheckService {
         dataCenterService.setData("department", department);
         dataCenterService.setData("purpose", purpose);
         dataCenterService.setData("note", note);
-        dataCenterService.setData("recorder", recorder);
     }
 
     public void usedListRequestCheck(){
