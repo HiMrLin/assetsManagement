@@ -1,72 +1,73 @@
-package com.fjnu.assetsManagement.module.assets.action;
+package com.fjnu.assetsManagement.module.personManagement.action;
 
 import com.fjnu.assetsManagement.action.JsonAction;
-import com.fjnu.assetsManagement.entity.ResponseData;
 import com.fjnu.assetsManagement.enums.ReasonOfFailure;
 import com.fjnu.assetsManagement.exception.RequestFailureException;
-import com.fjnu.assetsManagement.module.assets.constant.AssetsFunctionNoConstants;
-import com.fjnu.assetsManagement.module.assets.service.AssetsRequestService;
+import com.fjnu.assetsManagement.module.personManagement.constant.PersonManagementFunctionNoConstants;
+import com.fjnu.assetsManagement.module.personManagement.service.PersonManagementRequestService;
 import com.fjnu.assetsManagement.service.DataCenterService;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.struts2.convention.annotation.Action;
 import org.apache.struts2.convention.annotation.Namespace;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.ExceptionHandler;
 
 import static com.opensymphony.xwork2.Action.ERROR;
 import static com.opensymphony.xwork2.Action.SUCCESS;
 
 @Slf4j
-@CrossOrigin
-@Namespace("/assetsAction")
-public class AssetsAction extends JsonAction {
+@Namespace("/personManagement")
+public class PersonManagementAction extends JsonAction {
     @Autowired
     DataCenterService dataCenterService;
     @Autowired
-    AssetsRequestService assetsRequestService;
+    PersonManagementRequestService personManagementRequestService;
 
-    @Action(value="/assets")
-    public String execute() throws Exception {
-        String functionNo=dataCenterService.getFunctionNo();
+    @Action(value = "/person")
+    public String execute() {
+        String functionNo = dataCenterService.getFunctionNo();
         if (functionNo == null) {
             return "none";
         }
         log.info("-----functionNo------" + functionNo);
         try {
             switch (functionNo) {
-                case AssetsFunctionNoConstants.ASSETS_LIST:
-                    assetsRequestService.assetsListRequest();
+                case PersonManagementFunctionNoConstants.GET_PERSON_LIST:
+                    personManagementRequestService.getPersonListRequestProcess();
                     this.setHeadOfResponseDataWithSuccessInfo(dataCenterService.getResponseDataFromDataLocal());
                     this.responseData = dataCenterService.getResponseDataFromDataLocal();
                     break;
-                case AssetsFunctionNoConstants.USE_LIST:
-                    assetsRequestService.useListRequest();
+                case PersonManagementFunctionNoConstants.ADD_PERSON:
+                    personManagementRequestService.addPersonRequestProcess();
                     this.setHeadOfResponseDataWithSuccessInfo(dataCenterService.getResponseDataFromDataLocal());
                     this.responseData = dataCenterService.getResponseDataFromDataLocal();
                     break;
-                case AssetsFunctionNoConstants.USE:
-                    assetsRequestService.useRequest();
+                case PersonManagementFunctionNoConstants.UPDATE_PERSON:
+                    personManagementRequestService.updatePersonRequestProcess();
                     this.setHeadOfResponseDataWithSuccessInfo(dataCenterService.getResponseDataFromDataLocal());
                     this.responseData = dataCenterService.getResponseDataFromDataLocal();
                     break;
-                case AssetsFunctionNoConstants.USED_LIST:
-                    assetsRequestService.usedListRequest();
+                case PersonManagementFunctionNoConstants.DELETE_PERSON:
+                    personManagementRequestService.deletePersonRequestProcess();
                     this.setHeadOfResponseDataWithSuccessInfo(dataCenterService.getResponseDataFromDataLocal());
                     this.responseData = dataCenterService.getResponseDataFromDataLocal();
                     break;
-                case AssetsFunctionNoConstants.RETURN:
-                    assetsRequestService.returnRequest();
+                case PersonManagementFunctionNoConstants.UPDATE_PASSWORD:
+                    personManagementRequestService.updatePasswordRequestProcess();
                     this.setHeadOfResponseDataWithSuccessInfo(dataCenterService.getResponseDataFromDataLocal());
                     this.responseData = dataCenterService.getResponseDataFromDataLocal();
                     break;
-                case AssetsFunctionNoConstants.SCRAP:
-                    assetsRequestService.scrapRequest();
+                case PersonManagementFunctionNoConstants.UPDATE_STATUS:
+                    personManagementRequestService.updateStatusRequestProcess();
                     this.setHeadOfResponseDataWithSuccessInfo(dataCenterService.getResponseDataFromDataLocal());
                     this.responseData = dataCenterService.getResponseDataFromDataLocal();
                     break;
-                case AssetsFunctionNoConstants.SCRAP_LIST:
-                    assetsRequestService.scrapListRequest();
+                case PersonManagementFunctionNoConstants.GET_DEPARTMENT_LIST:
+                    personManagementRequestService.getDepartmentListRequestProcess();
+                    this.setHeadOfResponseDataWithSuccessInfo(dataCenterService.getResponseDataFromDataLocal());
+                    this.responseData = dataCenterService.getResponseDataFromDataLocal();
+                    break;
+                case PersonManagementFunctionNoConstants.Get_CURRENT_PERSON:
+                    personManagementRequestService.getCurrentPersonRequestProcess();
                     this.setHeadOfResponseDataWithSuccessInfo(dataCenterService.getResponseDataFromDataLocal());
                     this.responseData = dataCenterService.getResponseDataFromDataLocal();
                     break;
@@ -80,12 +81,6 @@ public class AssetsAction extends JsonAction {
         }
         return SUCCESS;
     }
-    @ExceptionHandler(RequestFailureException.class)
-    public Object handleException(RequestFailureException requestFailureException){
-        ResponseData responseData=requestFailureException.getResponseData();
-        this.responseData=responseData;
-        return ERROR;
 
-    }
 
 }

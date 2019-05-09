@@ -24,8 +24,8 @@ public class ExceptionUtil {
 	 * 抛出自定义异常原因
 	 */  
 	public  static RequestFailureException setFailureMsgAndThrow(ResponseData responseData, IReasonOfFailure reasonOfFailure) {
-		RequestFailureException requestFailureException=new RequestFailureException();
 		ResponseDataUtil.setResponseDataWithFailureInfo(responseData, reasonOfFailure);
+		RequestFailureException requestFailureException=new RequestFailureException();
 		requestFailureException.setResponseData(responseData);
 		throw requestFailureException;
 	}

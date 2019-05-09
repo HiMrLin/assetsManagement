@@ -1,11 +1,13 @@
 package com.fjnu.assetsManagement.module.helloWorld.service;
 
+import com.fjnu.assetsManagement.entity.Assets;
 import com.fjnu.assetsManagement.entity.Product;
 import com.fjnu.assetsManagement.entity.ResponseData;
 import com.fjnu.assetsManagement.service.DataCenterService;
 import com.fjnu.assetsManagement.util.PageUtil;
 import com.fjnu.assetsManagement.util.ResponseDataUtil;
 import com.google.common.collect.Lists;
+import com.google.common.primitives.Longs;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -44,6 +46,21 @@ public class HelloWordRequestBusinessService {
         purchaseMasterList.setList(((org.hibernate.query.Query) getListQuery).list());
 
     }
+
+    //测试从数据库取出条形码转化成图片
+    public void testTransferImagesProcess(Long id) {
+        //Long cardId = dataCenterService.getData("cardId");
+
+        Session session = sessionFactory.openSession();
+        Assets assets = session.get(Assets.class, id);
+        System.out.println(assets.getCode());
+
+        //this.GenerateImage(assets.getCode());
+        //转化为图片
+
+
+    }
+
     public void helloWorldRequestProcess() {
         String userName = dataCenterService.getData("userName");//从容器中获取数据
         Product product1 = new Product();
@@ -55,6 +72,9 @@ public class HelloWordRequestBusinessService {
         product2.setName("测试2");
         list.add(product1);
         list.add(product2);
+
+        this.testTransferImagesProcess(Longs.tryParse(userName));
+
         //操作完成后返回给前台数据
         ResponseData responseData=dataCenterService.getResponseDataFromDataLocal();
         ResponseDataUtil.setHeadOfResponseDataWithSuccessInfo(responseData);

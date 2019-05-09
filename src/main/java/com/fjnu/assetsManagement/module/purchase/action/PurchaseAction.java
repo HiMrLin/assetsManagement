@@ -33,34 +33,39 @@ public class PurchaseAction extends JsonAction {
             return "none";
         }
         log.info("-----functionNo------" + functionNo);
-        switch (functionNo) {
-            //添加采购单
-            case PurchaseFunctionNoConstants.ADD_PURCHASE_ITEM:
-                purchaseRequestService.addPurchaseItemServiceProcess();
-                this.setHeadOfResponseDataWithSuccessInfo(dataCenterService.getResponseDataFromDataLocal());
-                this.responseData = dataCenterService.getResponseDataFromDataLocal();
-                break;
-            //得到采购单列表
-            case PurchaseFunctionNoConstants.GET_PURCHASE_LIST:
-                purchaseRequestService.getPurchaseMasterListProcess();
-                this.setHeadOfResponseDataWithSuccessInfo(dataCenterService.getResponseDataFromDataLocal());
-                this.responseData = dataCenterService.getResponseDataFromDataLocal();
-                break;
-            //根据采购单号得到采购单
-            case PurchaseFunctionNoConstants.GET_PURCHASE_BY_ORDERNO:
-                purchaseRequestService.getPurchaseMasterListByOrderNoProcess();
-                this.setHeadOfResponseDataWithSuccessInfo(dataCenterService.getResponseDataFromDataLocal());
-                this.responseData = dataCenterService.getResponseDataFromDataLocal();
-                break;
-            //根据采购单号数组删除采购单
-            case PurchaseFunctionNoConstants.DELETE_PURCHASE_ITEM:
-                purchaseRequestService.deletePurchaseMasterListByOrderNoProcess();
-                this.setHeadOfResponseDataWithSuccessInfo(dataCenterService.getResponseDataFromDataLocal());
-                this.responseData = dataCenterService.getResponseDataFromDataLocal();
-                break;
-            default:
-                this.setResponseDataWithFailureInfo(dataCenterService.getResponseDataFromDataLocal(), ReasonOfFailure.FUNCTION_NO_ARE_INCORRECT);
-                break;
+        try {
+            switch (functionNo) {
+                //添加采购单
+                case PurchaseFunctionNoConstants.ADD_PURCHASE_ITEM:
+                    purchaseRequestService.addPurchaseItemServiceProcess();
+                    this.setHeadOfResponseDataWithSuccessInfo(dataCenterService.getResponseDataFromDataLocal());
+                    this.responseData = dataCenterService.getResponseDataFromDataLocal();
+                    break;
+                //得到采购单列表
+                case PurchaseFunctionNoConstants.GET_PURCHASE_LIST:
+                    purchaseRequestService.getPurchaseMasterListProcess();
+                    this.setHeadOfResponseDataWithSuccessInfo(dataCenterService.getResponseDataFromDataLocal());
+                    this.responseData = dataCenterService.getResponseDataFromDataLocal();
+                    break;
+                //根据采购单号得到采购单
+                case PurchaseFunctionNoConstants.GET_PURCHASE_BY_ORDERNO:
+                    purchaseRequestService.getPurchaseMasterListByOrderNoProcess();
+                    this.setHeadOfResponseDataWithSuccessInfo(dataCenterService.getResponseDataFromDataLocal());
+                    this.responseData = dataCenterService.getResponseDataFromDataLocal();
+                    break;
+                //根据采购单号数组删除采购单
+                case PurchaseFunctionNoConstants.DELETE_PURCHASE_ITEM:
+                    purchaseRequestService.deletePurchaseMasterListByOrderNoProcess();
+                    this.setHeadOfResponseDataWithSuccessInfo(dataCenterService.getResponseDataFromDataLocal());
+                    this.responseData = dataCenterService.getResponseDataFromDataLocal();
+                    break;
+                default:
+                    this.setResponseDataWithFailureInfo(dataCenterService.getResponseDataFromDataLocal(), ReasonOfFailure.FUNCTION_NO_ARE_INCORRECT);
+                    break;
+            }
+        } catch (RequestFailureException e) {
+            this.responseData = e.getResponseData();
+            return ERROR;
         }
         return SUCCESS;
     }

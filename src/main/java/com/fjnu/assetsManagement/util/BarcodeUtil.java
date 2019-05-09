@@ -64,6 +64,7 @@ public class BarcodeUtil {
 
         // 配置对象
         bean.setModuleWidth(moduleWidth);
+
         bean.setWideFactor(3);
         bean.doQuietZone(false);
 

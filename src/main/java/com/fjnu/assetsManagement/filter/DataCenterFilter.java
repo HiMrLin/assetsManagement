@@ -38,6 +38,16 @@ public class DataCenterFilter implements Filter {
 
         log.info("--------DataCenterFilter------doFilter---servletPath---{}", servletPath);
 
+        String contentType = request.getContentType();
+        String method = request.getMethod();
+        if (method.equalsIgnoreCase("OPTIONS")) {//option预请求
+            filterChain.doFilter(servletRequest, servletResponse);
+            return;
+        }
+        if (contentType.contains("multipart/form-data")) {//说明数据传递是通过formdata形式
+            filterChain.doFilter(servletRequest, servletResponse);
+            return;
+        }
 
         JSONObject requestParamJson = null;
         BufferedReader streamReader = new BufferedReader(new InputStreamReader(request.getInputStream(), "UTF-8"));

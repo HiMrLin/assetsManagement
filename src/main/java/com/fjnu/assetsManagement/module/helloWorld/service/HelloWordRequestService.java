@@ -9,9 +9,12 @@ public class HelloWordRequestService {
     private HelloWordRequestCheckService helloWordRequestCheckService;
     @Autowired
     private HelloWordRequestBusinessService helloWordRequestBusinessService;
+
     public void helloWorldRequestProcess() {
+
         helloWordRequestCheckService.helloWorldRequestCheck(); //检查参数合法性
-        helloWordRequestBusinessService.helloWorldRequestProcess();//获取数据后的具体操作
+            helloWordRequestBusinessService.helloWorldRequestProcess();//获取数据后的具体操作
+
 
     }
 }

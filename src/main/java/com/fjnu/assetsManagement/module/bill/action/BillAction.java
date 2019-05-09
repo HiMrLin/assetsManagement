@@ -33,25 +33,30 @@ public class BillAction extends JsonAction {
             return "none";
         }
         log.info("-----functionNo------" + functionNo);
-        switch (functionNo) {
-            case BillFunctionNoConstants.BILL_OUT_LIST:
-                billRequestService.billOutListRequest();
-                this.setHeadOfResponseDataWithSuccessInfo(dataCenterService.getResponseDataFromDataLocal());
-                this.responseData=dataCenterService.getResponseDataFromDataLocal();
-                break;
-            case BillFunctionNoConstants.IN_BILL:
-                billRequestService.inBillRequest();
-                this.setHeadOfResponseDataWithSuccessInfo(dataCenterService.getResponseDataFromDataLocal());
-                this.responseData=dataCenterService.getResponseDataFromDataLocal();
-                break;
-            case BillFunctionNoConstants.BILL_LIST:
-                billRequestService.billListRequest();
-                this.setHeadOfResponseDataWithSuccessInfo(dataCenterService.getResponseDataFromDataLocal());
-                this.responseData=dataCenterService.getResponseDataFromDataLocal();
-                break;
-            default:
-                this.setResponseDataWithFailureInfo(dataCenterService.getResponseDataFromDataLocal(),ReasonOfFailure.FUNCTION_NO_ARE_INCORRECT);
-                break;
+        try {
+            switch (functionNo) {
+                case BillFunctionNoConstants.BILL_OUT_LIST:
+                    billRequestService.billOutListRequest();
+                    this.setHeadOfResponseDataWithSuccessInfo(dataCenterService.getResponseDataFromDataLocal());
+                    this.responseData = dataCenterService.getResponseDataFromDataLocal();
+                    break;
+                case BillFunctionNoConstants.IN_BILL:
+                    billRequestService.inBillRequest();
+                    this.setHeadOfResponseDataWithSuccessInfo(dataCenterService.getResponseDataFromDataLocal());
+                    this.responseData = dataCenterService.getResponseDataFromDataLocal();
+                    break;
+                case BillFunctionNoConstants.BILL_LIST:
+                    billRequestService.billListRequest();
+                    this.setHeadOfResponseDataWithSuccessInfo(dataCenterService.getResponseDataFromDataLocal());
+                    this.responseData = dataCenterService.getResponseDataFromDataLocal();
+                    break;
+                default:
+                    this.setResponseDataWithFailureInfo(dataCenterService.getResponseDataFromDataLocal(), ReasonOfFailure.FUNCTION_NO_ARE_INCORRECT);
+                    break;
+            }
+        } catch (RequestFailureException e) {
+            this.responseData = e.getResponseData();
+            return ERROR;
         }
         return SUCCESS;
     }
