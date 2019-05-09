@@ -67,7 +67,6 @@ public class PurchaseMaster {
     @Getter(onMethod_ = {@OneToMany(cascade = CascadeType.ALL), @JoinColumn(name = "master_id")})
     private Set<PurchaseDetail> purchaseDetailSet = new HashSet<>();
 
-
     @Override
     public String toString() {
         return "PurchaseMaster{" +
@@ -77,6 +76,7 @@ public class PurchaseMaster {
                 ", totalPrice='" + totalPrice + '\'' +
                 ", operator='" + operator + '\'' +
                 ", operatorId=" + operatorId +
+                ", departmentId=" + departmentId +
                 ", state=" + state +
                 ", remark='" + remark + '\'' +
                 ", entryTime='" + entryTime + '\'' +
