@@ -44,7 +44,7 @@ public class EntryRequestBusinessService {
     public void entryProcess() {
         //取得数据
         List<String> orderNoList = dataCenterService.getData("orderNoList");
-        String inOperator = dataCenterService.getData("inOperator");
+        Long inOperatorId = dataCenterService.getData("inOperatorId");
 
         //进行入库——将state属性改为1
         Session session = sessionFactory.openSession();
@@ -54,10 +54,10 @@ public class EntryRequestBusinessService {
         for (String ordeNo : orderNoList) {
 
             Date nowDate = new Date();
-            String hql = "update PurchaseMaster p set p.state=1, p.inTime=:n, p.inOperator=:i where p.orderNo=:o";
+            String hql = "update PurchaseMaster p set p.state=1, p.inTime=:n, p.inOperatorId=:i where p.orderNo=:o";
             Query query = session.createQuery(hql);
             ((org.hibernate.query.Query) query).setString("o", ordeNo);
-            ((org.hibernate.query.Query) query).setString("i", inOperator);
+            ((org.hibernate.query.Query) query).setLong("i", inOperatorId);
             ((org.hibernate.query.Query) query).setDate("n", nowDate);
             query.executeUpdate();
 

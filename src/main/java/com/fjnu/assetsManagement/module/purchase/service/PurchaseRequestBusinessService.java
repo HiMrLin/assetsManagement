@@ -184,7 +184,7 @@ public class PurchaseRequestBusinessService {
 
         //读取采购表相关数据
         //获取操作员以及采购单号
-        String operator = dataCenterService.getData("operator");
+        Long operatorId = dataCenterService.getData("operatorId");
         String orderNo = dataCenterService.getData("orderNo");
         String remark = dataCenterService.getParamValueFromParamOfRequestParamJsonByParamName("remark");
         //获取采购的详细物品
@@ -194,7 +194,7 @@ public class PurchaseRequestBusinessService {
         PurchaseMaster purchaseMaster = new PurchaseMaster();
         purchaseMaster.setOrderNo(orderNo);
         purchaseMaster.setOrderTime(sdf.format(new Date()));
-        purchaseMaster.setOperator(operator);
+        purchaseMaster.setOperatorId(operatorId);
         purchaseMaster.setState(0L);
         purchaseMaster.setRemark(remark);
 

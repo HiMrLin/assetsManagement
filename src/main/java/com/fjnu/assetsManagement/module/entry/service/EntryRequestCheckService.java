@@ -5,6 +5,7 @@ import com.fjnu.assetsManagement.module.entry.enums.EntryReasonOfFailure;
 import com.fjnu.assetsManagement.module.purchase.enums.PurchaseReasonOfFailure;
 import com.fjnu.assetsManagement.service.DataCenterService;
 import com.fjnu.assetsManagement.util.ExceptionUtil;
+import com.google.common.primitives.Longs;
 import org.apache.commons.lang3.StringUtils;
 import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,7 +23,7 @@ public class EntryRequestCheckService {
 
     //入库
     public void entryCheck() {
-        String inOperator = dataCenterService.getParamValueFromParamOfRequestParamJsonByParamName("inOperator");
+        Long inOperatorId = Longs.tryParse(dataCenterService.getParamValueFromHeadOfRequestParamJsonByParamName("id"));
         JSONArray array = dataCenterService.getParamValueFromParamOfRequestParamJsonByParamName("orderNoList");
         List<String> orderNoList = array.toJavaList(String.class);
 
@@ -30,12 +31,12 @@ public class EntryRequestCheckService {
             ExceptionUtil.setFailureMsgAndThrow(dataCenterService.getResponseDataFromDataLocal(), EntryReasonOfFailure.ENTRY_IS_NOT_ENOUGH);
         }
 
-        if (StringUtils.isBlank(inOperator)) {
+        if (inOperatorId == null) {
             ExceptionUtil.setFailureMsgAndThrow(dataCenterService.getResponseDataFromDataLocal(), EntryReasonOfFailure.ENTRY_IS_NOT_ENOUGH);
         }
 
         dataCenterService.setData("orderNoList", orderNoList);
-        dataCenterService.setData("inOperator", inOperator);
+        dataCenterService.setData("inOperatorId", inOperatorId);
     }
 
     //得到已入库采购单列表
