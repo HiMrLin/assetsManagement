@@ -42,7 +42,7 @@ public class BillRequestBusinessService {
         for (Long id : orderDetailId) {
             long now = System.currentTimeMillis();
             long nowadd = now + 12345;
-            String hql = "update Assets a set a.inStateState=2, a.inAccountTime=:t, a.financeId=:f, a.accountId=:q where a.orderDetailId=:o";
+            String hql = "update Assets a set a.inState=2, a.inAccountTime=:t, a.financeId=:f, a.accountId=:q where a.orderDetailId=:o";
             Query query = session.createQuery(hql);
             ((org.hibernate.query.Query) query).setLong("o", id);
             ((org.hibernate.query.Query) query).setLong("f", now);
@@ -56,16 +56,16 @@ public class BillRequestBusinessService {
     //入账
     public void inBillRequestProcess(){
         List<String> orderNo = dataCenterService.getData("orderNo");
-        String entryOperator = dataCenterService.getData("entryOperator");
+        Long entryOperatorId = dataCenterService.getData("entryOperatorId");
         Session session = sessionFactory.openSession();
         session.beginTransaction();
         for (String entry : orderNo) {
             Date nowDate = new Date();
-            String hql = "update PurchaseMaster p set p.state=2,p.entryTime=:t,p.entryOperator=:e where p.orderNo=:o";
+            String hql = "update PurchaseMaster p set p.state=2,p.entryTime=:t,p.entryOperatorId=:e where p.orderNo=:o";
             Query query = session.createQuery(hql);
             ((org.hibernate.query.Query) query).setDate("t", nowDate);
             ((org.hibernate.query.Query) query).setString("o", entry);
-            ((org.hibernate.query.Query) query).setString("e", entryOperator);
+            ((org.hibernate.query.Query) query).setLong("e", entryOperatorId);
             query.executeUpdate();
             String getPurchaseDetailHql = "from PurchaseMaster pm where pm.orderNo=:o";
             Query query1 = session.createQuery(getPurchaseDetailHql);

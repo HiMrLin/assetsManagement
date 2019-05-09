@@ -47,6 +47,9 @@ public class PurchaseMaster {
     @Getter(onMethod_ = {@Column(name = "entry_operator")})
     private String entryOperator;//入账操作员
 
+    @Getter(onMethod_ = {@Column(name = "entry_operator_id")})
+    private String entryOperatorId;//入账操作员id
+
     @Getter(onMethod_ = {@Column(name = "in_operator")})
     private String inOperator;//入库操作员
 
@@ -76,6 +79,7 @@ public class PurchaseMaster {
                 ", entryTime='" + entryTime + '\'' +
                 ", inTime='" + inTime + '\'' +
                 ", entryOperator='" + entryOperator + '\'' +
+                ", entryOperatorId='" + entryOperatorId + '\'' +
                 ", inOperator='" + inOperator + '\'' +
                 ", inOperatorId=" + inOperatorId +
                 ", existState=" + existState +

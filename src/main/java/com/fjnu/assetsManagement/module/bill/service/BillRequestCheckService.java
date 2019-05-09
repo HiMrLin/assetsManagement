@@ -1,10 +1,12 @@
 package com.fjnu.assetsManagement.module.bill.service;
 
+import ch.qos.logback.core.net.SyslogOutputStream;
 import com.alibaba.fastjson.JSONArray;
 import com.fjnu.assetsManagement.module.bill.enums.BillReasonOfFailure;
 import com.fjnu.assetsManagement.service.DataCenterService;
 import com.fjnu.assetsManagement.util.CheckVariableUtil;
 import com.fjnu.assetsManagement.util.ExceptionUtil;
+import com.google.common.primitives.Longs;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -30,17 +32,20 @@ public class BillRequestCheckService {
     }
 
     public void inBillRequestCheck(){
-        JSONArray array = dataCenterService.getParamValueFromParamOfRequestParamJsonByParamName("oderNoList");
+        Long entryOperatorId = Longs.tryParse(dataCenterService.getParamValueFromHeadOfRequestParamJsonByParamName("id"));
+        JSONArray array = dataCenterService.getParamValueFromParamOfRequestParamJsonByParamName("orderNoList");
+        if(array == null)
+            System.out.println("为空");
         List<String> orderNo = array.toJavaList(String.class);
-        String entryOperator = dataCenterService.getParamValueFromParamOfRequestParamJsonByParamName("entryOperator");
+
         if (orderNo.size() <= 0) {
             ExceptionUtil.setFailureMsgAndThrow(dataCenterService.getResponseDataFromDataLocal(), BillReasonOfFailure.ORDERNO_IS_NOT_BLANK);
         }
-        if (StringUtils.isBlank(entryOperator)) {
+        if (entryOperatorId == null) {
             ExceptionUtil.setFailureMsgAndThrow(dataCenterService.getResponseDataFromDataLocal(), BillReasonOfFailure.ENTRYOPERATOR_IS_NOT_BLANK);
         }
         dataCenterService.setData("orderNo", orderNo);
-        dataCenterService.setData("entryOperator", entryOperator);
+        dataCenterService.setData("entryOperatorId", entryOperatorId);
 
     }
 
