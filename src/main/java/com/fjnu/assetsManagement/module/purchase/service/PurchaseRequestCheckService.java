@@ -6,6 +6,7 @@ import com.fjnu.assetsManagement.entity.PurchaseDetail;
 import com.fjnu.assetsManagement.module.purchase.enums.PurchaseReasonOfFailure;
 import com.fjnu.assetsManagement.service.DataCenterService;
 import com.fjnu.assetsManagement.util.ExceptionUtil;
+import com.google.common.primitives.Longs;
 import org.apache.commons.lang3.StringUtils;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -46,7 +47,7 @@ public class PurchaseRequestCheckService {
 
     //添加采购单参数校验
     public void addPurchaseItemServiceCheck() {
-        String operator = dataCenterService.getParamValueFromParamOfRequestParamJsonByParamName("operator");
+        Long operatorId = Longs.tryParse((String)dataCenterService.getParamValueFromHeadOfRequestParamJsonByParamName("id"));
 
         //有可能造成空指针异常，使用tryParse，如果转换失败会返回null，效果更好，不需要在之前判空
         //Long orderNo = Long.valueOf(String.valueOf(dataCenterService.getParamValueFromParamOfRequestParamJsonByParamName("orderNo")));
@@ -59,7 +60,7 @@ public class PurchaseRequestCheckService {
         Set<PurchaseDetail> purchaseDetailSet = new HashSet<>(purchaseDetailList);
 
         //判空
-        if (StringUtils.isBlank(operator)) {
+        if (operatorId == null) {
             //验证数据不合法后返回前台提示信息
             ExceptionUtil.setFailureMsgAndThrow(dataCenterService.getResponseDataFromDataLocal(), PurchaseReasonOfFailure.OPERATOR_IS_NOT_BLANK);
         }
@@ -87,7 +88,7 @@ public class PurchaseRequestCheckService {
         }
 
         //验证合法后插入容器
-        dataCenterService.setData("operator", operator);
+        dataCenterService.setData("operatorId", operatorId);
         dataCenterService.setData("orderNo", orderNo);
         dataCenterService.setData("purchaseDetailSet", purchaseDetailSet);
     }

@@ -5,6 +5,13 @@ import lombok.Data;
 import java.util.Arrays;
 import java.util.List;
 
+/**
+ * @ClassName:EasyExcelUtil
+ * @Description: 分页操作工具
+ * @Author:yzq
+ * @Date:2019/4/23
+ **/
+
 @SuppressWarnings("hiding")
 @Data
 public class PageUtil<T> {

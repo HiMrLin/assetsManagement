@@ -29,6 +29,9 @@ public class PurchaseMaster {
     @Getter(onMethod_ = {@Column(name = "operator")})
     private String operator;//操作员
 
+    @Getter(onMethod_ = {@Column(name = "operator_id")})
+    private Long operatorId;//操作员id
+
     @Getter(onMethod_ = {@Column(name = "state")})
     private Long state;//状态
 
@@ -47,6 +50,9 @@ public class PurchaseMaster {
     @Getter(onMethod_ = {@Column(name = "in_operator")})
     private String inOperator;//入库操作员
 
+    @Getter(onMethod_ = {@Column(name = "in_operator_id")})
+    private Long inOperatorId;//入库操作员id
+
     @Getter(onMethod_ = {@Column(name = "exist_state")})
     private Integer existState;//逻辑存在状态
 
@@ -64,10 +70,14 @@ public class PurchaseMaster {
                 ", orderTime='" + orderTime + '\'' +
                 ", totalPrice='" + totalPrice + '\'' +
                 ", operator='" + operator + '\'' +
+                ", operatorId=" + operatorId +
                 ", state=" + state +
                 ", remark='" + remark + '\'' +
                 ", entryTime='" + entryTime + '\'' +
                 ", inTime='" + inTime + '\'' +
+                ", entryOperator='" + entryOperator + '\'' +
+                ", inOperator='" + inOperator + '\'' +
+                ", inOperatorId=" + inOperatorId +
                 ", existState=" + existState +
                 ", purchaseDetailSet=" + purchaseDetailSet +
                 '}';
