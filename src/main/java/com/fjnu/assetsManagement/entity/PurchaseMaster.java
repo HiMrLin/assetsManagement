@@ -32,6 +32,9 @@ public class PurchaseMaster {
     @Getter(onMethod_ = {@Column(name = "operator_id")})
     private Long operatorId;//操作员id
 
+    @Getter(onMethod_ = {@Column(name = "department_id")})
+    private Long departmentId;//操作员id
+
     @Getter(onMethod_ = {@Column(name = "state")})
     private Long state;//状态
 
