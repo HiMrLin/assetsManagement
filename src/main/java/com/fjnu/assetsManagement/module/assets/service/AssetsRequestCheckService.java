@@ -67,15 +67,13 @@ public class AssetsRequestCheckService {
     public void returnRequestCheck(){
         JSONArray array = dataCenterService.getParamValueFromParamOfRequestParamJsonByParamName("receiveIdList");
         List<Long> receiveIdList = array.toJavaList(Long.class);
-        String returnName = dataCenterService.getParamValueFromParamOfRequestParamJsonByParamName("returnName");
+        String nameId = dataCenterService.getParamValueFromParamOfRequestParamJsonByParamName("id");
+        Long id = Long.parseLong(nameId);
         if (receiveIdList.size()<=0){
             ExceptionUtil.setFailureMsgAndThrow(dataCenterService.getResponseDataFromDataLocal(), AssetsReasonOfFailure.USER_ID_LIST_IS_NOT_BLANK); //验证数据不合法后返回前台提示信息
         }
-        if(StringUtils.isBlank(returnName)){
-            ExceptionUtil.setFailureMsgAndThrow(dataCenterService.getResponseDataFromDataLocal(), AssetsReasonOfFailure.RETURN_NAME_IS_NOT_BLANK); //验证数据不合法后返回前台提示信息
-        }
         dataCenterService.setData("receiveIdList", receiveIdList);
-        dataCenterService.setData("returnName", returnName);
+        dataCenterService.setData("nameId", id);
     }
 
     public void scrapRequestCheck(){

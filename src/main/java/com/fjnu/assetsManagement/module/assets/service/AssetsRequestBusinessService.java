@@ -5,7 +5,6 @@ import com.fjnu.assetsManagement.service.DataCenterService;
 import com.fjnu.assetsManagement.util.PageUtil;
 import com.fjnu.assetsManagement.util.ResponseDataUtil;
 import com.fjnu.assetsManagement.vo.AssetsItem;
-import com.fjnu.assetsManagement.vo.Receive;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -81,6 +80,27 @@ public class AssetsRequestBusinessService {
         ResponseDataUtil.putValueToData(responseData, "Assets", assetsList);
     }
 
+    //获取仓管
+    private String getKeeper(Long id){
+        Session session = sessionFactory.openSession();
+        session.beginTransaction();
+        String hql = "from SysUser where id="+id;
+        List<SysUser> sysUsers = find(hql);
+        session.getTransaction().commit();
+        if(sysUsers.get(0).getId()==1){
+            return "张雷";
+        }
+        else if(sysUsers.get(0).getId()==2){
+            return "陈琪";
+        }
+        else if(sysUsers.get(0).getId()==3){
+            return "吴必辉";
+        }
+        else{
+            return "0";
+        }
+    }
+
     //更新资产表
     private void updateAssets(List<Long> cardId,String userName,String depository) {
         Session session = sessionFactory.openSession();
@@ -100,6 +120,7 @@ public class AssetsRequestBusinessService {
         Session session = sessionFactory.openSession();
         session.beginTransaction();
         Query getQuery =session.createQuery(hql);
+        session.getTransaction().commit();
         return ((org.hibernate.query.Query) getQuery).list();
     }
 
@@ -138,99 +159,67 @@ public class AssetsRequestBusinessService {
         session.close();
     }
 
-   /* //领用记录
+    //领用记录
     public void usedListRequestProcess(){
         Integer pageSize = dataCenterService.getData("pageSize");
         Integer pageNum = dataCenterService.getData("pageNum");
         Session session = sessionFactory.openSession();
         session.beginTransaction();
-        String Hql;
         String hql;
-        Integer state;
         PageUtil<ReceiveMaster> receiveMaster = new PageUtil<>();
         String otherCondition = "  ";
+        AssetsItem assetsItem = new AssetsItem();
         this.getPageList(receiveMaster, pageNum, pageSize, ReceiveMaster.class.getSimpleName(),otherCondition);
-        List<Receive> receives = new ArrayList<>();
         for (ReceiveMaster receiveMaster1:receiveMaster.getList()) {
-            Receive receive = new Receive();
-            receive.setDate(receiveMaster1.getReceiveTime());
-            receive.setDepartment(receiveMaster1.getDepart());
-            receive.setReceiveId(receiveMaster1.getReceiveId());
-            receive.setPurpose(receiveMaster1.getPurpose());
-            receive.setNote(receiveMaster1.getNote());
-            state=receiveMaster1.getGetState();
-            receive.setAssetsState(state);
-            hql = "from RecordReceive where assetsId = "+ receiveMaster1.getReceiveId();
-            List<RecordReceive> recordReceives = find(hql);
-            for (RecordReceive recordReceive1: recordReceives) {
-                AssetsItem assetsItem1 = new AssetsItem();
-                Hql = "from Assets a where a.assetsId = "+ recordReceive1.getAssetsId();
-                List<Assets> assetsList = find(Hql);
-                assetsItem1.setAssetsId(assetsList.get(0).getAssetsId());
-                assetsItem1.setKind(assetsList.get(0).getKind());
-                assetsItem1.setQuantity(assetsList.get(0).getQuantity());
-                assetsItem1.setAsssetsName(assetsList.get(0).getAssetsName());
-                assetsItem1.setPrice(assetsList.get(0).getUnitPrice());
-
+            for (RecordReceive recordReceive1:receiveMaster1.getRecordReceive()) {
+                hql = "from Assets where assetsId = "+recordReceive1.getAssetsId();
+                List<Assets> assetsList  = find(hql);
+                assetsItem.setAsssetsName(assetsList.get(0).getAssetsName());
+                assetsItem.setPrice(assetsList.get(0).getUnitPrice());
+                assetsItem.setKind(assetsList.get(0).getKind());
+                assetsItem.setQuantity(assetsList.get(0).getQuantity());
+                recordReceive1.setAssetsItem(assetsItem);
             }
-            Query getQuery =session.createQuery(Hql);
-            List<Assets> assetsList = ((org.hibernate.query.Query) getQuery).list();
-            for (Assets assets1:assetsList) {
-                receive.setDepository(assets1.getDepository());
-                receive.setUserName(assets1.getUserName());
-            }
-            if(state==0){
-                String receiveIdHql = "from RecordReturn a where a.receiveId = "+ recordReceive1.getReceiveId();
-                Query receiveIdQuery =session.createQuery(receiveIdHql);
-                List<RecordReturn> recordRetruns = ((org.hibernate.query.Query) receiveIdQuery).list();
-                for (RecordReturn recordreturn1:recordRetruns) {
-                    receive.setReturnTime(recordreturn1.getReturnTime());
-                    receive.setReturnName(recordreturn1.getReturnName());
-                    receive.setReturnId(recordreturn1.getReturnId());
-                }
-            }
-            receives.add(receive);
         }
         ResponseData responseData = dataCenterService.getResponseDataFromDataLocal();
         ResponseDataUtil.setHeadOfResponseDataWithSuccessInfo(responseData);
-        ResponseDataUtil.putValueToData(responseData, "Receives", receives);
+        ResponseDataUtil.putValueToData(responseData, "ReceiveMasterList", receiveMaster);
     }
-*/
     //归还
     public void returnRequestProcess(){
         List<Long> receiveIdList = dataCenterService.getData("receiveIdList");
-        String returnName =dataCenterService.getData("returnName");
+        Long nameId =dataCenterService.getData("nameId");
+        String Hql;
         Session session = sessionFactory.openSession();
         session.beginTransaction();
         session.flush();
         session.clear();
         Integer state;
         List<String> assets = new ArrayList<>();
+        Hql = "from SysUser where id=" +nameId;
+        List<SysUser> sysUser = find(Hql);
         for (Long receiveId:receiveIdList) {
-            state=0;
             RecordReturn recordReturn = new RecordReturn();
-            String Hql = "from RecordReceive  where receiveId = "+ receiveId ;
-            Query getQuery =session.createQuery(Hql);
-            List<RecordReceive> recordReceives = ((org.hibernate.query.Query) getQuery).list();
-            for (RecordReceive receive:recordReceives) {
-                String assId = receive.getAssetsId();
-            String assetsIdHql = "from Assets a where a.assetsId = "+ assId;
-            Query assetsIdQuery =session.createQuery(assetsIdHql);
-            List<Assets> assetsList = ((org.hibernate.query.Query) assetsIdQuery).list();
-            state=assetsList.get(0).getAssetsState();
-            if(state==1) {
-                assets.add(assId);
+            Hql = "from ReceiveMaster  where receiveId = "+ receiveId ;
+            List<ReceiveMaster> receiveMasters = find(Hql);
+            for (ReceiveMaster receiveMaster1:receiveMasters) {
+                for (RecordReceive recordReceive1:receiveMaster1.getRecordReceive()) {
+                    String assetsIdHql = "from Assets a where a.assetsId = "+ recordReceive1.getAssetsId();
+                    List<Assets> assetsList =find(assetsIdHql);
+                    state=assetsList.get(0).getAssetsState();
+                    if(state==1) {
+                        assets.add(assetsList.get(0).getAssetsId());
+                    }
+                }
             }
-            }
-            recordReturn.setReceiveId(receiveId);
-            recordReturn.setReturnName(returnName);
+            recordReturn.setReturnName(sysUser.get(0).getUserName());
             recordReturn.setReturnId(System.currentTimeMillis());
             SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
             recordReturn.setReturnTime(sdf.format(new Date()));
             session.save(recordReturn);
         }
         updateRecordReceive(receiveIdList);
-        updateAssetsList(assets);
+        updateAssetsList(assets,getKeeper(nameId));
         session.getTransaction().commit();
         session.close();
     }
@@ -247,13 +236,13 @@ public class AssetsRequestBusinessService {
         session.getTransaction().commit();
     }
 
-    public void updateAssetsList(List<String>assetsId){
+    public void updateAssetsList(List<String>assetsId,String name){
         Session session = sessionFactory.openSession();
         session.beginTransaction();
         for (String assets:assetsId) {
             String shql = "update Assets a set a.userName=null,a.assetsState=0, a.depository=:t where a.assetsId=:o";
             Query query1 = session.createQuery(shql);
-            ((org.hibernate.query.Query) query1).setString("t", "刘在宁");
+            ((org.hibernate.query.Query) query1).setString("t", name);
             ((org.hibernate.query.Query) query1).setString("o", assets);
             query1.executeUpdate();
         }
