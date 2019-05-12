@@ -46,7 +46,7 @@ public class PurchaseRequestBusinessService {
     }
 
     //读取资产相关数据并进行存储
-    public void addAssets() throws IOException {
+    public void addAssets(String depository) throws IOException {
 
         Session session = sessionFactory.openSession();
         session.beginTransaction();
@@ -74,7 +74,7 @@ public class PurchaseRequestBusinessService {
                 //凭证号
                 assets.setAccountId(summaryAssets.getAccountId());
                 //保管人
-                assets.setDepository(summaryAssets.getDepository());
+                assets.setDepository(depository);
                 //使用年限
                 assets.setLifeFactor(summaryAssets.getLifeFactor());
                 //保修年限
@@ -117,7 +117,7 @@ public class PurchaseRequestBusinessService {
                     //凭证号
                     assets.setAccountId(summaryAssets.getAccountId());
                     //保管人
-                    assets.setDepository(summaryAssets.getDepository());
+                    assets.setDepository(depository);
                     //使用年限
                     assets.setLifeFactor(summaryAssets.getLifeFactor());
                     //保修年限
@@ -189,7 +189,17 @@ public class PurchaseRequestBusinessService {
         //获取操作员以及采购单号
         Long operatorId = dataCenterService.getData("operatorId");
         //根据id得到部门id
-        SysDepartment sysDepartment = sysDepartmentDao.getDepartmentById(operatorId);
+        Session getDepartmentIdSession = sessionFactory.openSession();
+        SysUser sysUser = getDepartmentIdSession.get(SysUser.class, operatorId);
+        SysDepartment sysDepartment = sysUser.getSysDepartment();
+        //根据部门ID确定保管人
+        String depository;
+        if(sysDepartment.getId() == 1)
+            depository = "张雷";
+        else if(sysDepartment.getId() == 2)
+            depository = "吴必辉";
+        else
+            depository = "陈琪";
 
         String orderNo = dataCenterService.getData("orderNo");
         String remark = dataCenterService.getParamValueFromParamOfRequestParamJsonByParamName("remark");
@@ -233,7 +243,7 @@ public class PurchaseRequestBusinessService {
         session.close();
         //添加资产表
         try {
-            this.addAssets();
+            this.addAssets(depository);
         } catch (IOException e) {
             e.printStackTrace();
         }
