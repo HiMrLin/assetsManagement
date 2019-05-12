@@ -136,8 +136,11 @@ public class PersonManagementRequestCheckService {
         String roleStr = dataCenterService.getParamValueFromParamOfRequestParamJsonByParamName("role");
         String departmentStr = dataCenterService.getParamValueFromParamOfRequestParamJsonByParamName("department");
         String userName = dataCenterService.getParamValueFromParamOfRequestParamJsonByParamName("userName");
-        String password = dataCenterService.getParamValueFromParamOfRequestParamJsonByParamName("password");
+//        String password = dataCenterService.getParamValueFromParamOfRequestParamJsonByParamName("password");
         Integer status = dataCenterService.getParamValueFromParamOfRequestParamJsonByParamName("status");
+        if (idStr == null) {
+            ExceptionUtil.setFailureMsgAndThrow(dataCenterService.getResponseDataFromDataLocal(), PersonManagementReasonOfFailure.ID_IS_BLANK);
+        }
         Long id = Longs.tryParse(idStr);
         Long role = Longs.tryParse(roleStr);
         Long department = Longs.tryParse(departmentStr);
@@ -151,9 +154,9 @@ public class PersonManagementRequestCheckService {
             ExceptionUtil.setFailureMsgAndThrow(dataCenterService.getResponseDataFromDataLocal(), PersonManagementReasonOfFailure.PHONE_IS_ILLEGAL);
         }
 
-        if (StringUtils.isBlank(password)) {
-            ExceptionUtil.setFailureMsgAndThrow(dataCenterService.getResponseDataFromDataLocal(), PersonManagementReasonOfFailure.PASSWORD_IS_BLANK);
-        }
+//        if (StringUtils.isBlank(password)) {
+//            ExceptionUtil.setFailureMsgAndThrow(dataCenterService.getResponseDataFromDataLocal(), PersonManagementReasonOfFailure.PASSWORD_IS_BLANK);
+//        }
         if (role == null) {
             ExceptionUtil.setFailureMsgAndThrow(dataCenterService.getResponseDataFromDataLocal(), PersonManagementReasonOfFailure.ROLE_IS_ILLEGAL);
         }
@@ -180,7 +183,7 @@ public class PersonManagementRequestCheckService {
         BeanUtils.copyProperties(before, user);
         //设置新数据
         user.setId(id);
-        user.setPassword(password);
+//        user.setPassword(password);
         user.setPhone(phone);
         user.setSex(sex);
         user.setUserName(userName);
@@ -233,9 +236,13 @@ public class PersonManagementRequestCheckService {
         String idStr = dataCenterService.getParamValueFromParamOfRequestParamJsonByParamName("id");
         Long id = Longs.tryParse(idStr);
         Integer status = dataCenterService.getParamValueFromParamOfRequestParamJsonByParamName("status");
+        if (idStr == null) {
+            ExceptionUtil.setFailureMsgAndThrow(dataCenterService.getResponseDataFromDataLocal(), PersonManagementReasonOfFailure.ID_IS_BLANK);
+        }
         if (id == null) {
             ExceptionUtil.setFailureMsgAndThrow(dataCenterService.getResponseDataFromDataLocal(), PersonManagementReasonOfFailure.ID_IS_ILLEGAL);
         }
+
         Set<Integer> set = Sets.newHashSet();
         set.add(PersonManagementConstants.LIZHI);
         set.add(PersonManagementConstants.ZAIZHI);
