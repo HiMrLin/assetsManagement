@@ -44,8 +44,7 @@ public class PersonManagementRequestBusinessService {
             pageNum = 1;
             pageSize = 10;
         }
-        String account = condition.getAccount();
-        SysUser currentLoginUser = sysUserDao.getByAccountAndPassword(account, null);
+        SysUser currentLoginUser = sysUserDao.getCurrentUser(condition.getId());
         if (currentLoginUser == null) {
             ExceptionUtil.setFailureMsgAndThrow(dataCenterService.getResponseDataFromDataLocal(), PersonManagementReasonOfFailure.NO_USER);
         }
@@ -125,8 +124,7 @@ public class PersonManagementRequestBusinessService {
     public void getDepartmentListRequestProcess() {
         //获取登录用户信息
         SysUser condition = dataCenterService.getData("user");//条件查询所有的条件
-        String account = condition.getAccount();
-        SysUser currentLoginUser = sysUserDao.getByAccountAndPassword(account, null);
+        SysUser currentLoginUser = sysUserDao.getCurrentUser(condition.getId());
         if (currentLoginUser == null) {
             ExceptionUtil.setFailureMsgAndThrow(dataCenterService.getResponseDataFromDataLocal(), PersonManagementReasonOfFailure.NO_USER);
         }

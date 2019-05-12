@@ -4,7 +4,7 @@ import com.fjnu.assetsManagement.enums.IReasonOfFailure;
 
 public enum PersonManagementReasonOfFailure implements IReasonOfFailure {
 
-    ACCOUNT_IS_BLANK("Account is blank", "账号不为空"),
+    ID_IS_BLANK("Id is blank", "id不为空"),
     SEX_IS_BLANK("Sex is blank", "性别不为空"),
     USERNAME_IS_BLANK("User name is blank", "用户名不为空"),
     PASSWORD_IS_BLANK("Password is blank", "密码不为空"),
