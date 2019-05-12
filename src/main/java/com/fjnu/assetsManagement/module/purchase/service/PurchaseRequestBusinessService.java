@@ -1,6 +1,7 @@
 package com.fjnu.assetsManagement.module.purchase.service;
 
 import com.alibaba.druid.util.Base64;
+import com.fjnu.assetsManagement.dao.SysDepartmentDao;
 import com.fjnu.assetsManagement.entity.*;
 import com.fjnu.assetsManagement.service.DataCenterService;
 import com.fjnu.assetsManagement.util.BarcodeUtil;
@@ -28,6 +29,8 @@ public class PurchaseRequestBusinessService {
     @Autowired
     private SessionFactory sessionFactory;
 
+    @Autowired
+    private SysDepartmentDao sysDepartmentDao;
 
 
     //生成资产编码
@@ -184,7 +187,10 @@ public class PurchaseRequestBusinessService {
 
         //读取采购表相关数据
         //获取操作员以及采购单号
-        String operator = dataCenterService.getData("operator");
+        Long operatorId = dataCenterService.getData("operatorId");
+        //根据id得到部门id
+        SysDepartment sysDepartment = sysDepartmentDao.getDepartmentById(operatorId);
+
         String orderNo = dataCenterService.getData("orderNo");
         String remark = dataCenterService.getParamValueFromParamOfRequestParamJsonByParamName("remark");
         //获取采购的详细物品
@@ -194,9 +200,10 @@ public class PurchaseRequestBusinessService {
         PurchaseMaster purchaseMaster = new PurchaseMaster();
         purchaseMaster.setOrderNo(orderNo);
         purchaseMaster.setOrderTime(sdf.format(new Date()));
-        purchaseMaster.setOperator(operator);
+        purchaseMaster.setOperatorId(operatorId);
         purchaseMaster.setState(0L);
         purchaseMaster.setRemark(remark);
+        purchaseMaster.setDepartmentId(sysDepartment.getId());
 
         //建立关联
         Double totalPrice = 0.00d;

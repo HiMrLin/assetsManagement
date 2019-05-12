@@ -29,6 +29,12 @@ public class PurchaseMaster {
     @Getter(onMethod_ = {@Column(name = "operator")})
     private String operator;//操作员
 
+    @Getter(onMethod_ = {@Column(name = "operator_id")})
+    private Long operatorId;//操作员id
+
+    @Getter(onMethod_ = {@Column(name = "department_id")})
+    private Long departmentId;//操作员所属组织id
+
     @Getter(onMethod_ = {@Column(name = "state")})
     private Long state;//状态
 
@@ -44,8 +50,14 @@ public class PurchaseMaster {
     @Getter(onMethod_ = {@Column(name = "entry_operator")})
     private String entryOperator;//入账操作员
 
+    @Getter(onMethod_ = {@Column(name = "entry_operator_id")})
+    private String entryOperatorId;//入账操作员id
+
     @Getter(onMethod_ = {@Column(name = "in_operator")})
     private String inOperator;//入库操作员
+
+    @Getter(onMethod_ = {@Column(name = "in_operator_id")})
+    private Long inOperatorId;//入库操作员id
 
     @Getter(onMethod_ = {@Column(name = "exist_state")})
     private Integer existState;//逻辑存在状态
@@ -55,7 +67,6 @@ public class PurchaseMaster {
     @Getter(onMethod_ = {@OneToMany(cascade = CascadeType.ALL), @JoinColumn(name = "master_id")})
     private Set<PurchaseDetail> purchaseDetailSet = new HashSet<>();
 
-
     @Override
     public String toString() {
         return "PurchaseMaster{" +
@@ -64,10 +75,16 @@ public class PurchaseMaster {
                 ", orderTime='" + orderTime + '\'' +
                 ", totalPrice='" + totalPrice + '\'' +
                 ", operator='" + operator + '\'' +
+                ", operatorId=" + operatorId +
+                ", departmentId=" + departmentId +
                 ", state=" + state +
                 ", remark='" + remark + '\'' +
                 ", entryTime='" + entryTime + '\'' +
                 ", inTime='" + inTime + '\'' +
+                ", entryOperator='" + entryOperator + '\'' +
+                ", entryOperatorId='" + entryOperatorId + '\'' +
+                ", inOperator='" + inOperator + '\'' +
+                ", inOperatorId=" + inOperatorId +
                 ", existState=" + existState +
                 ", purchaseDetailSet=" + purchaseDetailSet +
                 '}';
