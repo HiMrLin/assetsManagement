@@ -40,8 +40,23 @@ public class AssetsAction extends JsonAction {
                     this.setHeadOfResponseDataWithSuccessInfo(dataCenterService.getResponseDataFromDataLocal());
                     this.responseData = dataCenterService.getResponseDataFromDataLocal();
                     break;
+                case AssetsFunctionNoConstants.GET_OWNER_ASSTETS_LIST:
+                    assetsRequestService.ownerAssetsListRequest();
+                    this.setHeadOfResponseDataWithSuccessInfo(dataCenterService.getResponseDataFromDataLocal());
+                    this.responseData = dataCenterService.getResponseDataFromDataLocal();
+                    break;
+                case AssetsFunctionNoConstants.TRANSFER:
+                    assetsRequestService.transferRequest();
+                    this.setHeadOfResponseDataWithSuccessInfo(dataCenterService.getResponseDataFromDataLocal());
+                    this.responseData = dataCenterService.getResponseDataFromDataLocal();
+                    break;
                 case AssetsFunctionNoConstants.USE_LIST:
                     assetsRequestService.useListRequest();
+                    this.setHeadOfResponseDataWithSuccessInfo(dataCenterService.getResponseDataFromDataLocal());
+                    this.responseData = dataCenterService.getResponseDataFromDataLocal();
+                    break;
+                case AssetsFunctionNoConstants.TRANSFER_LIST:
+                    assetsRequestService.transferListRequest();
                     this.setHeadOfResponseDataWithSuccessInfo(dataCenterService.getResponseDataFromDataLocal());
                     this.responseData = dataCenterService.getResponseDataFromDataLocal();
                     break;
@@ -65,8 +80,28 @@ public class AssetsAction extends JsonAction {
                     this.setHeadOfResponseDataWithSuccessInfo(dataCenterService.getResponseDataFromDataLocal());
                     this.responseData = dataCenterService.getResponseDataFromDataLocal();
                     break;
+                case AssetsFunctionNoConstants.ALLOT:
+                    assetsRequestService.allotRequest();
+                    this.setHeadOfResponseDataWithSuccessInfo(dataCenterService.getResponseDataFromDataLocal());
+                    this.responseData = dataCenterService.getResponseDataFromDataLocal();
+                    break;
+                case AssetsFunctionNoConstants.ALLOT_LIST:
+                    assetsRequestService.allotListRequest();
+                    this.setHeadOfResponseDataWithSuccessInfo(dataCenterService.getResponseDataFromDataLocal());
+                    this.responseData = dataCenterService.getResponseDataFromDataLocal();
+                    break;
+                case AssetsFunctionNoConstants.ALLOT_CHECK:
+                    assetsRequestService.allotCheckRequest();
+                    this.setHeadOfResponseDataWithSuccessInfo(dataCenterService.getResponseDataFromDataLocal());
+                    this.responseData = dataCenterService.getResponseDataFromDataLocal();
+                    break;
                 case AssetsFunctionNoConstants.SCRAP_LIST:
                     assetsRequestService.scrapListRequest();
+                    this.setHeadOfResponseDataWithSuccessInfo(dataCenterService.getResponseDataFromDataLocal());
+                    this.responseData = dataCenterService.getResponseDataFromDataLocal();
+                    break;
+                case AssetsFunctionNoConstants.TRANSFERCHECK:
+                    assetsRequestService.transferCheckRequest();
                     this.setHeadOfResponseDataWithSuccessInfo(dataCenterService.getResponseDataFromDataLocal());
                     this.responseData = dataCenterService.getResponseDataFromDataLocal();
                     break;
@@ -85,7 +120,6 @@ public class AssetsAction extends JsonAction {
         ResponseData responseData=requestFailureException.getResponseData();
         this.responseData=responseData;
         return ERROR;
-
     }
 
 }
