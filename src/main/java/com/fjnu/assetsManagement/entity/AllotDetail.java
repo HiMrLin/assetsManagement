@@ -1,22 +1,19 @@
 package com.fjnu.assetsManagement.entity;
 
-
 import com.fjnu.assetsManagement.vo.AssetsItem;
 import lombok.Data;
 import lombok.Getter;
 
 import javax.persistence.*;
-import java.util.Date;
-
 @Data
 @Entity
-@Table(name = "record_receive")
-public class RecordReceive {
+@Table(name = "allot_detail")
+public class AllotDetail {
     @Getter(onMethod_ = {@Column(name = "assets_id")})
-    private String assetsId;//资产编码
+    private String assetsId;
 
-    @Getter(onMethod_ = {@Column(name = "receive_id")})
-    private Long ReceiveId;//领用编码
+    @Getter(onMethod_ = {@Column(name = "allot_id")})
+    private Long allotId;
 
     @Getter(onMethod_ = {@Id, @Column(name = "id"), @GeneratedValue(strategy = GenerationType.IDENTITY)})
     private Long id;

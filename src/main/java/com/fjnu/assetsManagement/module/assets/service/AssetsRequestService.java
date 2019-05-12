@@ -51,4 +51,39 @@ public class AssetsRequestService {
         assetsRequestCheckService.scrapListRequestCheck(); //检查参数合法性
         assetsRequestBusinessService.scrapListRequestProcess();//获取数据后的具体操作
     }
+
+    public void transferListRequest(){
+        assetsRequestCheckService.transferListRequestCheck(); //检查参数合法性
+        assetsRequestBusinessService.transferListRequestProcess();//获取数据后的具体操作
+    }
+
+    public void ownerAssetsListRequest(){
+        assetsRequestCheckService.ownerAssetsListRequestCheck(); //检查参数合法性
+        assetsRequestBusinessService.ownerAssetsListRequestProcess();//获取数据后的具体操作
+    }
+
+    public void transferRequest(){
+        assetsRequestCheckService.transferRequestCheck(); //检查参数合法性
+        assetsRequestBusinessService.transferRequestProcess();//获取数据后的具体操作
+    }
+
+    public void transferCheckRequest(){
+        assetsRequestCheckService.transferCheckRequestCheck(); //检查参数合法性
+        assetsRequestBusinessService.transferCheckRequestProcess();//获取数据后的具体操作
+    }
+
+    public void allotRequest(){
+        assetsRequestCheckService.allotRequestCheck(); //检查参数合法性
+        assetsRequestBusinessService.allotRequestProcess();//获取数据后的具体操作
+    }
+
+    public void allotListRequest(){
+        assetsRequestCheckService.allotListRequestCheck(); //检查参数合法性
+        assetsRequestBusinessService.allotListRequestProcess();//获取数据后的具体操作
+    }
+
+    public void allotCheckRequest(){
+        assetsRequestCheckService.allotCheckRequestCheck(); //检查参数合法性
+        assetsRequestBusinessService.allotCheckRequestProcess();//获取数据后的具体操作
+    }
 }

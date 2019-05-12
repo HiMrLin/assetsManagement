@@ -8,4 +8,11 @@ public interface AssetsFunctionNoConstants {
 	String RETURN="Return";
 	String SCRAP="Scrap";
 	String SCRAP_LIST="ScrapList";
+	String TRANSFER_LIST="TransferList";
+	String GET_OWNER_ASSTETS_LIST="OwnerAssets";
+	String TRANSFER="Transfer";
+	String TRANSFERCHECK="TransferCheck";
+	String ALLOT="Allot";
+	String ALLOT_LIST="AllotList";
+	String ALLOT_CHECK="AllotCheck";
 }
