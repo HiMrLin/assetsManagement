@@ -32,6 +32,9 @@ public class ReceiveMaster {
     @Getter(onMethod_ = {@Column(name = "department")})
     private String depart;//部门
 
+    @Getter(onMethod_ = {@Column(name = "user_id")})
+    private  Long userId;//领用状态
+
     @Getter(onMethod_ = {@Column(name = "get_state")})
     private  Integer getState;//领用状态
 }

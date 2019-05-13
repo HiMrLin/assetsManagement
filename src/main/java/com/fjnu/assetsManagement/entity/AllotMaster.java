@@ -21,8 +21,14 @@ public class AllotMaster {
     @Getter(onMethod_ = {@Column(name = "state")})
     private Integer state;
 
-    @Getter(onMethod_ = {@Column(name = "time")})
-    private String  time;
+    @Getter(onMethod_ = {@Column(name = "start_time")})
+    private String  startTime;
+
+    @Getter(onMethod_ = {@Column(name = "mid_time")})
+    private String  midTime;
+
+    @Getter(onMethod_ = {@Column(name = "end_time")})
+    private String  endTime;
 
     @Getter(onMethod_ = {@OneToMany(cascade = CascadeType.ALL),@JoinColumn(name = "allot_id")})
     private List<AllotDetail> allotDetailList;

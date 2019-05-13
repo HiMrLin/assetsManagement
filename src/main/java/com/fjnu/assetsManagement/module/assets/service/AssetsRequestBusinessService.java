@@ -28,10 +28,12 @@ public class AssetsRequestBusinessService {
 
     //资产列表
     public void assetsListRequestProcess() throws SQLException, UnsupportedEncodingException {
+        Long userId = dataCenterService.getData("userId");
         Integer pageSize = dataCenterService.getData("pageSize");
         Integer pageNum = dataCenterService.getData("pageNum");
+        String departmentName = getDepartmentName(userId);
         PageUtil<Assets> assets = new PageUtil<>();
-        String otherCondition = "where c.assetsState=0 and inState=1 or inState=2";
+        String otherCondition = "where  (inState=1 or inState=2) and ascription = '"+departmentName+"'";
         this.getPageList(assets, pageNum, pageSize, Assets.class.getSimpleName(),otherCondition);
         ResponseData responseData = dataCenterService.getResponseDataFromDataLocal();
         ResponseDataUtil.setHeadOfResponseDataWithSuccessInfo(responseData);
@@ -55,6 +57,17 @@ public class AssetsRequestBusinessService {
         getListQuery.setFirstResult(firstResult);
         getListQuery.setMaxResults(curPageSize);
         list.setList(((org.hibernate.query.Query) getListQuery).list());
+    }
+
+    //根据ID获取部门
+    public String getDepartmentName(Long id){
+        Session session = sessionFactory.openSession();
+        session.beginTransaction();
+        String Hql = "from SysUser where id=" +id;
+        List<SysUser> sysUser = find(Hql);
+        session.getTransaction().commit();
+        return sysUser.get(0).getSysDepartment().getName();
+
     }
 
     //按条件查询资产表
@@ -138,9 +151,8 @@ public class AssetsRequestBusinessService {
 
     //领用
     public void useRequestProcess(){
-        String Name = dataCenterService.getData("userName");
-        String depository = Name;
-        String department = dataCenterService.getData("department");
+        Long userId = dataCenterService.getData("userId");
+        String depository = getName(userId);
         String purpose = dataCenterService.getData("purpose");
         String note = dataCenterService.getData("note");
         List<Long> cardIdList = dataCenterService.getData("cardIdList");
@@ -150,11 +162,12 @@ public class AssetsRequestBusinessService {
         session.clear();
         Long Id = System.currentTimeMillis();
         ReceiveMaster receiveMaster = new ReceiveMaster();
-        receiveMaster.setDepart(department);
+        receiveMaster.setDepart(getDepartmentName(userId));
         receiveMaster.setGetState(1);
         receiveMaster.setNote(note);
         receiveMaster.setPurpose(purpose);
         receiveMaster.setReceiveId(Id);
+        receiveMaster.setUserId(userId);
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
         receiveMaster.setReceiveTime(sdf.format(new Date()));
         session.save(receiveMaster);
@@ -166,7 +179,7 @@ public class AssetsRequestBusinessService {
             recordReceive.setReceiveId(Id);
             session.save(recordReceive);
         }
-        updateAssets(cardIdList,Name,depository);
+        updateAssets(cardIdList,getName(userId),depository);
         session.getTransaction().commit();
         session.close();
     }
@@ -175,10 +188,19 @@ public class AssetsRequestBusinessService {
     public void usedListRequestProcess(){
         Integer pageSize = dataCenterService.getData("pageSize");
         Integer pageNum = dataCenterService.getData("pageNum");
+        Long userId = dataCenterService.getData("userId");
+        String otherCondition;
         Session session = sessionFactory.openSession();
         session.beginTransaction();
+        String Hql = "from SysUser where id=" +userId;
+        List<SysUser> sysUser = find(Hql);
+        if(sysUser.get(0).getSysRoleAcl().getId()==1){
+            otherCondition = "where depart = '"+getDepartmentName(userId)+"'";
+        }
+        else {
+            otherCondition = "where depart = '"+getDepartmentName(userId)+"' and userId="+userId;
+        }
         PageUtil<ReceiveMaster> receiveMaster = new PageUtil<>();
-        String otherCondition = "  ";
         AssetsItem assetsItem = new AssetsItem();
         this.getPageList(receiveMaster, pageNum, pageSize, ReceiveMaster.class.getSimpleName(),otherCondition);
         for (ReceiveMaster receiveMaster1:receiveMaster.getList()) {
@@ -229,7 +251,6 @@ public class AssetsRequestBusinessService {
             recordReturn.setReturnTime(sdf.format(new Date()));
             session.save(recordReturn);
         }
-        System.out.println("管理员："+getKeeper(nameId));
         updateRecordReceive(receiveIdList);
         updateAssetsList(assets,getKeeper(nameId));
         session.getTransaction().commit();
@@ -264,7 +285,6 @@ public class AssetsRequestBusinessService {
     //报废
     public void scrapRequestProcess(){
         Long notifier = dataCenterService.getData("userId");
-        String department = dataCenterService.getData("department");
         String assetsId = dataCenterService.getData("assetsId");
         String note = dataCenterService.getData("note");
         Session session = sessionFactory.openSession();
@@ -272,15 +292,15 @@ public class AssetsRequestBusinessService {
         RecordScrap recordScrap = new RecordScrap();
         recordScrap.setAssetsId(assetsId);
         recordScrap.setNote(note);
-        recordScrap.setDepartment(department);
         recordScrap.setNotifier(getName(notifier));
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
         recordScrap.setScrapId(System.currentTimeMillis());
+        recordScrap.setDepartment(getDepartmentName(notifier));
         recordScrap.setScrapTime(sdf.format(new Date()));
-        String hql = "update Assets a set a.assetsState=2 and userName=:n and depository=:n where a.assetsId=:o";
+        String hql = "update Assets a set a.assetsState=2, userName=:n, depository=:n where a.assetsId=:o";
         Query query = session.createQuery(hql);
         ((org.hibernate.query.Query) query).setString("o", assetsId);
-        ((org.hibernate.query.Query) query).setString("o", null);
+        ((org.hibernate.query.Query) query).setString("n", null);
         query.executeUpdate();
         session.save(recordScrap);
         session.getTransaction().commit();
@@ -289,10 +309,11 @@ public class AssetsRequestBusinessService {
 
     //报废列表
     public void scrapListRequestProcess(){
+        Long userId = dataCenterService.getData("userId");
         Integer pageSize = dataCenterService.getData("pageSize");
         Integer pageNum = dataCenterService.getData("pageNum");
         PageUtil<RecordScrap> recordScrap = new PageUtil<>();
-        String otherCondition = " ";
+        String otherCondition = "where department = '"+getDepartmentName(userId)+"'";
         this.getPageList(recordScrap, pageNum, pageSize, RecordScrap.class.getSimpleName(),otherCondition);
         ResponseData responseData = dataCenterService.getResponseDataFromDataLocal();
         ResponseDataUtil.setHeadOfResponseDataWithSuccessInfo(responseData);
@@ -415,7 +436,7 @@ public class AssetsRequestBusinessService {
         Long Id = System.currentTimeMillis();
         AllotMaster allotMaster = new AllotMaster();
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-        allotMaster.setTime(sdf.format(new Date()));
+        allotMaster.setStartTime(sdf.format(new Date()));
         allotMaster.setAllotId(Id);
         allotMaster.setOwner(owner);
         allotMaster.setCurrent(current);
@@ -480,21 +501,24 @@ public class AssetsRequestBusinessService {
         Session session = sessionFactory.openSession();
         session.beginTransaction();
         String hql;
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
         hql = "from SysUser where id=" +userId;
         List<SysUser> sysUser = find(hql);
         String departmentName = sysUser.get(0).getSysDepartment().getName();
         hql = "from AllotMaster where allotId = " +AllotId;
         List<AllotMaster> allotMasters = find(hql);
         if (allotMasters.get(0).getOwner().equals(departmentName)){
-            hql = "update AllotMaster a set a.state=1 where a.id=:o";
+            hql = "update AllotMaster a set a.state=1,midTime=:t where a.id=:o";
             Query query1 = session.createQuery(hql);
             ((org.hibernate.query.Query) query1).setLong("o", AllotId);
+            ((org.hibernate.query.Query) query1).setString("t", sdf.format(new Date()));
             query1.executeUpdate();
         }
         else {
-            hql = "update AllotMaster a set a.state=2 where a.id=:o";
+            hql = "update AllotMaster a set a.state=2, endTime=:t where a.id=:o";
             Query query1 = session.createQuery(hql);
             ((org.hibernate.query.Query) query1).setLong("o", AllotId);
+            ((org.hibernate.query.Query) query1).setString("t", sdf.format(new Date()));
             query1.executeUpdate();
             hql = "from AllotDetail where allotId="+AllotId;
             List<AllotDetail> allotDetails = find(hql);

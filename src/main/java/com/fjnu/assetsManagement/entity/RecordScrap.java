@@ -27,14 +27,10 @@ public class RecordScrap {
     @Getter(onMethod_ = {@Column(name = "note")})
     private String note;//备注
 
-    @Getter(onMethod_ = {@Column(name = "recorder")})
-    private String recorder;//记录员
-
     @Getter(onMethod_ = {@Column(name = "notifier")})
     private String notifier;//报备者
 
     @Getter(onMethod_ = {@Column(name = "department")})
-    private String department;//部门
-
+    private String department;//报备者
 
 }
