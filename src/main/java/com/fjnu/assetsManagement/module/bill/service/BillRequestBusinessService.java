@@ -9,7 +9,9 @@ import com.fjnu.assetsManagement.util.ResponseDataUtil;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.orm.hibernate5.HibernateTemplate;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.Query;
 import java.util.ArrayList;
@@ -17,10 +19,14 @@ import java.util.Date;
 import java.util.List;
 
 @Component
+@Transactional
 public class BillRequestBusinessService {
     @Autowired
     DataCenterService dataCenterService;
+
     @Autowired
+    HibernateTemplate hibernateTemplate;
+
     SessionFactory sessionFactory;
 
     //待入账记录
@@ -37,8 +43,8 @@ public class BillRequestBusinessService {
 
     //更新资产列表
     private void updateAssets(Date nowDate, List<Long> orderDetailId) {
-        Session session = sessionFactory.openSession();
-        session.beginTransaction();
+        sessionFactory = hibernateTemplate.getSessionFactory();
+        Session session = sessionFactory.getCurrentSession();
         for (Long id : orderDetailId) {
             long now = System.currentTimeMillis();
             long nowadd = now + 12345;
@@ -50,15 +56,14 @@ public class BillRequestBusinessService {
             ((org.hibernate.query.Query) query).setDate("t", nowDate);
             query.executeUpdate();
         }
-        session.getTransaction().commit();
     }
 
     //入账
     public void inBillRequestProcess(){
+        sessionFactory = hibernateTemplate.getSessionFactory();
         List<String> orderNo = dataCenterService.getData("orderNo");
         Long entryOperatorId = dataCenterService.getData("entryOperatorId");
-        Session session = sessionFactory.openSession();
-        session.beginTransaction();
+        Session session = sessionFactory.getCurrentSession();
         for (String entry : orderNo) {
             Date nowDate = new Date();
             String hql = "update PurchaseMaster p set p.state=2,p.entryTime=:t,p.entryOperatorId=:e where p.orderNo=:o";
@@ -79,13 +84,13 @@ public class BillRequestBusinessService {
             }
             this.updateAssets(nowDate, orderDetailId);
         }
-        session.getTransaction().commit();
     }
 
     //分页设置
     public void getPageList(PageUtil purchaseMasterList, int pageNum, int pageSize, String className, String otherCondition) {
+        sessionFactory = hibernateTemplate.getSessionFactory();
         String  wu= null;
-        Session session = sessionFactory.openSession();
+        Session session = sessionFactory.getCurrentSession();
         String getSizeHql = "select count(*) from " + className + " c " + otherCondition;
         Query getSizeQuery = session.createQuery(getSizeHql);
         Long sizeLong = (Long) ((org.hibernate.query.Query) getSizeQuery).uniqueResult();

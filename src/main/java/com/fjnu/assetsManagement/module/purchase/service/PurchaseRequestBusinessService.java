@@ -11,7 +11,9 @@ import com.fjnu.assetsManagement.vo.SummaryAssets;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.orm.hibernate5.HibernateTemplate;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.Query;
 import java.io.IOException;
@@ -22,11 +24,15 @@ import java.util.List;
 import java.util.Set;
 
 @Component
+@Transactional
 public class PurchaseRequestBusinessService {
 
     @Autowired
     private DataCenterService dataCenterService;
+
     @Autowired
+    HibernateTemplate hibernateTemplate;
+
     private SessionFactory sessionFactory;
 
     @Autowired
@@ -48,8 +54,8 @@ public class PurchaseRequestBusinessService {
     //读取资产相关数据并进行存储
     public void addAssets(String depository) throws IOException {
 
-        Session session = sessionFactory.openSession();
-        session.beginTransaction();
+        sessionFactory = hibernateTemplate.getSessionFactory();
+        Session session = sessionFactory.getCurrentSession();
 
         Set<PurchaseDetail> purchaseDetailSet = dataCenterService.getData("purchaseDetailSet");
 
@@ -167,16 +173,14 @@ public class PurchaseRequestBusinessService {
 
         }
 
-        session.getTransaction().commit();
-        session.close();
 
     }
 
     //从数据字典根据ID得到数据字典
     public Dictionary getDictionary(Long id) {
-        Session session = sessionFactory.openSession();
+        sessionFactory = hibernateTemplate.getSessionFactory();
+        Session session = sessionFactory.getCurrentSession();
         Dictionary dictionary = session.get(Dictionary.class, id);
-        session.close();
         return dictionary;
     }
 
@@ -184,12 +188,12 @@ public class PurchaseRequestBusinessService {
     //添加采购主表记录以及采购详表记录
     public void addPurchaseItemServiceProcess() {
 
-
+        sessionFactory = hibernateTemplate.getSessionFactory();
         //读取采购表相关数据
         //获取操作员以及采购单号
         Long operatorId = dataCenterService.getData("operatorId");
         //根据id得到部门id
-        Session getDepartmentIdSession = sessionFactory.openSession();
+        Session getDepartmentIdSession = sessionFactory.getCurrentSession();
         SysUser sysUser = getDepartmentIdSession.get(SysUser.class, operatorId);
         SysDepartment sysDepartment = sysUser.getSysDepartment();
         //根据部门ID确定保管人
@@ -231,16 +235,12 @@ public class PurchaseRequestBusinessService {
         purchaseMaster.setTotalPrice(df.format(totalPrice));
 
         //存入数据库
-        Session session = sessionFactory.openSession();
+        Session session = sessionFactory.getCurrentSession();
 
-        session.beginTransaction();
         session.flush();
         session.clear();
         session.save(purchaseMaster);
 
-        session.getTransaction().commit();
-        //关闭
-        session.close();
         //添加资产表
         try {
             this.addAssets(depository);
@@ -252,7 +252,8 @@ public class PurchaseRequestBusinessService {
 
     //分页方法
     public void getPageList(PageUtil purchaseMasterList, int pageNum, int pageSize, String className, String otherCondition) {
-        Session session = sessionFactory.openSession();
+        sessionFactory = hibernateTemplate.getSessionFactory();
+        Session session = sessionFactory.getCurrentSession();
 
         //得到记录总数
         String getSizeHql = "select count(*) from " + className + " c " + otherCondition;
@@ -296,7 +297,8 @@ public class PurchaseRequestBusinessService {
 
     //根据采购单号得到采购单数据
     public void getPurchaseMasterListByOrderNoProcess() {
-        Session session = sessionFactory.openSession();
+        sessionFactory = hibernateTemplate.getSessionFactory();
+        Session session = sessionFactory.getCurrentSession();
         String hql = "from PurchaseMaster p WHERE p.orderNo=:o and (p.existState<>0 or p.existState = null)";
         Query query = session.createQuery(hql);
         String orderNo = dataCenterService.getData("orderNo");
@@ -311,12 +313,12 @@ public class PurchaseRequestBusinessService {
 
     //根据采购单号数组删除采购单
     public void deletePurchaseMasterListByOrderNoProcess() {
+        sessionFactory = hibernateTemplate.getSessionFactory();
         //取得数据
         List<String> orderNoList = dataCenterService.getData("orderNoList");
 
         //进行逻辑删除——即把采购单记录的exist_state属性改为0
-        Session session = sessionFactory.openSession();
-        session.beginTransaction();
+        Session session = sessionFactory.getCurrentSession();
         for (String orderNo : orderNoList) {
             String hql = "update PurchaseMaster p set p.existState=0 where p.orderNo=:o";
             Query query = session.createQuery(hql);
@@ -324,8 +326,6 @@ public class PurchaseRequestBusinessService {
             query.executeUpdate();
 
         }
-        session.getTransaction().commit();
-        session.close();
     }
 
 }

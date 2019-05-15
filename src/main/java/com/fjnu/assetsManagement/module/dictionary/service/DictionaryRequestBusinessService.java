@@ -7,34 +7,37 @@ import com.fjnu.assetsManagement.util.ResponseDataUtil;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.orm.hibernate5.HibernateTemplate;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.Query;
 import java.util.List;
 
 @Component
+@Transactional
 public class DictionaryRequestBusinessService {
 
     @Autowired
     private DataCenterService dataCenterService;
+
     @Autowired
-    private SessionFactory sessionFactory;
+    HibernateTemplate hibernateTemplate;
+    SessionFactory sessionFactory;
 
 
     //添加数据字典列表
     public void addDictionaryItemServiceProcess() {
+        sessionFactory = hibernateTemplate.getSessionFactory();
         //得到数据
         String kind = dataCenterService.getData("kind");
         Integer quantityState = dataCenterService.getData("quantityState");
 
-        Session session = sessionFactory.openSession();
-        session.beginTransaction();
+        Session session = sessionFactory.getCurrentSession();
         Dictionary dictionary = new Dictionary();
         dictionary.setKind(kind);
         dictionary.setQuantityState(quantityState);
         session.save(dictionary);
-        session.getTransaction().commit();
-        session.close();
 
         //操作完成后返回给前台数据
         ResponseData responseData = dataCenterService.getResponseDataFromDataLocal();
@@ -44,10 +47,11 @@ public class DictionaryRequestBusinessService {
 
     //根据id得到数据字典
     public void getDictionaryByIdProcess() {
+        sessionFactory = hibernateTemplate.getSessionFactory();
         //得到数据
         Long id = dataCenterService.getData("id");
 
-        Session session = sessionFactory.openSession();
+        Session session = sessionFactory.getCurrentSession();
         Dictionary dictionary = (Dictionary) session.get(Dictionary.class, id);
 
         //操作完成后返回给前台数据
@@ -59,11 +63,11 @@ public class DictionaryRequestBusinessService {
 
     //删除数据字典列表
     public void deleteDictionaryListByIdProcess() {
+        sessionFactory = hibernateTemplate.getSessionFactory();
         //得到数据
         List<Long> idList = dataCenterService.getData("idList");
 
-        Session session = sessionFactory.openSession();
-        session.beginTransaction();
+        Session session = sessionFactory.getCurrentSession();
 
         String hql = "delete Dictionary d where ";
         int temp = 0;
@@ -80,8 +84,6 @@ public class DictionaryRequestBusinessService {
 
         Query query = session.createQuery(hql);
         int result = query.executeUpdate();
-        session.getTransaction().commit();
-        session.close();
         //操作完成后返回给前台数据
         ResponseData responseData = dataCenterService.getResponseDataFromDataLocal();
         ResponseDataUtil.setHeadOfResponseDataWithSuccessInfo(responseData);
@@ -90,12 +92,12 @@ public class DictionaryRequestBusinessService {
 
     //得到数据字典列表
     public void getDictionaryListProcess() {
-        Session session = sessionFactory.openSession();
+        sessionFactory = hibernateTemplate.getSessionFactory();
+        Session session = sessionFactory.getCurrentSession();
         String hql = "from Dictionary d ";
         Query query = session.createQuery(hql);
         List<Dictionary> dictionaryList = ((org.hibernate.query.Query) query).list();
 
-        session.close();
         //操作完成后返回给前台数据
         ResponseData responseData = dataCenterService.getResponseDataFromDataLocal();
         ResponseDataUtil.setHeadOfResponseDataWithSuccessInfo(responseData);

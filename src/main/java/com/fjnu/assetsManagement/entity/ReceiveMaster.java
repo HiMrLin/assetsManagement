@@ -33,7 +33,10 @@ public class ReceiveMaster {
     private String depart;//部门
 
     @Getter(onMethod_ = {@Column(name = "user_id")})
-    private  Long userId;//领用状态
+    private  Long userId;
+
+    @Getter(onMethod_ = {@Transient})
+    private String userName;
 
     @Getter(onMethod_ = {@Column(name = "get_state")})
     private  Integer getState;//领用状态

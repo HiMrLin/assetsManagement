@@ -26,9 +26,20 @@ public class TransferMaster {
     @Getter(onMethod_ = {@Column(name = "time")})
     private String  time;
 
+    @Getter(onMethod_ = {@Column(name = "check_time")})
+    private String  checkTime;
+
     @Getter(onMethod_ = {@OneToMany(cascade = CascadeType.ALL),@JoinColumn(name = "transferId")})
     private List<TransferDetail> transferDetailList;
 
     @Getter(onMethod_ = {@Transient})
     private Boolean alc = true;
+
+    //移交接收者姓名
+    @Getter(onMethod_ = {@Transient})
+    private String currentName;
+
+    //发起移交者姓名
+    @Getter(onMethod_ = {@Transient})
+    private String ownerName;
 }

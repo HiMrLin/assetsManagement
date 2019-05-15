@@ -37,11 +37,13 @@ public class AssetsRequestService {
         assetsRequestBusinessService.usedListRequestProcess();//获取数据后的具体操作
     }
 
+    //归还
     public void returnRequest(){
         assetsRequestCheckService.returnRequestCheck(); //检查参数合法性
         assetsRequestBusinessService.returnRequestProcess();//获取数据后的具体操作
     }
 
+    //报废
     public void scrapRequest(){
         assetsRequestCheckService.scrapRequestCheck(); //检查参数合法性
         assetsRequestBusinessService.scrapRequestProcess();//获取数据后的具体操作
@@ -62,9 +64,16 @@ public class AssetsRequestService {
         assetsRequestBusinessService.ownerAssetsListRequestProcess();//获取数据后的具体操作
     }
 
+    //移交
     public void transferRequest(){
         assetsRequestCheckService.transferRequestCheck(); //检查参数合法性
         assetsRequestBusinessService.transferRequestProcess();//获取数据后的具体操作
+    }
+
+    //得到可移交用户列表
+    public void getCouldTransferUserList() {
+        assetsRequestCheckService.getCouldTransferUserListCheck(); //检查参数合法性
+        assetsRequestBusinessService.getCouldTransferUserListProcess();//获取数据后的具体操作
     }
 
     public void transferCheckRequest(){
@@ -72,6 +81,7 @@ public class AssetsRequestService {
         assetsRequestBusinessService.transferCheckRequestProcess();//获取数据后的具体操作
     }
 
+    //调拨
     public void allotRequest(){
         assetsRequestCheckService.allotRequestCheck(); //检查参数合法性
         assetsRequestBusinessService.allotRequestProcess();//获取数据后的具体操作
@@ -86,4 +96,6 @@ public class AssetsRequestService {
         assetsRequestCheckService.allotCheckRequestCheck(); //检查参数合法性
         assetsRequestBusinessService.allotCheckRequestProcess();//获取数据后的具体操作
     }
+
+
 }

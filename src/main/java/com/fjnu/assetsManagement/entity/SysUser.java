@@ -33,4 +33,13 @@ public class SysUser {
 
     @Getter(onMethod_ = {@ManyToOne, @JoinColumn(name = "role")})
     private SysRoleAcl sysRoleAcl;
+
+    public SysUser (){
+    }
+    //用于移交对象的构造函数
+    public SysUser (Long id, String account, String userName){
+        this.id = id;
+        this.account = account;
+        this.userName = userName;
+    }
 }

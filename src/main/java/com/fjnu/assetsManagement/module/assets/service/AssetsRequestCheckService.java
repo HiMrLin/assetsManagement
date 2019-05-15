@@ -22,6 +22,7 @@ public class AssetsRequestCheckService {
     SessionFactory sessionFactory;
     @Autowired
     DataCenterService dataCenterService;
+
     public void pageCheck(){
         Integer pageSize = dataCenterService.getParamValueFromParamOfRequestParamJsonByParamName("pageSize");
         Integer pageNum = dataCenterService.getParamValueFromParamOfRequestParamJsonByParamName("pageNum");
@@ -129,6 +130,7 @@ public class AssetsRequestCheckService {
         dataCenterService.setData("userId", id);
     }
 
+    //进行移交参数检查
     public void transferRequestCheck(){
         Long id = Longs.tryParse(dataCenterService.getParamValueFromHeadOfRequestParamJsonByParamName("id"));
         Long currentId = Longs.tryParse(dataCenterService.getParamValueFromParamOfRequestParamJsonByParamName("currentId"));
@@ -156,6 +158,18 @@ public class AssetsRequestCheckService {
         dataCenterService.setData("currentId", currentId);
         dataCenterService.setData("cardIdList", cardIdList);
     }
+
+    //得到可移交用户列表参数检查
+    public void getCouldTransferUserListCheck() {
+
+        Long id = Longs.tryParse(dataCenterService.getParamValueFromHeadOfRequestParamJsonByParamName("id"));
+        if (id == null){
+            ExceptionUtil.setFailureMsgAndThrow(dataCenterService.getResponseDataFromDataLocal(), AssetsReasonOfFailure.USERID_IS_NOT_BLANK); //验证数据不合法后返回前台提示信息
+        }
+
+        dataCenterService.setData("id", id);
+    }
+
 
     public void transferCheckRequestCheck(){
         Long id = Longs.tryParse(dataCenterService.getParamValueFromHeadOfRequestParamJsonByParamName("id"));
@@ -201,4 +215,6 @@ public class AssetsRequestCheckService {
         dataCenterService.setData("AllotId",AllotId);
         dataCenterService.setData("userId",userId);
     }
+
+
 }

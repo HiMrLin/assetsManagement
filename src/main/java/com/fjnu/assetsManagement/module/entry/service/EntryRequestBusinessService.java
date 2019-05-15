@@ -9,7 +9,9 @@ import com.fjnu.assetsManagement.util.ResponseDataUtil;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.orm.hibernate5.HibernateTemplate;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.Query;
 import java.util.ArrayList;
@@ -17,17 +19,21 @@ import java.util.Date;
 import java.util.List;
 
 @Component
+@Transactional
 public class EntryRequestBusinessService {
 
     @Autowired
     private DataCenterService dataCenterService;
+
     @Autowired
-    private SessionFactory sessionFactory;
+    HibernateTemplate hibernateTemplate;
+
+    SessionFactory sessionFactory;
 
 
     private void updateAssets(Date nowDate, List<Long> orderDetailId) {
-        Session session = sessionFactory.openSession();
-        session.beginTransaction();
+        sessionFactory = hibernateTemplate.getSessionFactory();
+        Session session = sessionFactory.getCurrentSession();
 
         for (Long id : orderDetailId) {
             String hql = "update Assets a set a.inState=1, a.inTime=:t where a.orderDetailId=:o";
@@ -36,19 +42,17 @@ public class EntryRequestBusinessService {
             ((org.hibernate.query.Query) query).setDate("t", nowDate);
             query.executeUpdate();
         }
-
-        session.getTransaction().commit();
     }
 
     //入库
     public void entryProcess() {
+        sessionFactory = hibernateTemplate.getSessionFactory();
         //取得数据
         List<String> orderNoList = dataCenterService.getData("orderNoList");
         Long inOperatorId = dataCenterService.getData("inOperatorId");
 
         //进行入库——将state属性改为1
-        Session session = sessionFactory.openSession();
-        session.beginTransaction();
+        Session session = sessionFactory.getCurrentSession();
         session.flush();
         session.clear();
         for (String ordeNo : orderNoList) {
@@ -75,13 +79,12 @@ public class EntryRequestBusinessService {
 
         }
 
-        session.getTransaction().commit();
-        session.close();
     }
 
     //分页方法
     public void getPageList(PageUtil purchaseMasterList, int pageNum, int pageSize, String className, String otherCondition) {
-        Session session = sessionFactory.openSession();
+        sessionFactory = hibernateTemplate.getSessionFactory();
+        Session session = sessionFactory.getCurrentSession();
         String getSizeHql = "select count(*) from " + className + " c " + otherCondition;
         Query getSizeQuery = session.createQuery(getSizeHql);
         Long sizeLong = (Long) ((org.hibernate.query.Query) getSizeQuery).uniqueResult();
@@ -140,8 +143,8 @@ public class EntryRequestBusinessService {
     //根据采购单号得到采购单记录
     public void getPurchaseMasterListByOrderNoProcess() {
 
-
-        Session session = sessionFactory.openSession();
+        sessionFactory = hibernateTemplate.getSessionFactory();
+        Session session = sessionFactory.getCurrentSession();
         String hql = "from PurchaseMaster p WHERE p.orderNo=:oo and (p.existState<>0 or p.existState = null)";
         Query query = session.createQuery(hql);
         String orderNo = dataCenterService.getData("orderNo");

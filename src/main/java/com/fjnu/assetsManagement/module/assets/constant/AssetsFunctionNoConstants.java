@@ -15,4 +15,7 @@ public interface AssetsFunctionNoConstants {
 	String ALLOT="Allot";
 	String ALLOT_LIST="AllotList";
 	String ALLOT_CHECK="AllotCheck";
+
+	//得到可移交用户列表
+	String GET_COULD_TRANSFER_USER_LIST = "GetCouldTransferUserList";
 }
