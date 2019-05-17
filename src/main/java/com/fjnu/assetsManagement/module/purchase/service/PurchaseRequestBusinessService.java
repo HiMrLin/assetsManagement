@@ -52,7 +52,7 @@ public class PurchaseRequestBusinessService {
     }
 
     //读取资产相关数据并进行存储
-    public void addAssets(String depository) throws IOException {
+    public void addAssets(String depository, String ascription) throws IOException {
 
         sessionFactory = hibernateTemplate.getSessionFactory();
         Session session = sessionFactory.getCurrentSession();
@@ -72,7 +72,7 @@ public class PurchaseRequestBusinessService {
                 //地区
                 assets.setArea(summaryAssets.getArea());
                 //货物归属
-                assets.setAscription(summaryAssets.getAscription());
+                assets.setAscription(ascription);
                 //制造商
                 assets.setMaker(summaryAssets.getMaker());
                 //供应商
@@ -115,7 +115,7 @@ public class PurchaseRequestBusinessService {
                     //地区
                     assets.setArea(summaryAssets.getArea());
                     //货物归属
-                    assets.setAscription(summaryAssets.getAscription());
+                    assets.setAscription(ascription);
                     //制造商
                     assets.setMaker(summaryAssets.getMaker());
                     //供应商
@@ -189,6 +189,8 @@ public class PurchaseRequestBusinessService {
     public void addPurchaseItemServiceProcess() {
 
         sessionFactory = hibernateTemplate.getSessionFactory();
+        Session session = sessionFactory.getCurrentSession();
+
         //读取采购表相关数据
         //获取操作员以及采购单号
         Long operatorId = dataCenterService.getData("operatorId");
@@ -196,7 +198,8 @@ public class PurchaseRequestBusinessService {
         Session getDepartmentIdSession = sessionFactory.getCurrentSession();
         SysUser sysUser = getDepartmentIdSession.get(SysUser.class, operatorId);
         SysDepartment sysDepartment = sysUser.getSysDepartment();
-        //根据部门ID确定保管人
+        //根据部门ID确定保管人以及归属
+        //保管人
         String depository;
         if(sysDepartment.getId() == 1)
             depository = "张雷";
@@ -204,6 +207,11 @@ public class PurchaseRequestBusinessService {
             depository = "吴必辉";
         else
             depository = "陈琪";
+
+        //归属
+        String ascription;
+        SysUser operator = session.get(SysUser.class, operatorId);
+        ascription = operator.getSysDepartment().getName();
 
         String orderNo = dataCenterService.getData("orderNo");
         String remark = dataCenterService.getParamValueFromParamOfRequestParamJsonByParamName("remark");
@@ -235,7 +243,6 @@ public class PurchaseRequestBusinessService {
         purchaseMaster.setTotalPrice(df.format(totalPrice));
 
         //存入数据库
-        Session session = sessionFactory.getCurrentSession();
 
         session.flush();
         session.clear();
@@ -243,7 +250,7 @@ public class PurchaseRequestBusinessService {
 
         //添加资产表
         try {
-            this.addAssets(depository);
+            this.addAssets(depository,ascription);
         } catch (IOException e) {
             e.printStackTrace();
         }
