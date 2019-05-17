@@ -41,7 +41,10 @@ public class SysUserDaoImpl implements SysUserDao {
     @Override
 //    @Transactional
     public void updateUser(SysUser user) {
-        hibernateTemplate.update(user);
+        SessionFactory sf = hibernateTemplate.getSessionFactory();
+        Session session = sf.getCurrentSession();
+        session.merge(user);
+//        hibernateTemplate.update(user);
     }
 
     @Override
