@@ -40,7 +40,7 @@ public class AssetsRequestBusinessService {
         Integer pageNum = dataCenterService.getData("pageNum");
         String departmentName = getDepartmentName(userId);
         PageUtil<Assets> assets = new PageUtil<>();
-        String otherCondition = "where  (inState=1 or inState=2) and ascription = '"+departmentName+"'";
+        String otherCondition = "where  inState=2 and ascription = '"+departmentName+"'";
         this.getPageList(assets, pageNum, pageSize, Assets.class.getSimpleName(),otherCondition);
         ResponseData responseData = dataCenterService.getResponseDataFromDataLocal();
         ResponseDataUtil.setHeadOfResponseDataWithSuccessInfo(responseData);
