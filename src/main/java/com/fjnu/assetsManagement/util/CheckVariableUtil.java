@@ -11,8 +11,8 @@ import java.util.regex.Pattern;
 
 /**
  * @ClassName: CheckVariableUtil
- * @author CaoZhengxi
- * @date 2018年5月22日
+ * @author lwn
+ * @date
  *
  */
 public class CheckVariableUtil {

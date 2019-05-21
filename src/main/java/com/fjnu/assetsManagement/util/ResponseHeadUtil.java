@@ -3,6 +3,10 @@ package com.fjnu.assetsManagement.util;
 import com.fjnu.assetsManagement.entity.ResponseHead;
 import com.fjnu.assetsManagement.enums.ResponseHeadEnum;
 
+/**
+ * lwn
+ * 返回头
+ */
 public class ResponseHeadUtil {
 	public static ResponseHead createResponseHead(ResponseHeadEnum responseHeadEnum) {
 		ResponseHead responseHead = new ResponseHead();

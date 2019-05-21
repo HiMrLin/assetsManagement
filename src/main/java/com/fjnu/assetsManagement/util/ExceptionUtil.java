@@ -14,7 +14,7 @@ import org.springframework.stereotype.Component;
 /**  
  * @ClassName: ExceptionUtil    抛出异常
  * @author lwn
- * @date 2018年7月24日  
+ * @date
  *    
  */
 @Component

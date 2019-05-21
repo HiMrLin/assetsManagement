@@ -11,7 +11,7 @@ import java.io.*;
 /**
  * 条形码工具类
  *
- * @author tangzz
+ * @author
  * @createDate 2019年4月23日
  */
 public class BarcodeUtil {

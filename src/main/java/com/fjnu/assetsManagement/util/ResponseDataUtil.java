@@ -9,6 +9,13 @@ import com.fjnu.assetsManagement.enums.ResponseHeadEnum;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+/*
+ * author lwn
+ * description
+ * date
+ * param
+ * return
+ */
 public class ResponseDataUtil {
 
 	public static void setResponseDataWithFailureInfo(ResponseData responseData,IReasonOfFailure reasonOfFailure) {

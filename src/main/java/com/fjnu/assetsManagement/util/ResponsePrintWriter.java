@@ -10,7 +10,8 @@ import java.io.PrintWriter;
 
 
 /**
- * Created by czx on 2018/10/8.
+ * lwn
+ * response对象写入数据
  */
 public class ResponsePrintWriter {
 
